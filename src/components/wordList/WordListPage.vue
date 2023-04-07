@@ -27,10 +27,12 @@ export default {
 </script>
 
 <style scoped>
-.container{
+.container {
   display: flex;
   overflow: auto;
+  /*background-color: rgba(198, 228, 214, 1);*/
 }
+
 .left {
   flex-direction: column;
   width: 400px;
@@ -48,7 +50,7 @@ export default {
   padding: 30px;
   display: flex;
   align-items: center;
-  background-color: rgba(112,162,161,0.4);
+  background-color: rgba(112, 162, 161, 0.4);
   border-radius: 10px;
 }
 </style>

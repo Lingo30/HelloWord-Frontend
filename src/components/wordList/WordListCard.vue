@@ -18,6 +18,7 @@
         </template>
         <template #footer>
           <div class="foot">
+            <n-icon :component="AccessibilityOutline"/>
             <n-text class="font-color" v-text="'创作者名字'"/>
           </div>
         </template>
@@ -27,16 +28,20 @@
 </template>
 
 <script>
-import {NCard, NText} from 'naive-ui'
+import {NCard, NText, NIcon} from 'naive-ui'
+import {AccessibilityOutline} from '@vicons/ionicons5'
 
 export default {
   name: "WordListCard",
   components: {
     NCard,
-    NText
+    NText,
+    NIcon
   },
   setup() {
-
+    return {
+      AccessibilityOutline
+    }
   }
 }
 </script>
@@ -67,12 +72,14 @@ export default {
 
 .card {
   border-radius: 10px;
-  background-color: rgba(24,204,255, 0.5);
+  background-color: rgba(24, 204, 255, 0.5);
 }
-.font-color{
+
+.font-color {
   color: white;
   opacity: 1;
 }
+
 .head {
   text-align: left;
   font-size: 2em;
