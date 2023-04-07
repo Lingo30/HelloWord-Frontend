@@ -53,16 +53,13 @@ export default {
 .left {
   flex-direction: column;
   width: 10%;
-  /*background-color: #f5f5f5;*/
   padding: 10px;
   display: flex;
   align-items: center;
 }
 
 .right {
-  flex-direction: column;
   width: 80%;
-  /*background-color: #f5f5f5;*/
   padding: 10px;
   display: flex;
   align-items: center;
@@ -70,10 +67,11 @@ export default {
 
 .card {
   border-radius: 25px;
-  background-color: #18ccff;
+  background-color: rgba(24,204,255, 0.5);
 }
 .font-color{
   color: white;
+  opacity: 1;
 }
 .head {
   text-align: left;
