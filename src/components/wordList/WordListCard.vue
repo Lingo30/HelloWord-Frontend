@@ -47,7 +47,7 @@ export default {
 }
 
 .month {
-  font-size: 1.5em;
+  font-size: 1em;
 }
 
 .left {
@@ -66,7 +66,7 @@ export default {
 }
 
 .card {
-  border-radius: 25px;
+  border-radius: 10px;
   background-color: rgba(24,204,255, 0.5);
 }
 .font-color{
