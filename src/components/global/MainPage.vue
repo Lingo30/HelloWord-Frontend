@@ -1,6 +1,10 @@
 <template>
-  <SideBar/>
-  <router-view/>
+  <div class="side-bar">
+    <SideBar/>
+  </div>
+  <div class="container">
+    <router-view/>
+  </div>
 </template>
 
 <script>
@@ -15,5 +19,12 @@ export default {
 </script>
 
 <style scoped>
-
+.side-bar{
+  /*height: 100vh;*/
+}
+.container{
+  height: 100vh;
+  overflow: hidden;
+  background-color: #89AB9E;/*TODO 使用背景图片代替*/
+}
 </style>
