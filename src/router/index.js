@@ -32,11 +32,8 @@ const routes = [
     },
     {
         path: '/login',
+        name: 'login',
         component: Login
-    },
-    {
-        path: '/wordlist',
-        component: WordListPage
     },
     //用户登录后的使用界面
     {
@@ -47,28 +44,33 @@ const routes = [
             //统计界面（主页面）
             {
                 path: 'statistic',
+                name: 'statistic',
                 component: StatisticPage
             },
             //背单词页面
             {
                 path: 'learn',
+                name: 'learn',
                 //TODO WordPage存在bug component: WordPage
             },
             //拓展界面
             {
                 path: 'review',
+                name: 'review',
                 component: ReviewPage,
                 children: [/*TODO 对应的三个子功能*/]
             },
             //对话界面
             {
                 path: 'talk',
+                name: 'talk',
                 component: ReviewPage,
                 //TODO 对话界面组件
             },
             //单词本界面
             {
                 path: 'wordlist',
+                name: 'wordlist',
                 component: WordListPage
             }
         ]
