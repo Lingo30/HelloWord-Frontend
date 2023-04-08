@@ -2,38 +2,43 @@
   <nav class="s-sidebar__nav">
     <ul>
       <li>
-        <router-link @click="jump(1)" to="/user/learn" class="s-sidebar__nav-link">
+        <router-link to="/user/learn" class="s-sidebar__nav-link">
           <br>
-          <img v-show="index!==1" class="a" src="../../assets/img/home.png" width="20" height="20">
-          <img v-show="index===1" class="a" src="../../assets/img/homeSelected.png" width="20" height="20">
+          <img v-if="router.currentRoute.value.name!=='learn'" class="a" src="../../assets/img/home.png" width="20"
+               height="20">
+          <img v-else class="a" src="../../assets/img/homeSelected.png" width="20" height="20">
         </router-link>
       </li>
       <li>
-        <router-link @click="jump(2)" to="/user/review" class="s-sidebar__nav-link">
+        <router-link to="/user/review" class="s-sidebar__nav-link">
           <br>
-          <img v-show="index!==2" class="a" src="../../assets/img/notification.png" width="20" height="20">
-          <img v-show="index===2" class="a" src="../../assets/img/notificationSelected.png" width="20" height="20">
+          <img v-if="router.currentRoute.value.name!=='review'" class="a" src="../../assets/img/notification.png"
+               width="20" height="20">
+          <img v-else class="a" src="../../assets/img/notificationSelected.png" width="20" height="20">
         </router-link>
       </li>
       <li>
-        <router-link @click="jump(3)" to="/user/wordlist" class="s-sidebar__nav-link">
+        <router-link to="/user/wordlist" class="s-sidebar__nav-link">
           <br>
-          <img v-show="index!==3" class="a" src="../../assets/img/wordlist.png" width="20" height="20">
-          <img v-show="index===3" class="a" src="../../assets/img/wordlistSelected.png" width="20" height="20">
+          <img v-if="router.currentRoute.value.name!=='wordlist'" class="a" src="../../assets/img/wordlist.png"
+               width="20" height="20">
+          <img v-else class="a" src="../../assets/img/wordlistSelected.png" width="20" height="20">
         </router-link>
       </li>
       <li>
-        <router-link @click="jump(4)" to="/user/talk" class="s-sidebar__nav-link">
+        <router-link to="/user/talk" class="s-sidebar__nav-link">
           <br>
-          <img v-show="index!==4" class="a" src="../../assets/img/talk.png" width="20" height="20">
-          <img v-show="index===4" class="a" src="../../assets/img/talkSelected.png" width="20" height="20">
+          <img v-if="router.currentRoute.value.name!=='talk'" class="a" src="../../assets/img/talk.png" width="20"
+               height="20">
+          <img v-else class="a" src="../../assets/img/talkSelected.png" width="20" height="20">
         </router-link>
       </li>
       <li>
-        <router-link @click="jump(5)" to="/user/statistic" class="s-sidebar__nav-link">
+        <router-link to="/user/statistic" class="s-sidebar__nav-link">
           <br>
-          <img v-show="index!==5" class="a" src="../../assets/img/chart.png" width="20" height="20">
-          <img v-show="index===5" class="a" src="../../assets/img/chartSelected.png" width="20" height="20">
+          <img v-if="router.currentRoute.value.name!=='statistic'" src="../../assets/img/chart.png" width="20"
+               height="20">
+          <img v-else class="a" src="../../assets/img/chartSelected.png" width="20" height="20">
         </router-link>
       </li>
     </ul>
@@ -41,18 +46,17 @@
 </template>
 
 <script>
+import {useRouter} from "vue-router";
+
 export default {
   name: "SideBar",
-  data() {
+  setup() {
+    const router = useRouter();
+
     return {
-      index: 5,
+      router
     }
-  },
-  methods: {
-    jump: function (index) {
-      this.index = index; //重要处
-    },
-  },
+  }
 }
 </script>
 
