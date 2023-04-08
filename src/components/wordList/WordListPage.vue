@@ -28,12 +28,14 @@ export default {
 
 <style scoped>
 .container {
+  margin-left: 100px;
   display: flex;
   overflow: auto;
   /*background-color: rgba(198, 228, 214, 1);*/
 }
 
 .left {
+  margin-top: 10px;
   flex-direction: column;
   width: 400px;
   height: 500px;
@@ -44,6 +46,7 @@ export default {
 }
 
 .right {
+  margin-top: 10px;
   margin-left: 20px;
   width: 500px;
   height: 500px;

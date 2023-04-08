@@ -1,46 +1,62 @@
 <template>
-  <div class="s-layout__sidebar">
-    <nav class="s-sidebar__nav">
-      <ul>
-        <li>
-          <a @click="jump(1)" class="s-sidebar__nav-link" href="#0"> <!--路由 todo-->
-            <br>
-            <img v-show="index!==1" class = "a" src="../../assets/img/home.png" width="20" height="20">
-            <img v-show="index===1" class = "a" src="../../assets/img/homeSelected.png" width="20" height="20">
-          </a>
-        </li>
-        <li>
-          <a @click="jump(2)" class="s-sidebar__nav-link" href="#1">
-            <br>
-            <img v-show="index!==2" class = "a" src="../../assets/img/notification.png" width="20" height="20">
-            <img v-show="index===2" class = "a" src="../../assets/img/notificationSelected.png" width="20" height="20">
-          </a>
-        </li>
-        <li>
-          <a @click="jump(3)" class="s-sidebar__nav-link" href="#2">
-            <br>
-            <img v-show="index!==3" class="a" src="../../assets/img/chart.png" width="20" height="20">
-            <img v-show="index===3" class="a" src="../../assets/img/chartSelected.png" width="20" height="20">
-          </a>
-        </li>
-      </ul>
-    </nav>
-  </div>
+  <nav class="s-sidebar__nav">
+    <ul>
+      <li>
+        <router-link to="/user/learn" class="s-sidebar__nav-link">
+          <br>
+          <img v-if="router.currentRoute.value.name!=='learn'" class="a" src="../../assets/img/home.png" width="20"
+               height="20">
+          <img v-else class="a" src="../../assets/img/homeSelected.png" width="20" height="20">
+        </router-link>
+      </li>
+      <li>
+        <router-link to="/user/review" class="s-sidebar__nav-link">
+          <br>
+          <img v-if="router.currentRoute.value.name!=='review'" class="a" src="../../assets/img/notification.png"
+               width="20" height="20">
+          <img v-else class="a" src="../../assets/img/notificationSelected.png" width="20" height="20">
+        </router-link>
+      </li>
+      <li>
+        <router-link to="/user/wordlist" class="s-sidebar__nav-link">
+          <br>
+          <img v-if="router.currentRoute.value.name!=='wordlist'" class="a" src="../../assets/img/wordlist.png"
+               width="20" height="20">
+          <img v-else class="a" src="../../assets/img/wordlistSelected.png" width="20" height="20">
+        </router-link>
+      </li>
+      <li>
+        <router-link to="/user/talk" class="s-sidebar__nav-link">
+          <br>
+          <img v-if="router.currentRoute.value.name!=='talk'" class="a" src="../../assets/img/talk.png" width="20"
+               height="20">
+          <img v-else class="a" src="../../assets/img/talkSelected.png" width="20" height="20">
+        </router-link>
+      </li>
+      <li>
+        <router-link to="/user/statistic" class="s-sidebar__nav-link">
+          <br>
+          <img v-if="router.currentRoute.value.name!=='statistic'" src="../../assets/img/chart.png" width="20"
+               height="20">
+          <img v-else class="a" src="../../assets/img/chartSelected.png" width="20" height="20">
+        </router-link>
+      </li>
+    </ul>
+  </nav>
 </template>
 
 <script>
+import {useRouter} from "vue-router";
+
 export default {
   name: "SideBar",
-  data() {
+  setup() {
+    const router = useRouter();
+
     return {
-      index: 1,
+      router
     }
-  },
-  methods: {
-    jump: function (index) {
-      this.index = index; //重要处
-    },
-  },
+  }
 }
 </script>
 
@@ -82,7 +98,7 @@ br {
 }
 
 .s-sidebar__nav-link:hover {
-  background-color: rgba(255,255,255,0.5)/*选中时的颜色*/;
+  background-color: rgba(255, 255, 255, 0.5) /*选中时的颜色*/;
 }
 
 @media (min-width: 42em) {
