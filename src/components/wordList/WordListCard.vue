@@ -1,5 +1,5 @@
 <template>
-  <div style="display: flex">
+  <div style="display: flex; width: 400px">
     <div class="left">
       <n-text class="date" v-text="'07'"></n-text>
       <n-text class="month" v-text="'APR'"></n-text>

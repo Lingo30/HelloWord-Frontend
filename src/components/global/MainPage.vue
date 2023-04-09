@@ -23,6 +23,7 @@ export default {
   /*height: 100vh;*/
 }
 .container{
+  margin-left: 50px;
   height: 100vh;
   overflow: hidden;
   background-color: #89AB9E;/*TODO 使用背景图片代替*/

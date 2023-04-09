@@ -28,7 +28,6 @@ export default {
 
 <style scoped>
 .container {
-  margin-left: 100px;
   display: flex;
   overflow: auto;
   /*background-color: rgba(198, 228, 214, 1);*/
@@ -37,7 +36,7 @@ export default {
 .left {
   margin-top: 10px;
   flex-direction: column;
-  width: 400px;
+  width: 500px;
   height: 500px;
   padding: 10px;
   display: flex;
