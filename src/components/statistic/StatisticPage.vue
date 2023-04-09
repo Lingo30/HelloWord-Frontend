@@ -3,7 +3,36 @@
     <div style="width: 50%">
       <!--      当日数据（今日数据）-->
       <div>
-
+        <n-row>
+          <n-col :span="12">
+            <n-statistic style="" :value="' / '">
+              <template #label>
+                <span style="color: black">
+                  今日新学/今日复习
+                </span>
+              </template>
+              <template #prefix>
+                98(新学单词数)
+              </template>
+              <template #suffix>
+                23(复习单词数)
+              </template>
+            </n-statistic>
+          </n-col>
+          <n-col :span="12">
+            <n-statistic label="">
+              <template #label>
+                <span style="color: black">
+                  今日学习时长
+                </span>
+              </template>
+              111
+              <template #suffix>
+                min
+              </template>
+            </n-statistic>
+          </n-col>
+        </n-row>
       </div>
       <!--      图表展示-->
       <div>
@@ -31,11 +60,9 @@ import {addDays, isYesterday} from "date-fns/esm";
 export default {
   name: "StatisticPage",
   setup() {
-    // const message = useMessage();
     return {
       value: ref(addDays(Date.now(), 1).valueOf()),
       handleUpdateValue(_, {year, month, date}) {
-        // message.success(`${year}-${month}-${date}`);
       },
       isDateDisabled(timestamp) {
         if (isYesterday(timestamp)) {
