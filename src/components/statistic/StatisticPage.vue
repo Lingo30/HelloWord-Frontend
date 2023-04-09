@@ -1,8 +1,8 @@
 <template>
   <div class="container">
-    <div style="width: 50%">
+    <div class="left">
       <!--      当日数据（今日数据）-->
-      <div style="">
+      <div class="table">
         <n-row>
           <n-col :span="12">
             <n-statistic :value="' / '">
@@ -37,9 +37,9 @@
       <!--      图表展示-->
       <div class="chart" ref="chartRef"></div>
     </div>
-    <div class="calendar">
+    <div>
       <n-calendar
-          style="width: 100%;height: 100%"
+          class="calendar"
           v-model:value="value"
           :is-date-disabled="isDateDisabled"
           @update:value="handleUpdateValue"
@@ -47,7 +47,9 @@
         <!--        日期框内内容-->
         <template #default="{year, month, date}">
           <span v-if="calendarData[year+'-'+month+'-'+date]">
-          {{ calendarData[year + '-' + month + '-' + date]['new'] }}/{{ calendarData[year + '-' + month + '-' + date]['old'] }}
+          {{
+              calendarData[year + '-' + month + '-' + date]['new']
+            }}/{{ calendarData[year + '-' + month + '-' + date]['old'] }}
           </span>
         </template>
         <!--        年月-->
@@ -70,12 +72,16 @@ export default {
   setup() {
     const chartRef = ref();
     const chartData = {
+      backgroundColor: '',
+      tooltip: {
+        trigger: 'axis',
+      },
       xAxis: {
         type: 'category',
         data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
       },
       yAxis: {
-        type: 'value'
+        type: 'value',
       },
       series: [
         {
@@ -115,18 +121,36 @@ export default {
 <style scoped>
 .container {
   display: flex;
-  align-items: center;
+  overflow: auto;
+}
+
+.left {
+  /*display: flex;*/
+  /*flex-direction: column;*/
+  /*background-color: black;*/
+  width: 700px;
+  /*height: 700px;*/
+}
+
+.table {
+  /*background-color: blue;*/
+  margin-top: 100px;
+  height: 100px;
 }
 
 .chart {
+  /*background-color: black;*/
   height: 500px;
+  width: 700px;
 }
 
 .calendar {
-  height: 50%;
-  width: 50%;
+  margin-top: 200px;
+  /*background-color: black;*/
+  display: flex;
+  height: 450px;
+  width: 650px;
   margin-left: 20px;
   margin-right: 20px;
-  /*background-color: black;*/
 }
 </style>
