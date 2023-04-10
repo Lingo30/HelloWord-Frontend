@@ -1,18 +1,28 @@
 <template>
-  <router-view></router-view>
+  <n-dialog-provider>
+    <n-message-provider>
+      <n-config-provider :locale="zhCN" :date-locale="dateZhCN">
+        <router-view></router-view>
+      </n-config-provider>
+    </n-message-provider>
+  </n-dialog-provider>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
-import Login from "@/components/login/Login.vue";
-import MainPage from "@/components/global/MainPage.vue";
+import {NDialogProvider, NMessageProvider, NConfigProvider, dateZhCN, zhCN} from 'naive-ui'
 
 export default {
   name: 'App',
   components: {
-    Login,
-    MainPage,
-    HelloWorld
+    NConfigProvider,
+    NMessageProvider,
+    NDialogProvider
+  },
+  setup() {
+    return {
+      dateZhCN,
+      zhCN
+    }
   }
 }
 </script>

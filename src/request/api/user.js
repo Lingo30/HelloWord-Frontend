@@ -1,25 +1,28 @@
 import request from "@/request/request";
 
+//TODO
 export function loginAPI(name, pwd) {
     /*
     返回数据：
     status: true/false 是否登录成功
     data:{
-        uid:
+        uid:用户id
         wordNum:每日预期背诵单词数
     }
+    msg: 登录失败原因
      */
     const data = JSON.stringify({
         name: name,
         password: pwd,
     })
     return request({
-        url: '',//TODO
+        url: '73790186',
         method: 'get',
         data
     })
 }
 
+//TODO
 export function registerAPI(name, pwd) {
     /*
     返回数据：
@@ -35,7 +38,7 @@ export function registerAPI(name, pwd) {
         password: pwd,
     })
     return request({
-        url: '',//TODO
+        url: '73790186',
         method: 'get',
         data
     })
