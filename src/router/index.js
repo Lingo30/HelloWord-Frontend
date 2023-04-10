@@ -63,13 +63,6 @@ const routes = [
                 component: ReviewPage,
                 children: [/*TODO 对应的三个子功能*/]
             },
-            //对话界面
-            {
-                path: 'talk',
-                name: 'talk',
-                component: ReviewPage,
-                //TODO 对话界面组件
-            },
             //单词本界面
             {
                 path: 'wordlist',

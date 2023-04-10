@@ -26,9 +26,9 @@
         </router-link>
       </li>
       <li>
-        <router-link to="/user/talk" class="s-sidebar__nav-link">
+        <router-link to="/user/chat" class="s-sidebar__nav-link">
           <br>
-          <img v-if="router.currentRoute.value.name!=='talk'" class="a" src="../../assets/img/talk.png" width="20"
+          <img v-if="router.currentRoute.value.name!=='chat'" class="a" src="../../assets/img/talk.png" width="20"
                height="20">
           <img v-else class="a" src="../../assets/img/talkSelected.png" width="20" height="20">
         </router-link>
