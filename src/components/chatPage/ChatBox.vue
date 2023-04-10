@@ -3,23 +3,42 @@
     <div class="chat_top">
       <img src="../../assets/img/kaleidoBlank.png" height="170" width="150">
     </div>
-    <ChatMessageRight time="12:00" content="啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦" ></ChatMessageRight>
-    <ChatMessageLeft time="12:02" content="啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦" ></ChatMessageLeft>
-    <ChatMessageRight time="12:00" content="啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦" ></ChatMessageRight>
-    <ChatMessageLeft time="12:02" content="啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦" ></ChatMessageLeft>
-    <ChatMessageRight time="12:00" content="啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦" ></ChatMessageRight>
-    <ChatMessageLeft time="12:02" content="啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦" ></ChatMessageLeft>
+    <ChatMessage v-for="(item, index) in messages" v-bind:key="index" :type=item.type :time=item.time :content=item.content></ChatMessage>
   </div>
 </template>
 
 <script>
-import ChatMessageLeft from "@/components/chatPage/ChatMessageLeft";
-import ChatMessageRight from "@/components/chatPage/ChatMessageRight";
+import ChatMessage from "@/components/chatPage/ChatMessage";
 export default {
   name: "ChatBox",
   components:{
-    ChatMessageRight,
-    ChatMessageLeft
+    ChatMessage
+  },
+  data() {
+    return {
+      messages: [
+        {
+          type: false,
+          time: "12:00",
+          content: "llllllllllll"
+        },
+        {
+          type: true,
+          time: "12:01",
+          content: "tttttttttttt"
+        },
+        {
+          type: false,
+          time: "12:02",
+          content: "rrrrrrrrrrrr"
+        },
+        {
+          type: true,
+          time: "12:03",
+          content: "yyyyyyyyyyyyy"
+        }
+      ]
+    }
   }
 }
 </script>
