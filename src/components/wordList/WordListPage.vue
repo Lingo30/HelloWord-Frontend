@@ -22,7 +22,8 @@ import {NScrollbar} from "naive-ui"
 import WordListCard from "@/components/wordList/WordListCard.vue";
 import WordCardList from "@/components/wordList/WordCardList.vue";
 import {onMounted, reactive, ref} from "vue";
-// import {getLists} from "@/request/api/wordlist";
+import store from "@/store";
+import {getLists} from "@/request/api/wordlist";
 
 export default {
   name: "WordList",
@@ -41,9 +42,10 @@ export default {
 
     onMounted(() => {
       //TODO 通过uid获取所有词单id
-      // getLists().then((res) => {
-      //
-      // })
+      getLists(store.state.user.uid).then((res) => {
+        listIds.splice(0,listIds.length)
+        res.ids.forEach((id)=>listIds.push(id));
+      })
     })
 
     return {

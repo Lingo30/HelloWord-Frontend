@@ -35,7 +35,8 @@
 <script>
 import {NCard, NScrollbar} from "naive-ui";
 import {reactive} from "vue";
-// import {getWordsInfo} from "@/request/api/wordlist";
+import store from "@/store";
+import {getWordsInfo} from "@/request/api/wordlist";
 
 export default {
   name: "WordCardList",
@@ -57,9 +58,11 @@ export default {
     ])
 
     function showWords(listId) {
-      // getWordsInfo(listId).then((res) => {
-      //   //TODO
-      // })
+      getWordsInfo(store.state.user.uid, listId, store.state.wordNum).then((res) => {
+        //TODO
+        words.splice(0, words.length);
+        res.words.forEach((word) => words.push(word))
+      })
     }
 
     return {

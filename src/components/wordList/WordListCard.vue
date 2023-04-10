@@ -44,7 +44,7 @@
 import {NCard, NText, NIcon} from 'naive-ui'
 import {AccessibilityOutline} from '@vicons/ionicons5'
 import {onMounted, reactive} from "vue";
-// import {getListInfo} from "@/request/api/wordlist";
+import {getListInfo} from "@/request/api/wordlist";
 
 export default {
   name: "WordListCard",
@@ -82,9 +82,12 @@ export default {
 
     onMounted(() => {
       //TODO 根据 listId获取词单基本信息，并赋值给info
-      // getListInfo(props.listId).then((res)=>{
-      //
-      // })
+      getListInfo(props.listId).then((res) => {
+        info.name = res.name
+        info.num = res.num
+        info.creator = res.creator
+        info.date = res.date
+      });
     })
 
     return {
