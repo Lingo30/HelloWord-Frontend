@@ -95,6 +95,8 @@ import md5 from 'js-md5';
 import {useMessage} from 'naive-ui'
 import {registerAPI, loginAPI} from "@/request/api/user";
 import store from "@/store";
+import router from "@/router";
+import {USERNAME, PASSWORD} from "@/store/local";
 
 export default {
   name: 'HelloWorld',
@@ -116,6 +118,16 @@ export default {
       passwordConfirm.value = ""
     }
 
+    function saveUserInfo(res, name, pwd) {
+      //TODO 存储本地变量
+      store.state.user.login = true
+      store.state.user.uid = 1
+      store.state.user.wordNum = 20
+      //TODO 把用户名和密码自动保存到本地，可能会有安全隐患?
+      localStorage.setItem(USERNAME, name)
+      localStorage.setItem(PASSWORD, pwd)
+    }
+
     function register(name, pwd, pwdConfirm) {
       if (pwd !== pwdConfirm) {
         message.error("密码前后不一致");
@@ -126,15 +138,14 @@ export default {
         return;
       }
       //TODO 提交服务器
-      pwd = md5(pwd);
-      registerAPI(name, pwd).then((res) => {
-        console.log(res);
-        let success
+      const encodePwd = md5(pwd);
+      registerAPI(name, encodePwd).then((res) => {
+        let success = true
         if (success) {
-          //TODO 存储本地变量
-          store.state.user.login = true
-          store.state.user.uid = 1
-          store.state.user.wordNum = 20
+          saveUserInfo(res, name, pwd);
+          //设置路由
+          router.push('/user')
+          message.success("注册成功");
         } else {
           // 提示错误信息
           message.error("注册失败");
@@ -148,14 +159,14 @@ export default {
         return;
       }
       //TODO 提交服务器
-      loginAPI(name, pwd).then((res) => {
-        console.log(res);
+      const encodePwd = md5(pwd);
+      loginAPI(name, encodePwd).then((res) => {
         let success
         if (success) {
-          // TODO 存储本地变量
-          store.state.user.login = true
-          store.state.user.uid = 1
-          store.state.user.wordNum = 20
+          saveUserInfo(res, name, pwd);
+          //设置路由
+          router.push('/user')
+          message.success("登录成功");
         } else {
           // 提示错误信息
           message.error("登录失败");
