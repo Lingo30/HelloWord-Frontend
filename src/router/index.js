@@ -5,6 +5,7 @@ import ReviewPage from "@/components/review/ReviewPage.vue";
 import Login from "@/components/login/Login.vue";
 import MainPage from "@/components/global/MainPage.vue";
 import WordListPage from "@/components/wordList/WordListPage.vue";
+import ChatPage from "@/components/chatPage/ChatPage.vue";
 
 const routes = [
     //格式要求示例
@@ -74,6 +75,12 @@ const routes = [
                 path: 'wordlist',
                 name: 'wordlist',
                 component: WordListPage
+            },
+            //对话界面
+            {
+                path: 'chat',
+                name: 'chat',
+                component: ChatPage
             }
         ]
     },
