@@ -114,7 +114,7 @@ export default {
   width:400px;
   height: 600px;
   margin: auto;
-  background-image:url('../assets/img_1.png');
+  background-image:url('../../assets/img/Kaleido.png');
   background-size:cover;
   display: table-cell;
   vertical-align: middle;
