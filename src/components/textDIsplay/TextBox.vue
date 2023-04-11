@@ -3,16 +3,36 @@
     <n-space id="AllContainer">
       <n-space id="TextCard">
         <n-card hoverable id="InputCard">
-          <n-input id="Input" @select="onSelect"
-                   placeholder="在这里输入"
-                   :bordered="false"
-                   type="textarea"
-                   size="small"
-                   :autosize="{
+          <n-space>
+            <n-input id="Input" @select="onSelect"
+                     :placeholder="staticText"
+                     :disabled="!active"
+                     :bordered="false"
+                     type="textarea"
+                     size="small"
+                     :style="{ height: inputHeight }"
+                     :autosize="{
                       minRows: 15,
                       maxRows: 15
                     }"
-          />
+            />
+          </n-space>
+          <n-space v-if="!active" class="TodayWords">
+            <div style="font-weight: bold;">Today's new words:</div>
+            <n-space>
+              <n-tag
+                  class="tag"
+                  v-for="(word, index) in words"
+                  :key="index"
+                  :checked="selectedWords.includes(word)"
+                  checkable
+                  @update:checked="handleTagChecked(index)"
+              >
+                {{ word }}
+              </n-tag>
+            </n-space>
+          </n-space>
+
         </n-card>
         <n-card hoverable class="translation">
           {{selectedText}}
@@ -27,12 +47,26 @@
 </template>
 
 <script>
-import {onMounted, onUnmounted, ref} from "vue";
+import {computed, ref} from "vue";
 
 export default {
   name: "TextBox",
-  setup() {
+  props: {
+    active: {
+      type:Boolean,
+      default: true,
+    },
+    staticText: {
+      type: String,
+      default: "在这里输入",
+    },
+  },
+  setup(props) {
     let selectedText = ref(null);
+    // 后端传回已学的单词
+    let words = ref(["abc","bcd","dddssss","abcc","adsfw","dasfc",
+                          "a","vs","dhhkl","kjlj"]);
+    const inputHeight = computed(() => (props.active ? "350px" : "250px"));
     function onSelect(event) {
       selectedText.value = event.target.value.substring(
           event.target.selectionStart,
@@ -40,25 +74,27 @@ export default {
       );
     }
 
-    // 手动创建和清除 ResizeObserver 避免ResizeObserver 回调函数的循环嵌套
-    let resizeObserver = null;
-    let inputRef = ref(null);
+    const selectedWords = ref([]);
 
-    onMounted(() => {
-      resizeObserver = new ResizeObserver(() => {
-        // handle size changes here
-      });
-      resizeObserver.observe(inputRef.value);
-    });
-
-    onUnmounted(() => {
-      resizeObserver.disconnect();
-    });
+    const handleTagChecked = (index) => {
+      const word = words.value[index];
+      console.log(word)
+      if (selectedWords.value.includes(word)) {
+        selectedWords.value = selectedWords.value.filter((w) => w !== word);
+      } else {
+        selectedWords.value.push(word);
+      }
+      console.log(selectedWords.value)
+    };
 
     return {
       value: ref(null),
       selectedText,
       onSelect,
+      words,
+      selectedWords,
+      handleTagChecked,
+      inputHeight,
     };
   }
 }
@@ -94,7 +130,6 @@ export default {
     margin:auto;
   }
   #Input{
-    height: 350px;
     width: 650px;
     margin:auto;
     top: 50%;
@@ -120,5 +155,13 @@ export default {
     width: 500px;
     left: 50%;
     transform: translate(-25%, 0%);
+  }
+  .TodayWords {
+    height: 100px;
+    margin-top: 15px;
+    align-items: center;
+  }
+  .tag {
+    align-items: center;
   }
 </style>
