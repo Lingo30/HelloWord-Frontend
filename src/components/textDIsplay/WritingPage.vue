@@ -1,5 +1,5 @@
 <template>
-  <TextBox :active="inputActive">
+  <TextBox :active="inputActive" static-text="在这里输入">
     <template v-slot:left>
       <n-button id="left" round strong type="success" @click="onLeftButtonClick">导入文本</n-button>
     </template>

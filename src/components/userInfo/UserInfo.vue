@@ -27,7 +27,7 @@
           <n-number-animation
               ref="numberAnimationInstRef"
               :from="0"
-              :to="model.sales"
+              :to="model.words"
               duration="1000"
           />
           <template #suffix>
@@ -41,7 +41,7 @@
           <n-number-animation
               ref="numberAnimationInstRef"
               :from="0"
-              :to="model.likeValue"
+              :to="model.days"
               duration="1000"
           />
           <template #suffix>
@@ -55,7 +55,7 @@
           <n-number-animation
               ref="numberAnimationInstRef"
               :from="0"
-              :to="model.dislikeValue"
+              :to="model.wordLists"
               duration="1000"
           />
           <template #suffix>
@@ -150,12 +150,12 @@ export default ({
     const model = reactive({
       avatarPath:   null,
       email:        null,
-      sales:        null,
+      words:        2023,
       id:           null,
       name:         null,
       profile:      null,
-      likeValue:    null,
-      dislikeValue: null,
+      days:         150,
+      wordLists:    3,
     });
 
     // const load = () => {
@@ -280,4 +280,8 @@ export default ({
   cursor: pointer;
 }
 
+.InfoContainer {
+  margin-top: 100px;
+  margin-left: 13%;
+}
 </style>
