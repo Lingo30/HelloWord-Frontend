@@ -13,6 +13,8 @@
           @click="handleClick"
           :style="{backgroundColor:bgColor[colorIdx%bgColor.length]}"
           class="card"
+          :closable="closed"
+          @close="handleClose"
           hoverable
       >
         <template #header>
@@ -51,8 +53,9 @@ export default {
   props: {
     listId: Number,
     colorIdx: Number,
+    closed: Boolean,
   },
-  emits: ['handleClick'],
+  emits: ['handleClick', 'handleClose'],
   components: {
     NCard,
     NText,
@@ -77,7 +80,12 @@ export default {
     })
 
     function handleClick() {
+      if (props.closed) return
       emit('handleClick', props.listId)
+    }
+
+    function handleClose() {
+      emit('handleClose', props.listId)
     }
 
     onMounted(() => {
@@ -95,6 +103,7 @@ export default {
       bgColor,
       info,
       handleClick,
+      handleClose,
     }
   }
 }
