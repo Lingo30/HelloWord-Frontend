@@ -27,8 +27,8 @@
       </template>
     </n-card>
     <div>
-      <n-button class="left button">拼写模式</n-button>
-      <n-button class="right button" @click="submitAnswers">提交</n-button>
+      <n-button class="left button" type="primary" >拼写模式</n-button>
+      <n-button class="right button" type="primary" ghost @click="submitAnswers">提交</n-button>
     </div>
   </div>
 
@@ -41,6 +41,18 @@ export default {
   name: "BlankText",
   setup() {
     const content = ref('This is a cloze test example. There is a blank here and another blank there.' +
+        'This is a cloze test example. There is a blank here and another blank there.' +
+        'This is a cloze test example. There is a blank here and another blank there.' +
+        'This is a cloze test example. There is a blank here and another blank there.' +
+        'This is a cloze test example. There is a blank here and another blank there.' +
+        'This is a cloze test example. There is a blank here and another blank there.' +
+        'This is a cloze test example. There is a blank here and another blank there.' +
+        'This is a cloze test example. There is a blank here and another blank there.' +
+        'This is a cloze test example. There is a blank here and another blank there.' +
+        'This is a cloze test example. There is a blank here and another blank there.' +
+        'This is a cloze test example. There is a blank here and another blank there.' +
+        'This is a cloze test example. There is a blank here and another blank there.' +
+        'This is a cloze test example. There is a blank here and another blank there.' +
         'This is a cloze test example. There is a blank here and another blank there.' +
         'This is a cloze test example. There is a blank here and another blank there.' +
         'This is a cloze test example. There is a blank here and another blank there.' +
@@ -161,23 +173,25 @@ export default {
     text-align: center;
   }
   .TextContainer {
-    width: 400px;
-    height: 400px;
+    width: 800px;
+    height: 500px;
+    text-align: left;
   }
   /*overflow-y 文本超出后scroll*/
   .content-box {
     overflow-wrap: break-word;
     word-wrap: break-word;
     max-width: 100%;
-    height: 350px;
+    height: 450px;
     overflow-y: auto;
     position: relative;
   }
   .answer-box {
     margin-top: 10px;
-    width: 400px;
+    width: 800px;
     height: 100px;
     margin-bottom: 10px;
+    text-align: left;
   }
   .correct {
     color: green;
@@ -186,18 +200,17 @@ export default {
     color: red;
   }
   .left {
+    margin-left: 13%;
     margin-right: 100px;
   }
   .button {
+    float: left;
     width: 150px;
   }
 
   /* 滚动条样式 */
-  .content-box:hover::-webkit-scrollbar {
-    width: 6px;
-  }
   .content-box::-webkit-scrollbar {
-    width: 0;
+    width: 6px;
     transition: width 1s;
   }
   .content-box::-webkit-scrollbar-track {

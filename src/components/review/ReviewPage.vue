@@ -18,21 +18,21 @@
           >
             <n-carousel-item :style="{ width: '60%' }">
               <div class="imgTitle">故事模式</div>
-              <router-link to="/ClassCenter"><img
+              <router-link to="/story"><img
                 class="carousel-img"
                 src="../../assets/img/story.jpg"
               ></router-link>
             </n-carousel-item>
             <n-carousel-item :style="{ width: '60%' }">
               <div class="imgTitle">单词复习</div>
-              <router-link to="/ClassRate"><img
+              <router-link to="/blank"><img
                 class="carousel-img"
                 src="../../assets/img/review.jpeg"
               ></router-link>
             </n-carousel-item>
             <n-carousel-item :style="{ width: '60%'}">
               <div class="imgTitle">阅读写作</div>
-              <router-link to="/Comment"><img
+              <router-link to="/writing"><img
                 class="carousel-img"
                 src="../../assets/img/write.jpeg"
               ></router-link>

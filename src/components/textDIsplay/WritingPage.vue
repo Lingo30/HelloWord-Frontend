@@ -1,5 +1,5 @@
 <template>
-  <TextBox>
+  <TextBox :active="inputActive" static-text="在这里输入">
     <template v-slot:left>
       <n-button id="left" round strong type="success" @click="onLeftButtonClick">导入文本</n-button>
     </template>
@@ -11,11 +11,13 @@
 
 <script>
 import TextBox from "./TextBox";
+import {ref} from "vue";
 export default {
   name: "WritingPage",
   components: {TextBox},
 
   setup() {
+    const inputActive = ref(true);
     function onLeftButtonClick() {
       console.log("left")
     }
@@ -23,6 +25,7 @@ export default {
       console.log("right")
     }
     return {
+      inputActive,
       onLeftButtonClick,
       onRightButtonClick
     }
