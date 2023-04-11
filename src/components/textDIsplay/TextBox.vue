@@ -4,15 +4,15 @@
       <n-space id="TextCard">
         <n-card hoverable id="InputCard">
           <n-space>
-            <n-input id="Input" @select="onSelect"
+            <n-input
+                class="Input" @select="onSelect"
                      :placeholder="staticText"
-                     :disabled="!active"
-                     :bordered="false"
+                     :bordered="!active"
+                     v-model:value="textValue"
                      type="textarea"
                      size="small"
                      :style="{ height: inputHeight}"
                      :autosize="{
-                      minRows: 19,
                       maxRows: 20
                     }"
             />
@@ -22,20 +22,20 @@
             <n-space>
               <n-tag
                   class="tag"
-                  v-for="(word, index) in words"
-                  :key="index"
-                  :checked="selectedWords.includes(word)"
+                  v-for="(wordObj, index) in words"
+                  :key="wordObj.id"
+                  :checked="selectedWords.includes(wordObj.word)"
                   checkable
                   @update:checked="handleTagChecked(index)"
               >
-                {{ word }}
+                {{ wordObj.word }}
               </n-tag>
             </n-space>
           </n-space>
 
         </n-card>
         <n-card hoverable class="translation">
-          <div style="font-size: 25px">
+          <div class="translationText">
             {{selectedText}}
           </div>
 
@@ -63,38 +63,51 @@ export default {
       type: String,
       default: "在这里输入",
     },
+    words: {
+      type: Array,
+      default: () => [],
+    },
+    inputValue: {
+      type: String,
+      default: "",
+    }
   },
-  setup(props) {
+  setup(props,{emit}) {
     let selectedText = ref(null);
-    // 后端传回已学的单词
-    let words = ref(["abc","bcd","dddssss","abcc","adsfw","dasfc",
-                          "a","vs","dhhkl","kjlj","d","wfefw","dfdg","juyghj","dfcc","werwtt"]);
     const inputHeight = computed(() => (props.active ? "550px" : "450px"));
     function onSelect(event) {
       selectedText.value = event.target.value.substring(
           event.target.selectionStart,
           event.target.selectionEnd,
       );
+      console.log(selectedText);
     }
 
+    // 父组件向子组件实时传值，使用计算属性
+    // active===true时，使用ref()使之可编辑
+    const textValue = props.active===true?ref():computed(() => props.inputValue);
+    // const textValue = ref(props.inputValue);
     const selectedWords = ref([]);
 
     const handleTagChecked = (index) => {
-      const word = words.value[index];
-      console.log(word)
+      const word = props.words[index].word;
+      // console.log(word)
       if (selectedWords.value.includes(word)) {
         selectedWords.value = selectedWords.value.filter((w) => w !== word);
       } else {
         selectedWords.value.push(word);
       }
-      console.log(selectedWords.value)
+      // 向父组件传值，绑定一个事件，父组件监听该事件
+      emit('handleTagChecked',selectedWords.value);
+      // console.log(textValue.value)
     };
+
 
     return {
       value: ref(null),
+      textValue,
       selectedText,
       onSelect,
-      words,
       selectedWords,
       handleTagChecked,
       inputHeight,
@@ -134,7 +147,7 @@ export default {
     width: 1100px;
     margin:auto;
   }
-  #Input{
+  .Input{
     font-size: 25px;
     width: 750px;
     margin:auto;
@@ -157,6 +170,32 @@ export default {
     width: 270px;
     text-align: left;
   }
+  .translationText {
+    font-size: 25px;
+    width: 210px;
+    height: 550px;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    overflow-y: auto;
+    position: relative;
+  }
+
+  /* 滚动条样式 */
+  .translationText::-webkit-scrollbar {
+    width: 6px;
+    transition: width 1s;
+  }
+  .translationText::-webkit-scrollbar-track {
+    background-color: rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+  }
+  .translationText::-webkit-scrollbar-thumb {
+    background-color: #999;
+    border-radius: 10px;
+    box-shadow: inset 0 0 3px rgba(0, 0, 0, 0.2);
+  }
+
   #ButtonContainer {
     position: relative;
     bottom: 0;
