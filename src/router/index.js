@@ -66,23 +66,6 @@ const routes = [
                 path: 'review',
                 name: 'review',
                 component: ReviewPage,
-                children: [
-                    {
-                        path: 'writing',
-                        name: 'writing',
-                        component: WritingPage
-                    },
-                    {
-                        path: 'story',
-                        name: 'story',
-                        component: StoryPage
-                    },
-                    {
-                        path: 'blank',
-                        name: 'blank',
-                        component: BlankText
-                    }
-                ]
             },
             //单词本界面
             {
@@ -100,6 +83,24 @@ const routes = [
                 path: 'info',
                 name: 'info',
                 component: UserInfo
+            },
+            // 写作页面
+            {
+                path: 'writing',
+                name: 'writing',
+                component: WritingPage
+            },
+            // 故事页面
+            {
+                path: 'story',
+                name: 'story',
+                component: StoryPage
+            },
+            // 填词页面
+            {
+                path: 'blank',
+                name: 'blank',
+                component: BlankText
             }
         ]
     },
