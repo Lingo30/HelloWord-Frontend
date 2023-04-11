@@ -1,17 +1,30 @@
 <template>
   <div class="container">
     <n-scrollbar>
-      <n-card class="card" :bordered="false" hoverable v-for="i in 10">
+      <n-card
+          class="card"
+          :bordered="false"
+          hoverable
+          v-for="(word,index) in words"
+          :key="index"
+      >
         <template #header>
           <div class="head">
-            <n-text class="font-color" v-text="'dangerous'"/>
+            <!--            基本释义-->
+            <n-text class="font-color">
+              {{ word.word }}
+            </n-text>
           </div>
         </template>
         <template #header-extra>
-          <n-text class="font-color" v-text="'【deng3eres】'"/>
+          <n-text class="font-color">
+            {{ word.pronounce }}
+          </n-text>
         </template>
         <div class="content">
-          <n-text class="font-color" v-text="'adj. 有危险的'"/>
+          <n-text class="font-color">
+            {{ word.meaning }}
+          </n-text>
         </div>
       </n-card>
     </n-scrollbar>
@@ -21,12 +34,41 @@
 
 <script>
 import {NCard, NScrollbar} from "naive-ui";
+import {reactive} from "vue";
+import store from "@/store";
+import {getWordsInfo} from "@/request/api/wordlist";
 
 export default {
   name: "WordCardList",
+  props: {
+    listId: Number,
+  },
   components: {
     NCard,
     NScrollbar
+  },
+  setup() {
+    const words = reactive([
+      {
+        wordId: '1',
+        word: 'dangerous',
+        pronounce: '【deng3eres】',
+        meaning: 'adj. 有危险的',
+      }
+    ])
+
+    function showWords(listId) {
+      getWordsInfo(store.state.user.uid, listId, store.state.wordNum).then((res) => {
+        //TODO
+        words.splice(0, words.length);
+        res.words.forEach((word) => words.push(word))
+      })
+    }
+
+    return {
+      words,
+      showWords,
+    }
   }
 }
 </script>

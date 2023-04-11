@@ -2,11 +2,17 @@
   <div class="container">
     <div class="left">
       <n-scrollbar>
-        <WordListCard v-for="i in 10"/>
+        <WordListCard
+            v-for="(id,index) in listIds"
+            :key="id"
+            :list-id="id"
+            :color-idx="index"
+            @handle-click="clickWordList"
+        />
       </n-scrollbar>
     </div>
     <div class="right">
-      <WordCardList/>
+      <WordCardList ref="wordCardListRef"/>
     </div>
   </div>
 </template>
@@ -15,6 +21,9 @@
 import {NScrollbar} from "naive-ui"
 import WordListCard from "@/components/wordList/WordListCard.vue";
 import WordCardList from "@/components/wordList/WordCardList.vue";
+import {onMounted, reactive, ref} from "vue";
+import store from "@/store";
+import {getLists} from "@/request/api/wordlist";
 
 export default {
   name: "WordList",
@@ -22,6 +31,28 @@ export default {
     NScrollbar,
     WordCardList,
     WordListCard
+  },
+  setup() {
+    const wordCardListRef = ref(null)
+    const listIds = reactive([1,])
+
+    function clickWordList(id) {
+      wordCardListRef.value.showWords(id)
+    }
+
+    onMounted(() => {
+      //TODO 通过uid获取所有词单id
+      getLists(store.state.user.uid).then((res) => {
+        listIds.splice(0,listIds.length)
+        res.ids.forEach((id)=>listIds.push(id));
+      })
+    })
+
+    return {
+      wordCardListRef,
+      listIds,
+      clickWordList,
+    }
   }
 }
 </script>

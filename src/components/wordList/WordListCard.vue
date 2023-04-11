@@ -1,25 +1,38 @@
 <template>
   <div style="display: flex; width: 400px">
     <div class="left">
-      <n-text class="date" v-text="'07'"></n-text>
-      <n-text class="month" v-text="'APR'"></n-text>
-      <!--    <div class="date">07</div>-->
-      <!--    <div class="month">APR</div>-->
+      <n-text class="date">
+        {{ info.date.day }}
+      </n-text>
+      <n-text class="month">
+        {{ info.date.month }}
+      </n-text>
     </div>
     <div class="right">
-      <n-card class="card" hoverable>
+      <n-card
+          @click="handleClick"
+          :style="{backgroundColor:bgColor[colorIdx%bgColor.length]}"
+          class="card"
+          hoverable
+      >
         <template #header>
           <div class="head">
-            <n-text class="font-color" v-text="'英语四级'"/>
+            <n-text class="font-color">
+              {{ info.name }}
+            </n-text>
           </div>
         </template>
         <template #header-extra>
-          <n-text class="font-color" v-text="'10 Items'"/>
+          <n-text class="font-color">
+            {{ info.num + ' Items' }}
+          </n-text>
         </template>
         <template #footer>
           <div class="foot">
-            <n-icon :component="AccessibilityOutline"/>
-            <n-text class="font-color" v-text="'创作者名字'"/>
+            <n-icon class="icon" size="20" :component="AccessibilityOutline"/>
+            <n-text class="font-color">
+              {{ info.creator }}
+            </n-text>
           </div>
         </template>
       </n-card>
@@ -30,17 +43,58 @@
 <script>
 import {NCard, NText, NIcon} from 'naive-ui'
 import {AccessibilityOutline} from '@vicons/ionicons5'
+import {onMounted, reactive} from "vue";
+import {getListInfo} from "@/request/api/wordlist";
 
 export default {
   name: "WordListCard",
+  props: {
+    listId: Number,
+    colorIdx: Number,
+  },
+  emits: ['handleClick'],
   components: {
     NCard,
     NText,
     NIcon
   },
-  setup() {
+  setup(props, {emit}) {
+    const bgColor = [
+      'rgba(105, 142, 250, 1)',
+      'rgba(24, 204, 186, 1)',
+      'rgba(255, 210, 22, 1)',
+      // TODO 其他颜色
+    ]
+
+    let info = reactive({
+      name: '',
+      num: '',
+      creator: '',
+      date: {
+        month: '',
+        day: ''
+      }
+    })
+
+    function handleClick() {
+      emit('handleClick', props.listId)
+    }
+
+    onMounted(() => {
+      //TODO 根据 listId获取词单基本信息，并赋值给info
+      getListInfo(props.listId).then((res) => {
+        info.name = res.name
+        info.num = res.num
+        info.creator = res.creator
+        info.date = res.date
+      });
+    })
+
     return {
-      AccessibilityOutline
+      AccessibilityOutline,
+      bgColor,
+      info,
+      handleClick,
     }
   }
 }
@@ -87,5 +141,9 @@ export default {
 
 .foot {
   text-align: left;
+}
+
+.icon {
+  margin-right: 5px;
 }
 </style>
