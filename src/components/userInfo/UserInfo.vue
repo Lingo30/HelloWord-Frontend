@@ -86,26 +86,8 @@
         <n-form-item label="昵称" path="name">
           <n-input v-model:value="model.name" placeholder="昵称" class="text"/>
         </n-form-item>
-        <n-form-item label="我的偏好" path="email">
-          <n-space class="input-container">
-            <n-space class="tag-pre">
-              <n-tag
-                  class="tag"
-                  type="success"
-                  v-for="(tag, index) in model.tags"
-                  :key="index"
-                  closable
-                  @close="removeTag(index)"
-              >
-                {{ tag }}
-              </n-tag>
-            </n-space>
-            <div class="input-instance" :style="{marginLeft: getLength() + 'px'}">
-              <input type="text" maxlength="20" class="input-val" v-model="inputTag" @keydown.enter.prevent="addTag" placeholder="输入标签并按Enter键添加"/>
-            </div>
-            <div class="tag-last">还可以添加{{lastTags}}个标签</div>
-          </n-space>
-
+        <n-form-item label="我的偏好" path="tags">
+          <n-dynamic-tags type="success" v-model:value="model.tags" :max="10"/>
         </n-form-item>
         <n-form-item label="热门标签">
           <div>
@@ -189,8 +171,6 @@ export default ({
     const formRef = ref(null);
     // const message = useMessage();
     const numberAnimationInstRef = ref(null);
-
-    const inputTag = ref(null);
     const serverRecommendedTags = ref([
       { name: "推荐1", selected: false },
       { name: "推荐2", selected: false },
@@ -222,59 +202,17 @@ export default ({
       });
     };
 
-    // 所剩标签数量
-    let lastTags = ref(10 - model.tags.length);
-
-    const addTag = () => {
-      // console.log(inputTag.value);
-      const tagInputValue = inputTag.value.trim();
-      if (tagInputValue && !model.tags.includes(tagInputValue)) {
-        model.tags.push(tagInputValue);
-        inputTag.value = "";
-        lastTags.value--;
-        serverRecommendedTags.value.forEach(recommendedTag => {
-          if (tagInputValue === recommendedTag.name) {
-            recommendedTag.selected = true;
-          }
-        });
-      }
-    };
-
     const addServerRecommendedTag = (index) => {
       serverRecommendedTags.value[index].selected = !serverRecommendedTags.value[index].selected;
       if (serverRecommendedTags.value[index].selected && !model.tags.includes(serverRecommendedTags.value[index].name)) {
         model.tags.push(serverRecommendedTags.value[index].name);
-        lastTags.value--;
       } else {
         const tagIndex = model.tags.findIndex(tag => tag === serverRecommendedTags.value[index].name);
         model.tags.splice(tagIndex, 1);
-        lastTags.value++;
       }
       // console.log(model.tags)
     };
 
-    const removeTag = (index) => {
-      const removedTag = model.tags[index];
-
-      // Check if the removed tag is in serverRecommendedTags
-      serverRecommendedTags.value.forEach(recommendedTag => {
-        if (removedTag === recommendedTag.name) {
-          recommendedTag.selected = false;
-        }
-      });
-
-      model.tags.splice(index, 1);
-      lastTags.value += 1;
-    };
-
-    function getLength() {
-      if (model.tags.length === 0) {
-        return 0;
-      }
-      else {
-        return 10;
-      }
-    }
     /* ********************** 用户标签相关逻辑 ******************/
 
     /* ********************** 上传相关逻辑 ******************/
@@ -307,12 +245,7 @@ export default ({
 
     return {
       logout,
-      getLength,
-      inputTag,
-      lastTags,
-      removeTag,
       addServerRecommendedTag,
-      addTag,
       serverRecommendedTags,
       onSubmit,
       inputRef,
@@ -344,6 +277,38 @@ export default ({
         email: {
           required: false,
           trigger: ["blur", "input"],
+        },
+        tags: {
+          trigger: ["change"],
+          validator(rule, value) {
+            if (value.length !== 0) {
+              value[value.length-1] = value[value.length-1].trim();
+              const last = value[value.length-1];
+              for (let i = 0;i<value.length-1;i++) {
+                if (last === value[i]) {
+                  value.pop();
+                  return new Error("标签重复啦");
+                }
+              }
+            }
+            serverRecommendedTags.value.forEach(recommendedTag => {
+              let flag = false;
+              for (let i = 0;i<value.length;i++) {
+                if (value[i] === recommendedTag.name) {
+                  recommendedTag.selected = true;
+                  flag = true;
+                  break;
+                }
+              }
+              if (!flag) {
+                recommendedTag.selected = false;
+              }
+            });
+
+            if (value.length > 10)
+              return new Error("最多设置十个标签");
+            return true;
+          }
         },
         name: {
           required: true,
@@ -410,63 +375,8 @@ export default ({
   width: 500vh;
 }
 
-/* 标签部分样式 */
-.input-container {
-  display: flex;
-  background-color: rgb(255, 255, 255);
-  border: 1px solid #ccd0d7;
-  padding-top: 6px;
-  padding-bottom: 6px;
-  border-radius: 4px;
-  position: relative;
-  align-items: center;
-  flex-wrap: wrap;
-  transition-duration: 0.3s;
-  transition-timing-function: ease;
-  transition-delay: 0s;
-  transition-property: border;
-  width: 500vh;
-}
-
-.input-container:hover {
-  border-color: #36ad6a;
-}
-
-.tag-pre {
-  margin-left: 12px;
-}
-
 .tag {
   margin-right: 5px;
-}
-
-.input-instance {
-  flex: 1;
-  min-width: 200px;
-}
-
-.input-val {
-  display: block;
-  width: 100%;
-  color: #222;
-  line-height: 22px;
-  height: 22px;
-  font-size: 14px;
-  outline: 0;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-  border: 0;
-  background-color: transparent;
-}
-
-.tag-last {
-  display: flex;
-  font-size: 14px;
-  color: #858585;
-  margin-left: 12px;
-  cursor: default;
-  align-items: center;
 }
 
 .btn-box {
