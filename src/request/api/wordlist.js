@@ -1,7 +1,7 @@
 import request from "@/request/request";
 
 //TODO 根据用户id获取所有词单id
-export function getLists(uid) {
+export function getUserLists(uid) {
     /*
     返回数据格式:
     {
@@ -84,5 +84,32 @@ export function getWordsInfo(userId, listId, wordNum) {
         url: "",//TODO
         method: 'get',
         data,
+    })
+}
+
+//TODO 获取所有官方词单（公共词单）
+export function getOfficialLists() {
+    /*
+        ids:[]
+     */
+    return request({
+        url: '',//TODO
+        method: 'get'
+    })
+}
+
+//TODO 用户根据已有的官方词单创建词单
+export function createFromOfficial(userId, listId) {
+    /*
+        state:true/false是否成功创建
+     */
+    const data = JSON.stringify({
+        userId: userId,
+        listId: listId,
+    })
+    return request({
+        url: "",//TODO
+        method: 'post',
+        data
     })
 }

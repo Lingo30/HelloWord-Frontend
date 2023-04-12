@@ -11,6 +11,7 @@ import WritingPage from "@/components/textDIsplay/WritingPage";
 import StoryPage from "@/components/textDIsplay/StoryPage";
 import BlankText from "@/components/blankText/BlankText";
 import UserInfo from "@/components/userInfo/UserInfo";
+import CreatePage from "@/components/wordList/CreatePage.vue";
 
 const routes = [
     //格式要求示例
@@ -71,7 +72,12 @@ const routes = [
             {
                 path: 'wordlist',
                 name: 'wordlist',
-                component: WordListPage
+                component: WordListPage,
+            },
+            {
+                path: 'create',
+                name: 'createWordlist',
+                component: CreatePage,
             },
             //对话界面
             {
