@@ -63,7 +63,7 @@
         </n-statistic>
       </div>
     </n-space>
-    <div style="margin-left: 200px">
+    <div style="margin-left: 200px;text-align: left">
       <n-form
           ref="formRef"
           :model="model"
@@ -92,7 +92,7 @@
               placeholder="个人简介"
               type="textarea"
               :autosize="{
-          minRows: 3,
+          minRows: 5,
           maxRows: 5
         }"
           />

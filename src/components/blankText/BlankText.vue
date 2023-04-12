@@ -182,7 +182,7 @@ export default {
     overflow-wrap: break-word;
     word-wrap: break-word;
     max-width: 100%;
-    height: 450px;
+    height: 87%;
     overflow-y: auto;
     position: relative;
   }
