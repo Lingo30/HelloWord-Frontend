@@ -13,13 +13,19 @@
           @click="handleClick"
           :style="{backgroundColor:bgColor[colorIdx%bgColor.length]}"
           class="card"
-          :closable="closed"
+          :closable="editFlag"
           @close="handleClose"
           hoverable
       >
         <template #header>
           <div class="head">
-            <n-text class="font-color">
+            <n-input
+                v-if="editFlag"
+                v-model:value="newName"
+                :bordered="false"
+                @blur="updateName(listId,newName)"
+                class="edit-font-color"/>
+            <n-text v-else class="font-color">
               {{ info.name }}
             </n-text>
           </div>
@@ -45,7 +51,7 @@
 <script>
 import {NCard, NText, NIcon} from 'naive-ui'
 import {AccessibilityOutline} from '@vicons/ionicons5'
-import {onMounted, reactive} from "vue";
+import {onMounted, reactive, ref} from "vue";
 import {getListInfo} from "@/request/api/wordlist";
 
 export default {
@@ -53,9 +59,9 @@ export default {
   props: {
     listId: Number,
     colorIdx: Number,
-    closed: Boolean,
+    editFlag: Boolean,
   },
-  emits: ['handleClick', 'handleClose'],
+  emits: ['handleClick', 'handleClose', 'updateName'],
   components: {
     NCard,
     NText,
@@ -78,14 +84,19 @@ export default {
         day: '08'
       }
     })
+    let newName = ref(info.name)
 
     function handleClick() {
-      if (props.closed) return
+      if (props.editFlag) return
       emit('handleClick', props.listId, info.num)
     }
 
     function handleClose() {
       emit('handleClose', props.listId)
+    }
+
+    function updateName(listId, name) {
+      emit('updateName', listId, name)
     }
 
     onMounted(() => {
@@ -102,8 +113,11 @@ export default {
       AccessibilityOutline,
       bgColor,
       info,
+      newName,
+
       handleClick,
       handleClose,
+      updateName,
     }
   }
 }
@@ -135,7 +149,12 @@ export default {
 
 .card {
   border-radius: 10px;
-  background-color: rgba(24, 204, 255, 0.5);
+}
+
+.edit-font-color {
+  background-color: transparent;
+  font-size: 1em;
+  color: white;
 }
 
 .font-color {
@@ -145,7 +164,7 @@ export default {
 
 .head {
   text-align: left;
-  font-size: 2em;
+  font-size: 1.5em;
 }
 
 .foot {

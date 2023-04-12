@@ -9,7 +9,9 @@
               :key="id"
               :list-id="id"
               :color-idx="index"
-              :closed="editFlag"
+              :editFlag="editFlag"
+              ref="wordListCardsRef"
+              @update-name="updateName"
               @handle-click="clickWordList"
               @handle-close="removeWordList"
           />
@@ -50,7 +52,7 @@ import WordListCard from "@/components/wordList/WordListCard.vue";
 import WordCardList from "@/components/wordList/WordCardList.vue";
 import {onMounted, reactive, ref} from "vue";
 import store from "@/store";
-import {getUserLists, deleteLists} from "@/request/api/wordlist";
+import {getUserLists, editWordlists} from "@/request/api/wordlist";
 import CreatePage from "@/components/wordList/CreatePage.vue";
 
 
@@ -64,10 +66,12 @@ export default {
   },
   setup() {
     const wordCardListRef = ref(null)
+    const wordListCardsRef = ref(null)
     const listIds = reactive([1, 2, 3, 4, 5, 6, 7, 8,])
     const editFlag = ref(false)
     const removeList = []//待删除的id队列
     const tmpListIds = []//缓存编辑前的id队列
+    const updateList = []//待更新词单名的词单，{listId:123,name:'aaa'}
     const message = useMessage()
     let createPageRef = ref(null)
 
@@ -79,6 +83,7 @@ export default {
       //初始化队列
       tmpListIds.splice(0, tmpListIds.length)
       removeList.splice(0, removeList.length)
+      updateList.splice(0, updateList.length)
       listIds.forEach(id => tmpListIds.push(id))
 
       editFlag.value = !editFlag.value
@@ -90,23 +95,30 @@ export default {
       editFlag.value = !editFlag.value
     }
 
+    function updateName(listId, name) {
+      updateList.push({
+        listId: listId,
+        name: name,
+      })
+    }
+
     function removeWordList(id) {
       removeList.push(id)
       listIds.splice(listIds.indexOf(id), 1)
     }
 
+    // 完成词单编辑
     function finish() {
-      // 服务器删除
       let success = false
-      deleteLists(store.state.user.uid, removeList).then((res) => {
-        success = res.status
+      editWordlists(store.state.user.uid, removeList, updateList).then((res) => {
+        success = res.state
       }).finally(() => {
         if (success) {
-          message.success("删除成功")
+          message.success("修改成功")
         } else {
           listIds.splice(0, listIds.length)
           tmpListIds.forEach(id => listIds.push(id))
-          message.error("删除失败")
+          message.error("修改失败")
         }
       })
       editFlag.value = !editFlag.value
@@ -116,18 +128,19 @@ export default {
       //TODO 通过uid获取所有词单id
       getUserLists(store.state.user.uid).then((res) => {
         listIds.splice(0, listIds.length)
-        res.ids.forEach((id) => listIds.push(id));
+        res.ids.forEach((id) => listIds.push(Number(id)));
       })
     })
 
     return {
       wordCardListRef,
+      wordListCardsRef,
       listIds,
       editFlag,
       createPageRef,
 
+      updateName,
       editWordList,
-      // createWordList,
       cancel,
       finish,
       clickWordList,

@@ -19,22 +19,23 @@ export function getUserLists(uid) {
 }
 
 //TODO 删除用户的多个词单
-export function deleteLists(uid, listIds) {
-    /*
-        {
-            state:true/false是否成功删除
-        }
-     */
-    const data = JSON.stringify({
-        user_id: uid,//用户id
-        list_ids: listIds//[1,2,...]删除的词单id
-    })
-    return request({
-        url: '74054908',
-        method: 'post',
-        data
-    })
-}
+
+// export function deleteLists(uid, listIds) {
+//     /*
+//         {
+//             state:true/false是否成功删除
+//         }
+//      */
+//     const data = JSON.stringify({
+//         user_id: uid,//用户id
+//         list_ids: listIds//[1,2,...]删除的词单id
+//     })
+//     return request({
+//         url: '74054908',
+//         method: 'post',
+//         data
+//     })
+// }
 
 //TODO 根据词单id获取词单名、作者、日期、单词总数等
 export function getListInfo(listId) {
@@ -105,11 +106,42 @@ export function createFromOfficial(userId, listId) {
         state:true/false是否成功创建
      */
     const data = JSON.stringify({
-        userId: userId,
-        listId: listId,
+        user_id: userId,
+        list_id: listId,
     })
     return request({
         url: "",//TODO
+        method: 'post',
+        data
+    })
+}
+
+//TODO 用户更新多个词单的词单名
+
+// export function updateListName(userId, lists) {
+//     /*
+//         state:true/false是否成功修改
+//     */
+//     const data = JSON.stringify({
+//         userId: userId,
+//         lists: lists
+//     })
+//     return request({
+//         url: '',//TODO
+//         method: "post",
+//         data
+//     })
+// }
+
+// 用户编辑个人词单列表（删除词单、修改词单名）
+export function editWordlists(userId, deleteLists, updateLists) {
+    const data = JSON.stringify({
+        userId: userId,
+        deleteLists: deleteLists,
+        updateLists: updateLists,
+    })
+    return request({
+        url: 'edit_wordlists/',
         method: 'post',
         data
     })
