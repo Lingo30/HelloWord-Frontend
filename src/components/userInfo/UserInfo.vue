@@ -101,7 +101,6 @@
               </n-tag>
             </n-space>
             <div class="input-instance" :style="{marginLeft: getLength() + 'px'}">
-<!--              <n-input class="input-val" placeholder="输入标签并按Enter键添加"></n-input>-->
               <input type="text" maxlength="20" class="input-val" v-model="inputTag" @keydown.enter.prevent="addTag" placeholder="输入标签并按Enter键添加"/>
             </div>
             <div class="tag-last">还可以添加{{lastTags}}个标签</div>
@@ -123,25 +122,13 @@
             </n-tag>
           </div>
         </n-form-item>
-<!--        <n-form-item label="个人简介" path="profile">-->
-<!--          <n-input-->
-<!--              class="text"-->
-<!--              v-model:value="model.profile"-->
-<!--              placeholder="个人简介"-->
-<!--              type="textarea"-->
-<!--              :autosize="{-->
-<!--          minRows: 3,-->
-<!--          maxRows: 3-->
-<!--        }"-->
-<!--          />-->
-<!--        </n-form-item>-->
-        <div style="display: flex; justify-content: flex-end">
-          <n-button round type="primary" ghost @click="modify" style="margin-right: 10px">
-            修改密码
-          </n-button>
-          <n-button round type="primary" @click="onSubmit">
-            保存
-          </n-button>
+        <div class="btn-box">
+          <n-button class="logout-btn" round type="error" ghost @click="logout">退出登录</n-button>
+          <div class="right-btns">
+            <n-button round type="primary" ghost @click="modify" style="margin-right: 10px">修改密码</n-button>
+            <n-button round type="primary" @click="onSubmit">保存</n-button>
+          </div>
+
         </div>
       </n-form>
       <n-message-provider>
@@ -160,6 +147,7 @@ import { ArchiveOutline as ArchiveIcon } from "@vicons/ionicons5";
 import store from "@/store";
 // import request from "@/utils/request";
 import ModifyPassword from "./ModifyPassword";
+import router from "@/router";
 
 export default ({
   name: "UserInfo",
@@ -276,8 +264,6 @@ export default ({
       });
 
       model.tags.splice(index, 1);
-      // console.log(model.tags)
-      // console.log(model.tags)
       lastTags.value += 1;
     };
 
@@ -311,9 +297,16 @@ export default ({
       //...
     }
     /* ********************** 上传相关逻辑 ******************/
+
+    function logout() {
+      store.state.user.login = false;
+      router.push('/login/');
+    }
+
     checkSelectedTags();
 
     return {
+      logout,
       getLength,
       inputTag,
       lastTags,
@@ -474,6 +467,20 @@ export default ({
   margin-left: 12px;
   cursor: default;
   align-items: center;
+}
+
+.btn-box {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.btn-box > .right-btns {
+  margin-left: auto;
+}
+
+.right-btns > *:not(:last-child) {
+  margin-right: 10px;
 }
 
 </style>
