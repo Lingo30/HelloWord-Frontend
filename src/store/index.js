@@ -10,7 +10,6 @@ export default createStore({
             wordNum:0,//每日背诵单词数
 
             nickname: "Veronica",
-            userID: '1',
             // 头像Url
             avatar: "/img/head.d31cda9c.jpg",
             email: "837826068@qq.com",
