@@ -128,6 +128,6 @@ export default {
     width: 200px;
   }
   #left {
-    margin-right: 50px;
+    margin-right: 11vh;
   }
 </style>
