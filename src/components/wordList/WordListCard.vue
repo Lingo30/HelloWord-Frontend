@@ -70,18 +70,18 @@ export default {
     ]
 
     let info = reactive({
-      name: '',
-      num: '',
-      creator: '',
+      name: '四级',
+      num: 25,
+      creator: 'official',
       date: {
-        month: '',
-        day: ''
+        month: 'Apr',
+        day: '08'
       }
     })
 
     function handleClick() {
       if (props.closed) return
-      emit('handleClick', props.listId)
+      emit('handleClick', props.listId, info.num)
     }
 
     function handleClose() {
@@ -90,12 +90,12 @@ export default {
 
     onMounted(() => {
       //TODO 根据 listId获取词单基本信息，并赋值给info
-      getListInfo(props.listId).then((res) => {
-        info.name = res.name
-        info.num = res.num
-        info.creator = res.creator
-        info.date = res.date
-      });
+      // getListInfo(props.listId).then((res) => {
+      //   info.name = res.name
+      //   info.num = res.num
+      //   info.creator = res.creator
+      //   info.date = res.date
+      // });
     })
 
     return {
