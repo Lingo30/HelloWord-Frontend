@@ -118,11 +118,11 @@ export default {
       passwordConfirm.value = ""
     }
 
-    function saveUserInfo(res, name, pwd) {
+    function saveUserInfo(data, name, pwd) {
       //TODO 存储本地变量
       store.state.user.login = true
-      store.state.user.uid = 1
-      store.state.user.wordNum = 20
+      store.state.user.uid = data.uid
+      store.state.user.wordNum = data.wordNum
       //TODO 把用户名和密码自动保存到本地，可能会有安全隐患?
       localStorage.setItem(USERNAME, name)
       localStorage.setItem(PASSWORD, pwd)
@@ -137,18 +137,23 @@ export default {
         message.error("用户名或密码不能为空");
         return;
       }
-      //TODO 提交服务器
+
       const encodePwd = md5(pwd);
+      let success = false
+      let data
+      let wrMsg = '网络错误'
       registerAPI(name, encodePwd).then((res) => {
-        let success = true
+        success = res.state
+        data = res.data
+        wrMsg = res.msg
+      }).finally(() => {
         if (success) {
-          saveUserInfo(res, name, pwd);
+          saveUserInfo(data, name, pwd);
+          message.success("注册成功");
           //设置路由
           router.push('/user')
-          message.success("注册成功");
         } else {
-          // 提示错误信息
-          message.error("注册失败");
+          message.error(wrMsg);
         }
       })
     }
@@ -158,18 +163,23 @@ export default {
         message.error("用户名或密码不能为空");
         return;
       }
-      //TODO 提交服务器
+
       const encodePwd = md5(pwd);
+      let success = false
+      let data
+      let wrMsg = '网络错误'
       loginAPI(name, encodePwd).then((res) => {
-        let success
+        success = res.state
+        data = res.data
+        wrMsg = res.msg
+      }).finally(() => {
         if (success) {
-          saveUserInfo(res, name, pwd);
+          saveUserInfo(data, name, pwd);
+          message.success("登录成功");
           //设置路由
           router.push('/user')
-          message.success("登录成功");
         } else {
-          // 提示错误信息
-          message.error("登录失败");
+          message.error(wrMsg);
         }
       })
     }
