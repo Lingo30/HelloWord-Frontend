@@ -17,7 +17,7 @@
             </div>
           </NScrollbar>
           <div class="bottom">
-            <NInput class="message" v-model="question" round placeholder="Type a message...">
+            <NInput class="message" v-model:value="question" round placeholder="Type a message...">
             </NInput>
             <NButton class="send" @click="sendChat" strong secondary type="info">
               提问
@@ -34,6 +34,8 @@
 
 import {NInput , NButton, NScrollbar} from 'naive-ui';
 import ChatMessage from "@/components/chatPage/ChatMessage";
+import {getHistoryChatAPI, sendChatAPI} from "@/request/api/chat";
+import {ref} from 'vue'
 
 export default {
   components:{
@@ -48,58 +50,42 @@ export default {
   },
   data() {
     return {
-      messages: [
-        {
-          type: false,
-          time: "12:00",
-          content: "llllllllllll"
-        },
-        {
-          type: true,
-          time: "12:01",
-          content: "tttttttttttt"
-        },
-        {
-          type: false,
-          time: "12:02",
-          content: "rrrrrrrrrrrr"
-        },
-        {
-          type: true,
-          time: "12:03",
-          content: "yyyyyyyyyyyyy"
-        }
-      ]
+      question: ref(''),
+      messages: []
     }
   },
   created() {
     this.getHistory();
   },
   methods: {
-    async getHistory() {
-      await this.axios.get('http://127.0.0.1:4523/m2/2544762-0-default/74215801', {params:{user_id:10}})
-          .catch(function (error) {
-            console.log("aaaaaaa");
-            console.log(error);
-          })
-          .then((response) => {
-            this.messages = response.data.history;
-          })
+    sendChat() {
+      sendChatAPI(10, this.question).then((res) => {
+        let q = {
+          time:res.receive_time,
+          type: false,
+          content: this.question,
+        };
+        this.messages.push(q);
+        let p = {
+          time:res.post_time,
+          type: true,
+          content: res.post_message,
+        };
+        this.messages.push(p);
+      })
     },
-    async sendChat() {
-      // await this.axios.get('http://127.0.0.1:4523/m2/2544762-0-default/74212367',{params:{user_id:10, question:this.question.text}})
-      //     .catch(function (error) {
-      //       console.log(error);
-      //     })
-      //     .then((response) => {
-      //       console.log(response);
-      //     });
-      let newList = {
-        time:'12:00',
-        type: true,
-        content:"aaaaa",
-      }
-      this.messages.push(newList);
+    getHistory() {
+      getHistoryChatAPI(10).then((res) => {
+        console.log(res);
+        res.history.forEach((item) => {
+          let newList = {
+            time:item.time,
+            type: item.type,
+            content:item.content,
+          };
+          this.messages.push(newList);
+        });
+      })
     }
   }
 }
