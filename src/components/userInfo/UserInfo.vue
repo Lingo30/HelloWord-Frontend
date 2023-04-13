@@ -10,6 +10,7 @@
           <input
               ref="inputRef"
               type="file"
+              accept="image/jpeg,image/png"
               @change="getImageFile"
               id="img"
               style="width: 150px"
@@ -77,9 +78,6 @@
     }"
       >
 
-        <n-form-item label="ID" path="id">
-          <span class="text">{{model.id}}</span>
-        </n-form-item>
         <n-form-item label="邮箱" path="email">
           <span class="text">{{model.email}}</span>
         </n-form-item>
@@ -123,35 +121,44 @@
 
 <script>
 
-import {ref, reactive, onMounted, onUnmounted} from "vue";
+import {ref, reactive, onMounted, onUnmounted, onBeforeMount} from "vue";
 import { ArchiveOutline as ArchiveIcon } from "@vicons/ionicons5";
-// import {useMessage} from "naive-ui"
+import {useMessage} from "naive-ui"
 import store from "@/store";
-// import request from "@/utils/request";
 import ModifyPassword from "./ModifyPassword";
 import router from "@/router";
+import {getInfo, getRecommendTags, submitInfo} from "@/request/api/user";
 
 export default ({
   name: "UserInfo",
   components: {ModifyPassword},
 
   setup() {
-    // const load = () => {
-    //   request.post("/getUserInfo/",JSON.stringify({'id':targetUserId.value})).then(res=>{
-    //     model.value.avatarPath = res.data.photo
-    //     model.value.email = res.data.email
-    //     model.value.id = res.data.id
-    //     model.value.name = res.data.username
-    //     model.value.profile = res.data.profile
-    //     model.value.gender = res.data.gender
-    //     model.value.sales = res.data.sales
-    //     model.value.likeValue = res.data.likes
-    //     model.value.dislikeValue = res.data.dislikes
-    //   })
-    // }
-    // onBeforeMount(()=>{
-    //   load()
-    // })
+    async function load() {
+      await getInfo(store.state.user.uid).then((res)=>{
+        let state = res.state
+        if (state) {
+          model.avatarPath = res.info.avatar_path;
+          model.email = res.info.email;
+          model.words = res.info.words;
+          model.name = res.info.name;
+          model.days = res.info.days;
+          model.wordLists = res.info.lists;
+          model.tags = res.info.tags;
+        }
+        else {
+          msg.error(res.msg)
+        }
+      })
+      getRecommendTags().then((res)=>{
+        res.tags.forEach(tag => {
+          serverRecommendedTags.value.push({name:tag, selected: false})
+        })
+      })
+    }
+    onBeforeMount(()=>{
+      load()
+    })
     // 手动创建和清除 ResizeObserver 避免ResizeObserver 回调函数的循环嵌套
     let resizeObserver = null;
     let inputRef = ref(null);
@@ -171,23 +178,16 @@ export default ({
     const formRef = ref(null);
     // const message = useMessage();
     const numberAnimationInstRef = ref(null);
-    const serverRecommendedTags = ref([
-      { name: "推荐1", selected: false },
-      { name: "推荐2", selected: false },
-      { name: "推荐3", selected: false },
-    ]);
+    const serverRecommendedTags = ref([]);
 
     const model = reactive({
       avatarPath:   null,
-      email:        "ddd@buaa.edu.cn",
-      words:        2023,
-      id:           22345678,
+      email:        null,
+      words:        null,
       name:         null,
-      profile:      null,
-      days:         150,
-      wordLists:    3,
-      tags:         ["ffffffffffffffff","aaaaaaaaaaaaaa","dddddddddddddddd",
-                    "推荐1","sasssssssssgdfgd","asdfjklafhlkjh"],
+      days:         null,
+      wordLists:    null,
+      tags:         [],
     });
 
     /* ********************** 用户标签相关逻辑 ******************/
@@ -223,16 +223,27 @@ export default ({
       userAvatar.value = e.target.files[0];
       let img = new FileReader();
       img.readAsDataURL(userAvatar.value);
-      console.log("img:",img)
+      // console.log("img:",img)
       img.onload = ({ target }) => {
         showImage.value = target.result; //将img转化为二进制数据
-        console.log("target:",target)
+        // console.log(showImage.value)
       };
     }
 
+    const msg = useMessage()
+
     async function onSubmit(){
-      console.log("good");
-      //...
+      const imgFile = new FormData();
+      imgFile.append('avatar', userAvatar.value);
+      await submitInfo(store.state.user.uid,model,imgFile).then((res)=>{
+        let success = res.state
+        if (success) {
+          showImage.value = res.url
+        }
+        else {
+          msg.error(res.msg)
+        }
+      })
     }
     /* ********************** 上传相关逻辑 ******************/
 
@@ -262,13 +273,6 @@ export default ({
         store.state.modifyVisible = true;
       },
 
-      handleSave() {
-        store.state.user.avatar = model.avatarPath
-        // request.post("/updateUser/",JSON.stringify({"content":model.value})).then(res=>{
-        //   message.success(res.messsagee);
-        //   // console.log(res.data)
-        // })
-      },
       rules: {
         id: {
           required: false,

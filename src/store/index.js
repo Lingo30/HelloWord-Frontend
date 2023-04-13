@@ -8,14 +8,6 @@ export default createStore({
             login: false,//用户是否已登录
             uid:0,//用户id
             wordNum:0,//每日背诵单词数
-
-            nickname: "Veronica",
-            // 头像Url
-            avatar: "/img/head.d31cda9c.jpg",
-            email: "837826068@qq.com",
-            intro: "爱打电动的BUAAer",
-            words:100,
-            days:20,
         },
         modifyVisible: false,
     },
