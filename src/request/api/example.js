@@ -10,7 +10,7 @@ example1(data).then((res)=>{
  */
 export function example1(data) {
     return request({
-        url: "/example1/",
+        url: "example1/",
         method: 'post',
         data
     })
@@ -19,15 +19,19 @@ export function example1(data) {
 export function example2(postFlag, data) {
     let method = postFlag ? 'post' : 'get'
     return request({
-        url: "/example2/",
+        url: "example2/",
         method,
-        data
+        params: data
     })
 }
 
-export function example3() {
+export function example3(param) {
+    const params = {
+        param1: param
+    }
     return request({
-        url: "/example3/",
-        method: 'get'
+        url: "example3/",
+        method: 'get',
+        params
     })
 }

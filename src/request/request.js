@@ -1,8 +1,9 @@
 //request基本配置
 import axios from 'axios'
+import {BACKEND_BASE_URL} from "../../secret_config";
 
 const request = axios.create({
-    baseURL: '/api',
+    baseURL: BACKEND_BASE_URL,
     timeout: 5000
 })
 
