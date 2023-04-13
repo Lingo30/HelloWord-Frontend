@@ -41,3 +41,42 @@ export function registerAPI(name, pwd) {
         data
     })
 }
+
+export function getInfo(uid) {
+    const data = JSON.stringify({
+        user_id: uid
+    })
+    return request({
+        url: 'https://mock.apifox.cn/m2/2544762-0-default/75149824',
+        method: 'post',
+        data
+    })
+}
+
+export function submitInfo(uid,userInfo,imgFile) {
+
+    // 上传文件需要使用FormData对象，
+    const formData = new FormData();
+    formData.append("user_id", uid);
+    formData.append("user_info", JSON.stringify(userInfo));
+    formData.append("img", imgFile);
+
+    return request({
+        url: "73790186",
+        method: "post",
+        data: formData,
+        // 更改headers以上传文件
+        headers: {
+            "Content-Type": "multipart/form-data",
+        },
+    });
+}
+
+export function getRecommendTags() {
+    const data = JSON.stringify({})
+    return request({
+        url: 'https://mock.apifox.cn/m2/2544762-0-default/75150066',
+        method: 'post',
+        data
+    })
+}
