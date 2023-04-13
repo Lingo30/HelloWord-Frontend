@@ -7,14 +7,19 @@
         <div class="background">
         </div>
         <!-- 右侧的注册盒子 -->
-        <div v-show="0===number" class="content-login">
+        <div class="content-login">
           <NScrollbar class="chat" style="max-height: 500px">
-            <ChatBox></ChatBox>
+            <div>
+              <div class="chat_top">
+                <img src="../../assets/img/kaleidoBlank.png" height="170" width="150">
+              </div>
+              <ChatMessage v-for="(item, index) in messages" v-bind:key="index" :type=item.type :time=item.time :content=item.content></ChatMessage>
+            </div>
           </NScrollbar>
           <div class="bottom">
-            <NInput class="message" round placeholder="Type a message...">
+            <NInput class="message" v-model:value="question" round placeholder="Type a message...">
             </NInput>
-            <NButton class="send" strong secondary type="info">
+            <NButton class="send" @click="sendChat" strong secondary type="info">
               提问
             </NButton>
           </div>
@@ -28,14 +33,16 @@
 <script>
 
 import {NInput , NButton, NScrollbar} from 'naive-ui';
-import {ref} from "vue";
-import ChatBox from "@/components/chatPage/ChatBox";
+import ChatMessage from "@/components/chatPage/ChatMessage";
+import {getHistoryChatAPI, sendChatAPI} from "@/request/api/chat";
+import {ref} from 'vue'
+
 export default {
   components:{
     NInput,
     NButton,
     NScrollbar,
-    ChatBox
+    ChatMessage
   },
   name: 'HelloWorld',
   props: {
@@ -43,17 +50,44 @@ export default {
   },
   data() {
     return {
-      number: 0,
-      message : "aaaaaa",
-      time : "12:00"
+      question: ref(''),
+      messages: []
     }
   },
-  setup () {
-    return {
-      value: ref(null)
-    }
+  created() {
+    this.getHistory();
   },
-
+  methods: {
+    sendChat() {
+      sendChatAPI(10, this.question).then((res) => {
+        let q = {
+          time:res.receive_time,
+          type: false,
+          content: this.question,
+        };
+        this.messages.push(q);
+        let p = {
+          time:res.post_time,
+          type: true,
+          content: res.post_message,
+        };
+        this.messages.push(p);
+      })
+    },
+    getHistory() {
+      getHistoryChatAPI(10).then((res) => {
+        console.log(res);
+        res.history.forEach((item) => {
+          let newList = {
+            time:item.time,
+            type: item.type,
+            content:item.content,
+          };
+          this.messages.push(newList);
+        });
+      })
+    }
+  }
 }
 
 
@@ -61,7 +95,20 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-
+/* top */
+.chat_top{
+  width: 100%;
+  height: 50px;
+  position: absolute;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  padding-left: 20px;
+  font-size: 20px;
+  line-height: 50px;
+  box-sizing: border-box;
+  font-weight: 550;
+  border-width: 0px;
+}
 .chat {
   position: relative;
 }
