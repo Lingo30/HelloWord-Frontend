@@ -7,14 +7,19 @@
         <div class="background">
         </div>
         <!-- 右侧的注册盒子 -->
-        <div v-show="0===number" class="content-login">
+        <div class="content-login">
           <NScrollbar class="chat" style="max-height: 500px">
-            <ChatBox></ChatBox>
+            <div>
+              <div class="chat_top">
+                <img src="../../assets/img/kaleidoBlank.png" height="170" width="150">
+              </div>
+              <ChatMessage v-for="(item, index) in messages" v-bind:key="index" :type=item.type :time=item.time :content=item.content></ChatMessage>
+            </div>
           </NScrollbar>
           <div class="bottom">
-            <NInput class="message" round placeholder="Type a message...">
+            <NInput class="message" v-model="question" round placeholder="Type a message...">
             </NInput>
-            <NButton class="send" strong secondary type="info">
+            <NButton class="send" @click="sendChat" strong secondary type="info">
               提问
             </NButton>
           </div>
@@ -28,14 +33,14 @@
 <script>
 
 import {NInput , NButton, NScrollbar} from 'naive-ui';
-import {ref} from "vue";
-import ChatBox from "@/components/chatPage/ChatBox";
+import ChatMessage from "@/components/chatPage/ChatMessage";
+
 export default {
   components:{
     NInput,
     NButton,
     NScrollbar,
-    ChatBox
+    ChatMessage
   },
   name: 'HelloWorld',
   props: {
@@ -43,17 +48,60 @@ export default {
   },
   data() {
     return {
-      number: 0,
-      message : "aaaaaa",
-      time : "12:00"
+      messages: [
+        {
+          type: false,
+          time: "12:00",
+          content: "llllllllllll"
+        },
+        {
+          type: true,
+          time: "12:01",
+          content: "tttttttttttt"
+        },
+        {
+          type: false,
+          time: "12:02",
+          content: "rrrrrrrrrrrr"
+        },
+        {
+          type: true,
+          time: "12:03",
+          content: "yyyyyyyyyyyyy"
+        }
+      ]
     }
   },
-  setup () {
-    return {
-      value: ref(null)
-    }
+  created() {
+    this.getHistory();
   },
-
+  methods: {
+    async getHistory() {
+      await this.axios.get('http://127.0.0.1:4523/m2/2544762-0-default/74215801', {params:{user_id:10}})
+          .catch(function (error) {
+            console.log("aaaaaaa");
+            console.log(error);
+          })
+          .then((response) => {
+            this.messages = response.data.history;
+          })
+    },
+    async sendChat() {
+      // await this.axios.get('http://127.0.0.1:4523/m2/2544762-0-default/74212367',{params:{user_id:10, question:this.question.text}})
+      //     .catch(function (error) {
+      //       console.log(error);
+      //     })
+      //     .then((response) => {
+      //       console.log(response);
+      //     });
+      let newList = {
+        time:'12:00',
+        type: true,
+        content:"aaaaa",
+      }
+      this.messages.push(newList);
+    }
+  }
 }
 
 
@@ -61,7 +109,20 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-
+/* top */
+.chat_top{
+  width: 100%;
+  height: 50px;
+  position: absolute;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  padding-left: 20px;
+  font-size: 20px;
+  line-height: 50px;
+  box-sizing: border-box;
+  font-weight: 550;
+  border-width: 0px;
+}
 .chat {
   position: relative;
 }
