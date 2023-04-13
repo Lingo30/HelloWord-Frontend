@@ -5,10 +5,11 @@
         <span v-for="(char, index) in content" :key="index">
           <template v-if="isBlank(index)">
             <input
+                ref="inputs"
                 class="blank-input"
                 v-if="isBlankStart(index)"
                 :style="{ width: getWidth(index) + 'px' }"
-                :class="{ correct: answerStatus[getBlankIndex(index)] === true, incorrect: answerStatus[getBlankIndex(index)] === false }"
+                :class="{ correct: !init && answerStatus[getBlankIndex(index)] === true, incorrect: !init && answerStatus[getBlankIndex(index)] === false }"
                 type="text"
                 @input="recordAnswer($event.target.value, index)"
             />
@@ -27,7 +28,7 @@
       </template>
     </n-card>
     <div>
-      <n-button class="left button" type="primary" >拼写模式</n-button>
+      <n-button class="left button" type="primary" @click="changeArticle">换一篇文章吧</n-button>
       <n-button class="right button" type="primary" ghost @click="submitAnswers">提交</n-button>
     </div>
   </div>
@@ -35,53 +36,30 @@
 </template>
 
 <script>
-import {computed, reactive, ref} from "vue";
+import {computed, onBeforeMount, reactive, ref} from "vue";
+import {getBlankText} from "@/request/api/review";
+import store from "@/store";
 
 export default {
   name: "BlankText",
   setup() {
-    const content = ref('This is a cloze test example. There is a blank here and another blank there.' +
-        'This is a cloze test example. There is a blank here and another blank there.' +
-        'This is a cloze test example. There is a blank here and another blank there.' +
-        'This is a cloze test example. There is a blank here and another blank there.' +
-        'This is a cloze test example. There is a blank here and another blank there.' +
-        'This is a cloze test example. There is a blank here and another blank there.' +
-        'This is a cloze test example. There is a blank here and another blank there.' +
-        'This is a cloze test example. There is a blank here and another blank there.' +
-        'This is a cloze test example. There is a blank here and another blank there.' +
-        'This is a cloze test example. There is a blank here and another blank there.' +
-        'This is a cloze test example. There is a blank here and another blank there.' +
-        'This is a cloze test example. There is a blank here and another blank there.' +
-        'This is a cloze test example. There is a blank here and another blank there.' +
-        'This is a cloze test example. There is a blank here and another blank there.' +
-        'This is a cloze test example. There is a blank here and another blank there.' +
-        'This is a cloze test example. There is a blank here and another blank there.' +
-        'This is a cloze test example. There is a blank here and another blank there.' +
-        'This is a cloze test example. There is a blank here and another blank there.' +
-        'This is a cloze test example. There is a blank here and another blank there.' +
-        'This is a cloze test example. There is a blank here and another blank there.' +
-        'This is a cloze test example. There is a blank here and another blank there.' +
-        'This is a cloze test example. There is a blank here and another blank there.' +
-        'This is a cloze test example. There is a blank here and another blank there.' +
-        'This is a cloze test example. There is a blank here and another blank there.' +
-        'This is a cloze test example. There is a blank here and another blank there.' +
-        'This is a cloze test example. There is a blank here and another blank there.' +
-        'This is a cloze test example. There is a blank here and another blank there.' +
-        'This is a cloze test example. There is a blank here and another blank there.' +
-        'This is a cloze test example. There is a blank here and another blank there.' +
-        'This is a cloze test example. There is a blank here and another blank there.' +
-        'This is a cloze test example. There is a blank here and another blank there.' +
-        'This is a cloze test example. There is a blank here and another blank there.' +
-        'This is a cloze test example. There is a blank here and another blank there.' +
-        'This is a cloze test example. There is a blank here and another blank there.' +
-        'This is a cloze test example. There is a blank here and another blank there.' +
-        'This is a cloze test example. There is a blank here and another blank there.' +
-        '');
-    const wordList = reactive([
-      { start: 0, end: 4 },
-      { start: 10, end: 15 }
-    ]);
+    const content = ref('');
+    const wordList = reactive([]);
     const userAnswers = reactive([]);
+    const init = ref(true)
+
+    const load = () => {
+      init.value = true
+      getBlankText(store.state.user.uid).then((res)=>{
+        content.value = res.content
+        wordList.splice(0);
+        wordList.push(...res.wordList);
+      })
+
+    }
+    onBeforeMount(()=>{
+      load()
+    })
 
     // 判断是否是单词空的第一个字符
     const isBlankStart = (index) => {
@@ -136,18 +114,36 @@ export default {
     // 获取正确答案
     const getRealAnswer = (index) => {
       const word = wordList[index];
-      return content.value.slice(word.start, word.end);
+      return content.value.slice(word.start, word.end).toLowerCase();
     };
 
     // 验证答案
     const submitAnswers = () => {
+      init.value = false
       for (let i = 0; i < wordList.length; i++) {
         const answer = userAnswers[i] || '';
-        answerStatus[i] = answer === getRealAnswer(i);
+        answerStatus[i] = answer.toLowerCase() === getRealAnswer(i);
       }
       showAnswers.value = true;
     };
+
+    const inputs = ref(null)
+
+    function changeArticle() {
+      load()
+      showAnswers.value = false
+      answerStatus.slice(0)
+      userAnswers.slice(0)
+
+      inputs.value.forEach(input => {
+        input.value = '';
+      });
+    }
+
     return {
+      inputs,
+      init,
+      changeArticle,
       content,
       wordList,
       userAnswers,

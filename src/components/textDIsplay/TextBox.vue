@@ -36,7 +36,7 @@
         </n-card>
         <n-card hoverable class="translation">
           <div class="translationText">
-            {{selectedText}}
+            {{analysis}}
           </div>
 
         </n-card>
@@ -51,6 +51,8 @@
 
 <script>
 import {computed,ref} from "vue";
+import {getSentenceAnalysis} from "@/request/api/review";
+import {useMessage} from "naive-ui";
 
 export default {
   name: "TextBox",
@@ -73,19 +75,30 @@ export default {
     }
   },
   setup(props,{emit}) {
+    let msg = useMessage()
     let selectedText = ref(null);
+    let analysis = ref("");
     const inputHeight = computed(() => (props.active ? "550px" : "450px"));
     function onSelect(event) {
       selectedText.value = event.target.value.substring(
           event.target.selectionStart,
           event.target.selectionEnd,
       );
-      console.log(selectedText);
+      getSentenceAnalysis(selectedText.value).then((res)=>{
+        let success = res.state
+        if (success) {
+          analysis.value = res.translation
+        }
+        else {
+          msg.error(res.msg)
+        }
+      })
+      // console.log(selectedText);
     }
 
     // 父组件向子组件实时传值，使用计算属性
     // active===true时，使用ref()使之可编辑
-    const textValue = props.active===true?ref():computed(() => props.inputValue);
+    const textValue = props.active===true?ref(""):computed(() => props.inputValue);
     // const textValue = ref(props.inputValue);
     const selectedWords = ref([]);
 
@@ -106,7 +119,7 @@ export default {
     return {
       value: ref(null),
       textValue,
-      selectedText,
+      analysis,
       onSelect,
       selectedWords,
       handleTagChecked,
