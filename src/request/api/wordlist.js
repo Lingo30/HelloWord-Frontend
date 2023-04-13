@@ -61,7 +61,7 @@ export function getListInfo(listId) {
 }
 
 //TODO 根据用户id、词单id获取wordNum个单词信息
-export function getWordsInfo(userId, listId, wordNum) {
+export function getWordsInfo(userId, listId, pageSize, curPage) {
     /*
     {
         words: [
@@ -76,9 +76,10 @@ export function getWordsInfo(userId, listId, wordNum) {
 
      */
     const data = JSON.stringify({
-        userId: userId,
-        listId: listId,
-        num: wordNum,//背诵单词数
+        user_id: userId,
+        list_id: listId,
+        page_size: pageSize,//每页的单词数
+        cur_page: curPage,//当前页
     })
     return request({
         url: "",//TODO

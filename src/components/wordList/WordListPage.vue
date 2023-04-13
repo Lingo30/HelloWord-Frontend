@@ -66,8 +66,8 @@ export default {
     const tmpListIds = []//缓存编辑前的id队列
     const message = useMessage()
 
-    function clickWordList(id) {
-      wordCardListRef.value.showWords(id)
+    function clickWordList(id, totalNum) {
+      wordCardListRef.value.showWords(id, totalNum)
     }
 
     function editWordList() {
