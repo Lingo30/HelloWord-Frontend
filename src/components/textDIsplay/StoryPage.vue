@@ -16,94 +16,54 @@
 
 <script>
 import TextBox from "./TextBox";
-import {ref} from "vue";
+import {onBeforeMount, ref} from "vue";
+import {getTodayWords, wordsToStory} from "@/request/api/review";
+import store from "@/store";
+import {useMessage} from 'naive-ui'
 export default {
   name: "StoryPage",
   components: {TextBox},
 
   setup() {
-    const words = ref([
-      {
-        id: 1,
-        word:"abc"
-      },
-      {
-        id: 2,
-        word:"dddssss"
-      },
-      {
-        id: 3,
-        word:"werwtt"
-      },
-      {
-        id: 4,
-        word:"dhhkl"
-      },
-      {
-        id: 5,
-        word:"adsfw"
-      },
-      {
-        id: 6,
-        word:"dasfc"
-      },
-      {
-        id: 7,
-        word:"kjlj"
-      },{
-        id: 8,
-        word:"dafdsffsfc"
-      },
-      {
-        id: 9,
-        word:"kjlffdaj"
-      },{
-        id: 10,
-        word:"dasgghefc"
-      },
-      {
-        id: 11,
-        word:"kehehhlj"
-      }])
+    const message = useMessage()
+    const words = ref([])
+
+    const load = () => {
+      getTodayWords(store.state.user.uid).then((res)=>{
+        // console.log(res);
+        let success = res.state
+        if (success) {
+          words.value = res.today_words
+        }
+        else {
+          message.error(res.msg)
+        }
+      })
+    }
+    onBeforeMount(()=>{
+      load()
+    })
+
     const selectedWords = ref([])
-    const story = ref("aaaa");
+    const story = ref("");
     const inputActive = ref(false);
     const inputPlaceholder = ref("");
     function onLeftButtonClick() {
-      console.log("left")
+      // console.log("left")
     }
     function onRightButtonClick() {
       // console.log(story.value)
-      story.value = "afsdddddddddddddddddddddddddddddddddddddddddddddddddddddddddddffffffffffffff" +
-          "ffffffffffffffffffffffffffffff" +
-          "fffffffffffff" +
-          "fffffffffffffffffffffffffffffffffffffsssssssssssss" +
-          "fffffffffffffffffddddddddddd" +
-          "dddddddddddddddddddddddddd" +
-          "ddddddddddddddddddddddddddd" +
-          "dddddddddddddddddddddd" +
-          "d" +
-          "ffffffffffffffffffffffffffffffffffffffffffff"+
-          "afsdddddddddddddddddddddddddddddddddddddddddddddddddddddddddddffffffffffffff" +
-          "ffffffffffffffffffffffffffffff" +
-          "fffffffffffff" +
-          "fffffffffffffffffffffffffffffffffffffsssssssssssss" +
-          "fffffffffffffffffddddddddddd" +
-          "dddddddddddddddddddddddddd" +
-          "ddddddddddddddddddddddddddd" +
-          "dddddddddddddddddddddd" +
-          "d" +
-          "ffffffffffffffffffffffffffffffffffffffffffff"+
-          "afsdddddddddddddddddddddddddddddddddddddddddddddddddddddddddddffffffffffffff" +
-          "ffffffffffffffffffffffffffffff" +
-          "fffffffffffff" +
-          "fffffffffffffffffffffffffffffffffffffsssssssssssss" +
-          "fffffffffffffffffddddddddddd" +
-          "dddddddddddddddddddddddddd" +
-          "ddddddddddddddddddddddddddd" +
-          "dddddddddddddddddddddd" +
-          "d" +
-          "ffffffffffffffffffffffffffffffffffffffffffff";
+      wordsToStory(store.state.user.uid,selectedWords).then((res) => {
+        // console.log(res);
+        let success = res.state
+        if (success) {
+          story.value = res.story
+        }
+        else {
+          let msg = res.msg
+          message.error(msg);
+        }
+      })
     }
 
     function handleSelectedWords(retWords) {

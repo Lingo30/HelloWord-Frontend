@@ -15,6 +15,8 @@
 <script>
 import TextBox from "./TextBox";
 import {ref,onMounted} from "vue";
+import {getArticleAnalysis} from "@/request/api/review";
+import {useMessage} from "naive-ui";
 export default {
   name: "WritingPage",
   components: {TextBox},
@@ -22,6 +24,7 @@ export default {
   setup() {
     const inputActive = ref(true);
     const textBoxRef = ref(null);
+    const msg = useMessage();
 
     const handleFileUpload = (event) => {
       const file = event.target.files[0];
@@ -38,9 +41,16 @@ export default {
     });
 
     function onRightButtonClick() {
-      // 获取子组件中用户输入的文章
       const inputValue = textBoxRef.value.textValue;
-      console.log(inputValue);
+      if (inputValue === '') {
+        msg.warning("写点东西再问我叭")
+        return
+      }
+      getArticleAnalysis(inputValue).then((res)=>{
+        // console.log(res.comment);
+        textBoxRef.value.analysis = res.comment
+      })
+      // console.log(textBoxRef.value.analysis);
     }
     return {
       inputActive,
