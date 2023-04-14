@@ -80,3 +80,16 @@ export function getRecommendTags() {
         data
     })
 }
+
+export function changePassword(uid,oldPwd,newPwd) {
+    const data = JSON.stringify({
+        user_id: uid,
+        new_pwd: newPwd,
+        old_pwd: oldPwd
+    })
+    return request({
+        url: 'https://mock.apifox.cn/m2/2544762-0-default/75149784',
+        method: 'post',
+        data
+    })
+}
