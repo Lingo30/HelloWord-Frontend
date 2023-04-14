@@ -1,10 +1,14 @@
 <template>
   <n-modal style="background-color: white" :show="true">
     <div class="container">
-      <!--      <span style="font-size: 2em; margin-left: 5px; margin-bottom: 5px">-->
-      <!--        词单导入-->
-      <!--      </span>-->
-      <n-select class="select" v-model:value="value" :options="options"/>
+      <span style="font-size: 2em; margin-left: 5px; margin-bottom: 5px; height: 10%">
+        词单导入
+      </span>
+      <div class="choose-button-group">
+        <n-button class="choose-button" :bordered="true">官方</n-button>
+        <n-button class="choose-button" :bordered="true">文件</n-button>
+      </div>
+      <n-divider style="margin: 0;padding: 0"/>
       <div class="content">
         <!--        官方的词单卡片-->
         <n-scrollbar v-if="value==='official'">
@@ -42,10 +46,7 @@
           </div>
         </n-scrollbar>
         <!--        文件导入-->
-        <div
-            v-if="value==='file'"
-            class="drop-area"
-        >
+        <div v-if="value==='file'" class="drop-area">
           <p style="width: 180px;margin: 80px auto">将文件拖拽到此处即可完成文件上传。</p>
         </div>
       </div>
@@ -61,7 +62,18 @@
 </template>
 
 <script>
-import {useDialog, useMessage, NModal, NSelect, NScrollbar, NSpace, NTooltip, NInput, NButton} from "naive-ui";
+import {
+  useDialog,
+  useMessage,
+  NModal,
+  NSelect,
+  NScrollbar,
+  NSpace,
+  NTooltip,
+  NInput,
+  NButton,
+  NDivider
+} from "naive-ui";
 import router from "@/router";
 import store from "@/store";
 import {createFromOfficial, getOfficialLists} from "@/request/api/wordlist";
@@ -77,24 +89,15 @@ export default {
     NTooltip,
     NInput,
     NButton,
+    NDivider,
   },
-  props:{
+  props: {
     showFlag: Boolean,
   },
   setup() {
     const dialog = useDialog()
     const message = useMessage()
-    let optionRef = ref('file')
-    let options = [
-      {
-        value: 'official',
-        label: '从已有词单导入',
-      },
-      {
-        value: 'file',
-        label: '从文件导入'
-      },
-    ]
+    let optionRef = ref('official')
     let listIds = reactive([1, 2])//所有官方词单
 
     function create(listId) {
@@ -131,7 +134,6 @@ export default {
 
     return {
       value: optionRef,
-      options,
       listIds,
 
       clickWordList,
@@ -147,14 +149,23 @@ export default {
   display: flex;
   flex-direction: column;
   overflow: auto;
+  padding: 5px;
   /*background-color: black;*/
 }
 
-.select {
-  height: 10%;
-  width: 25%;
-  margin-left: auto;
-  margin-top: 1px;
+.choose-button-group {
+  display: flex;
+  flex-direction: row;
+  padding: 0;
+  height: 7%;
+  margin: 0;
+}
+
+.choose-button {
+  width: 100px;
+  border-radius: 0;
+  margin: 0;
+  padding:0;
 }
 
 .content {
@@ -164,7 +175,7 @@ export default {
   justify-content: center;
   align-items: center;
   /*background-color: black;*/
-  height: 85%;
+  height: 75%;
   width: 100%;
 }
 
@@ -190,7 +201,7 @@ export default {
 }
 
 .foot {
-  height: 10%;
+  height: 7%;
   display: flex;
   justify-content: space-between;
   margin-bottom: 5px;
