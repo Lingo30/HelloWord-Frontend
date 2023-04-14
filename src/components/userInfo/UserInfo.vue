@@ -85,7 +85,7 @@
           <n-input v-model:value="model.name" placeholder="昵称" class="text"/>
         </n-form-item>
         <n-form-item label="我的偏好" path="tags">
-          <n-dynamic-tags type="success" v-model:value="model.tags" :max="10"/>
+          <dynamic-tags type="success" v-model:value="model.tags" :max="10"></dynamic-tags>
         </n-form-item>
         <n-form-item label="热门标签">
           <div>
@@ -111,11 +111,55 @@
 
         </div>
       </n-form>
-      <n-message-provider>
-        <ModifyPassword class="modifyCard" v-if="store.state.modifyVisible">
-        </ModifyPassword>
-      </n-message-provider>
     </div>
+    <n-modal
+        v-model:show="showPwd"
+        class="change-pwd"
+        preset="card"
+        :style="bodyStyle"
+        title="修改密码"
+        size="huge"
+        :bordered="false"
+    >
+      <div style="margin-bottom: 30px">
+        <n-form
+          ref="pwdForm"
+          :model="password"
+          :rules="pwdRules"
+          label-placement="left"
+          label-width="auto"
+          require-mark-placement="right-hanging"
+        >
+          <n-form-item label="原密码" path="oldPassword">
+            <n-input
+                type="password"
+                show-password-on="click"
+                v-model:value="password.oldPwd" placeholder="请输入原密码" />
+          </n-form-item>
+          <n-form-item label="新密码" path="newPassword">
+            <n-input
+                type="password"
+                show-password-on="click"
+                v-model:value="password.newPwd" placeholder="请输入新密码" />
+          </n-form-item>
+          <n-form-item label="确认密码" path="checkPassword">
+            <n-input
+                type="password"
+                show-password-on="click"
+                v-model:value="password.confirm" placeholder="请再次输入密码" />
+          </n-form-item>
+          <div style="display: flex; justify-content: flex-end">
+            <n-button style="margin-right: 10px" round @click="handleClose">
+              取消
+            </n-button>
+            <n-button round type="primary" @click="handleConfirm">
+              确认
+            </n-button>
+          </div>
+        </n-form>
+      </div>
+
+    </n-modal>
   </div>
 </template>
 
@@ -125,13 +169,14 @@ import {ref, reactive, onMounted, onUnmounted, onBeforeMount} from "vue";
 import { ArchiveOutline as ArchiveIcon } from "@vicons/ionicons5";
 import {useMessage} from "naive-ui"
 import store from "@/store";
-import ModifyPassword from "./ModifyPassword";
 import router from "@/router";
-import {getInfo, getRecommendTags, submitInfo} from "@/request/api/user";
+import {changePassword, getInfo, getRecommendTags, submitInfo} from "@/request/api/user";
+import md5 from "js-md5";
+import DynamicTags from "@/components/userInfo/DynamicTags";
 
 export default ({
   name: "UserInfo",
-  components: {ModifyPassword},
+  components: {DynamicTags},
 
   setup() {
     async function load() {
@@ -252,10 +297,55 @@ export default ({
       router.push('/login/');
     }
 
-    checkSelectedTags();
+    const showPwd = ref(false);
+
+    function modify() {
+      showPwd.value = true
+    }
+
+    const pwdForm = ref(null)
+    const password = reactive({
+      oldPwd: null,
+      newPwd: null,
+      confirm: null,
+    })
+
+    function handleClose() {
+      showPwd.value = false
+    }
+
+    function handleConfirm() {
+      if (password.newPwd !== password.confirm) {
+        msg.error("两次密码不一致");
+        return;
+      }
+      let format = /^(?=.*[a-zA-Z])(?=.*[0-9])[a-zA-Z0-9~!@&%#_]{6,15}$/gi
+      if(!format.test(password.newPwd)){
+        msg.error('密码长度应在6-15位，且同时包含字母与数字')
+        return;
+      }
+      const tempOld = md5(password.oldPwd);
+      const tempNew = md5(password.newPwd);
+      changePassword(store.state.user.uid,tempOld,tempNew).then((res)=>{
+        let success = res.state
+        if (success) {
+          msg.success("修改成功")
+        }
+        else {
+          msg.error(res.msg)
+        }
+      })
+    }
+
+    checkSelectedTags()
 
     return {
+      handleConfirm,
       logout,
+      handleClose,
+      pwdForm,
+      showPwd,
+      password,
       addServerRecommendedTag,
       serverRecommendedTags,
       onSubmit,
@@ -269,10 +359,7 @@ export default ({
       ArchiveIcon,
       store,
       model,
-      modify() {
-        store.state.modifyVisible = true;
-      },
-
+      modify,
       rules: {
         id: {
           required: false,
@@ -324,6 +411,26 @@ export default ({
           trigger: ["blur", "input"],
         },
       },
+      pwdRules: {
+        oldPassword: {
+          required: true,
+          trigger: ["blur", "input"],
+          message: "请输入原密码",
+        },
+        newPassword: {
+          required: true,
+          trigger: ["blur", "input"],
+          message: "请输入新密码"
+        },
+        checkPassword: {
+          required: true,
+          trigger: ["blur", "input"],
+          message: "请再次输入密码"
+        }
+      },
+      bodyStyle: {
+        width: "50%"
+      },
     };
   }
 });
@@ -370,8 +477,8 @@ export default ({
 }
 
 .InfoContainer {
-  margin-top: 2%;
-  margin-left: 13%;
+  margin-top: 6%;
+  margin-left: 16%;
 }
 
 .text {
