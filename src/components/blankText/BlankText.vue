@@ -1,42 +1,53 @@
 <template>
-  <div>
-    <n-card hoverable class="TextContainer">
-      <div class="content-box">
-        <span v-for="(char, index) in content" :key="index">
-          <template v-if="isBlank(index)">
-            <input
-                ref="inputs"
-                class="blank-input"
-                v-if="isBlankStart(index)"
-                :style="{ width: getWidth(index) + 'px' }"
-                :class="{ correct: !init && answerStatus[getBlankIndex(index)] === true, incorrect: !init && answerStatus[getBlankIndex(index)] === false }"
-                type="text"
-                @input="recordAnswer($event.target.value, index)"
-            />
-          </template>
-          <span v-else>{{ char }}</span>
-        </span>
-      </div>
-    </n-card>
-    <n-card hoverable class="answer-box">
-      <template v-if="showAnswers">
-        <p v-for="chunk in answerChunks" :key="chunk[0].index">
-          <span v-for="(answer, innerIndex) in chunk" :key="innerIndex">
-            {{ answer.index }}: {{ answer.realAnswer }}&nbsp;&nbsp;
-          </span>
-        </p>
-      </template>
-    </n-card>
-    <div>
-      <n-button class="left button" type="primary" @click="changeArticle">换一篇文章吧</n-button>
-      <n-button class="right button" type="primary" ghost @click="submitAnswers">提交</n-button>
-    </div>
-  </div>
+  <n-space vertical class="card-box">
+    <n-space class="all-container">
+      <n-space class="text-card">
+        <n-card hoverable class="TextContainer">
+          <n-scrollbar style="max-height: 550px;">
+            <div class="content-box">
+            <span v-for="(char, index) in content" :key="index">
+              <template v-if="isBlank(index)">
+                <input
+                    ref="inputs"
+                    class="blank-input"
+                    v-if="isBlankStart(index)"
+                    :style="{ width: getWidth(index) + 'px' }"
+                    :class="{ correct: !init && answerStatus[getBlankIndex(index)] === true, incorrect: !init && answerStatus[getBlankIndex(index)] === false }"
+                    type="text"
+                    @input="recordAnswer($event.target.value, index)"
+                />
+              </template>
+              <span v-else>{{ char }}</span>
+            </span>
+            </div>
+          </n-scrollbar>
+        </n-card>
+        <n-card :title="showAnswers?'看看哪儿错了？':'你可以试着填入这些词'" hoverable class="used-words-box">
+          <n-scrollbar style="max-height: 505px;">
+            <n-list hoverable v-if="showAnswers">
+              <n-list-item v-for="(word,index) in realAnswers" :key="index">
+                <n-thing style="font-size: 20px;">{{index+1}}: {{word}}</n-thing>
+              </n-list-item>
+            </n-list>
+            <n-list hoverable v-else>
+              <n-list-item v-for="(word,index) in usedWords" :key="index">
+                <n-thing style="font-size: 20px;">{{word}}</n-thing>
+              </n-list-item>
+            </n-list>
+          </n-scrollbar>
+        </n-card>
+      </n-space>
+      <n-space class="btn-box">
+        <n-button round class="left button" type="primary" @click="changeArticle">换一篇文章吧</n-button>
+        <n-button round class="right button" type="primary" ghost @click="submitAnswers">提交</n-button>
+      </n-space>
+    </n-space>
+  </n-space>
 
 </template>
 
 <script>
-import {computed, onBeforeMount, reactive, ref} from "vue";
+import {onBeforeMount, reactive, ref} from "vue";
 import {getBlankText} from "@/request/api/review";
 import store from "@/store";
 
@@ -47,14 +58,28 @@ export default {
     const wordList = reactive([]);
     const userAnswers = reactive([]);
     const init = ref(true)
+    const realAnswers = reactive([]);
+    const usedWords = ref(null)
 
-    const load = () => {
+    async function load () {
       init.value = true
-      getBlankText(store.state.user.uid).then((res)=>{
+      await getBlankText(store.state.user.uid).then((res)=>{
         content.value = res.content
         wordList.splice(0);
         wordList.push(...res.wordList);
       })
+      wordList.forEach((loc)=>{
+        realAnswers.push(content.value.substring(loc.start,loc.end))
+      })
+
+      const arr = [...realAnswers]
+
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+
+      usedWords.value = new Set(arr)
 
     }
     onBeforeMount(()=>{
@@ -74,7 +99,7 @@ export default {
     // 获取单词长度，动态调整输入框长度
     function getWidth(index) {
       const word = wordList.find(word => index === word.start);
-      return word ? (word.end - word.start) * 10 : 0;
+      return word ? (word.end - word.start) * 15 : 0;
     }
 
     // 记录答案
@@ -84,25 +109,6 @@ export default {
     }
 
     const showAnswers = ref(false);
-
-    // 用于显示正确答案
-    const answerChunks = computed(() => {
-      const chunks = [];
-      const chunkSize = 5;
-
-      for (let i = 0; i < wordList.length; i += chunkSize) {
-        chunks.push(
-            wordList.slice(i, i + chunkSize).map((word, index) => {
-              return {
-                index: i+index+1,
-                realAnswer: getRealAnswer(i + index)
-              };
-            })
-        );
-      }
-
-      return chunks;
-    });
 
     // 根据字符在文章中的序号获取空的序号
     const getBlankIndex = (index) => {
@@ -143,6 +149,8 @@ export default {
     return {
       inputs,
       init,
+      usedWords,
+      realAnswers,
       changeArticle,
       content,
       wordList,
@@ -152,7 +160,6 @@ export default {
       recordAnswer,
       isBlankStart,
       showAnswers,
-      answerChunks,
       submitAnswers,
       answerStatus,
       getBlankIndex
@@ -169,25 +176,16 @@ export default {
     text-align: center;
   }
   .TextContainer {
+    height: 600px;
     width: 800px;
-    height: 500px;
     text-align: left;
   }
-  /*overflow-y 文本超出后scroll*/
+
   .content-box {
-    overflow-wrap: break-word;
-    word-wrap: break-word;
+    font-size: 20px;
     max-width: 100%;
-    height: 87%;
-    overflow-y: auto;
+    height: 48%;
     position: relative;
-  }
-  .answer-box {
-    margin-top: 10px;
-    width: 800px;
-    height: 100px;
-    margin-bottom: 10px;
-    text-align: left;
   }
   .correct {
     color: green;
@@ -195,28 +193,61 @@ export default {
   .incorrect {
     color: red;
   }
-  .left {
-    margin-left: 13%;
-    margin-right: 100px;
-  }
-  .button {
-    float: left;
-    width: 150px;
+
+  .btn-box {
+    position: relative;
+    bottom: 0;
+    margin-top: 1px;
+    width: 500px;
+    left: 50%;
+    transform: translate(18%, 15%);
   }
 
-  /* 滚动条样式 */
-  .content-box::-webkit-scrollbar {
-    width: 6px;
-    transition: width 1s;
+  .left {
+    margin-right: 11vh;
   }
-  .content-box::-webkit-scrollbar-track {
-    background-color: rgba(0, 0, 0, 0.1);
-    border-radius: 10px;
-    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+  .button {
+    width: 200px;
   }
-  .content-box::-webkit-scrollbar-thumb {
-    background-color: #999;
-    border-radius: 10px;
-    box-shadow: inset 0 0 3px rgba(0, 0, 0, 0.2);
+
+  .used-words-box {
+    font-size: 25px;
+    margin-left: 15px;
+    height: 600px;
+    width: 270px;
+    text-align: left;
+  }
+
+  .all-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    display: flex;
+    justify-content: flex-end;
+    transform: translate(-50%, -48.5%);
+  }
+
+  .card-box {
+    height: 700px;
+    width: 1200px;
+    background-image: url("../../assets/img/logo.png");
+    margin-left: 9%;
+    margin-top: 2%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+  }
+
+  .text-card {
+    position: relative;
+    top: 50%;
+    left: 50%;
+    display: flex;
+    justify-content: flex-end;
+    transform: translate(-50%, -50%);
+    height: 600px;
+    width: 1100px;
+    margin:auto;
   }
 </style>
