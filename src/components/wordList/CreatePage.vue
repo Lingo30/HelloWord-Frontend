@@ -1,5 +1,5 @@
 <template>
-  <n-modal style="background-color: white" :show="showFlag">
+  <n-modal style="background-color: white" :show="true">
     <div class="container">
       <!--      <span style="font-size: 2em; margin-left: 5px; margin-bottom: 5px">-->
       <!--        词单导入-->
@@ -7,10 +7,9 @@
       <n-select class="select" v-model:value="value" :options="options"/>
       <div class="content">
         <!--        官方的词单卡片-->
-        <n-scrollbar>
-          <div class="card-list">
+        <n-scrollbar v-if="value==='official'">
+          <div class="card-list" v-show="value==='official'">
             <div
-                v-show="value==='official'"
                 class="card"
                 v-for="(id,index) in 10"
                 :key="id">
@@ -43,14 +42,16 @@
           </div>
         </n-scrollbar>
         <!--        文件导入-->
-        <div v-show="value==='file'" class="drop-area drop-active">
+        <div
+            v-if="value==='file'"
+            class="drop-area"
+        >
+          <p style="width: 180px;margin: 80px auto">将文件拖拽到此处即可完成文件上传。</p>
         </div>
       </div>
       <!--      底部输入词单名和确认-->
       <div class="foot">
-        <n-input class="input-name">
-
-        </n-input>
+        <n-input class="input-name"/>
         <n-button class="button">
           生成词单
         </n-button>
@@ -64,7 +65,6 @@ import {useDialog, useMessage, NModal, NSelect, NScrollbar, NSpace, NTooltip, NI
 import router from "@/router";
 import store from "@/store";
 import {createFromOfficial, getOfficialLists} from "@/request/api/wordlist";
-import WordListCard from "@/components/wordList/WordListCard.vue";
 import {onMounted, reactive, ref} from "vue";
 
 export default {
@@ -78,11 +78,13 @@ export default {
     NInput,
     NButton,
   },
+  props:{
+    showFlag: Boolean,
+  },
   setup() {
     const dialog = useDialog()
     const message = useMessage()
-    let showFlag = ref(true)
-    let optionRef = ref('official')
+    let optionRef = ref('file')
     let options = [
       {
         value: 'official',
@@ -128,7 +130,6 @@ export default {
     })
 
     return {
-      showFlag,
       value: optionRef,
       options,
       listIds,
@@ -157,11 +158,12 @@ export default {
 }
 
 .content {
-  /*display: flex;*/
-  /*flex-direction: row;*/
+  display: flex;
+  flex-direction: column;
   /*flex-wrap: wrap;*/
-  /*justify-content: center;*/
-
+  justify-content: center;
+  align-items: center;
+  /*background-color: black;*/
   height: 85%;
   width: 100%;
 }
@@ -176,11 +178,6 @@ export default {
 .card {
   width: 300px;
   margin: 5px;
-}
-
-.font-color {
-  /*color: white;*/
-  opacity: 1;
 }
 
 .head {
@@ -206,5 +203,20 @@ export default {
 
 .button {
   margin-right: 5px;
+}
+
+.drop-area {
+  display: flex;
+  width: 200px;
+  height: 200px;
+  color: rgba(0, 0, 0, 0.45);
+  text-align: center;
+  background-color: #fafafa;
+  border: 1px dashed #d9d9d9;
+  margin: auto;
+}
+
+.drop-active {
+  background-color: rgba(231, 234, 246, 0.8);
 }
 </style>
