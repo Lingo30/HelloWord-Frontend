@@ -29,21 +29,24 @@
 								{{group_words[curId].word}}
 							</div>
 							<div class="word_meaning_box">
-								<div class="word_reading">
+								<div class="word_reading" v-if="shown==true">
 									音标: {{group_words[curId].phonetic_symbol}}
 								</div>
-								<div class="word_meaning">
+								<div class="word_meaning" v-if="shown==true">
 									{{group_words[curId].definition_cn}}
 								</div>
-								<router-link to="" class="delword" @click="delWord">不再学习</router-link>
+								<router-link to="" class="delword" @click="delWord" v-if="shown==true">不再学习</router-link>
 							</div>
 							
 							<div class="word_button_box">
-								<n-button large strong primary round type="error" class="info_button1" @click="forgetWord">
+								<n-button round type="success" class="info_button3" @click="nextWord" v-if="shown==true && forget_times==1">
+									下一个
+								</n-button>
+								<n-button large strong primary round type="error" class="info_button1" @click="forgetWord" v-if="shown==false && forget_times==0">
 									不认识
 								</n-button>
-								<n-button  round type="success" class="info_button2" @click="nextWord">
-									下一个
+								<n-button  round type="success" class="info_button2" @click="showWord" v-if="shown==false && forget_times==0">
+									认识
 								</n-button>
 							</div>
 							
@@ -57,7 +60,7 @@
 						<div class="info_title">
 							同义词
 						</div>
-						<div class="info_content">
+						<div class="info_content" v-if="shown==true">
 							<div class="info_word1" v-for="(synonym, index) in relation.synonyms">
 								<div class="related_word">
 									{{synonym.word}}
@@ -74,7 +77,7 @@
 						<div class="info_title">
 							反义词
 						</div>
-						<div class="info_content">
+						<div class="info_content" v-if="shown==true">
 							<div class="info_word1" v-for="(antonym, index) in relation.antonyms">
 								<div class="related_word">
 									{{ antonym.word }}
@@ -92,7 +95,7 @@
 						<div class="info_title">
 							例句
 						</div>
-						<div class="info_content">
+						<div class="info_content" v-if="shown==true">
 							{{ relation.example }}
 						</div>
 					</div>
@@ -121,44 +124,22 @@ export default {
 			group_words: reactive([ {
 					// id: 1,
                     word_id: 1,
-					word: "dangerous",
-					phonetic_symbol: "['dendʒərəs]",
-					definition_cn: "adj. 危险的",
+					word: "",
+					phonetic_symbol: "",
+					definition_cn: "",
 					synonyms: [ {
 						word_id: 3,
-						word: "unsafe",
-						definition_cn: "adj."
-						},
-						{
-						word_id: 4,
-						word: "risky",
-						definition_cn: "adj."
-						},
-						{
-						word_id: 5,
-						word: "hazard",
-						definition_cn: "n."
+						word: "",
+						definition_cn: ""
 						},
 					],
 					antonyms: [{
                         word_id: 6,
-						word: "safe",
-						definition_cn: "adj."
+						word: "",
+						definition_cn: ""
 						},
-						{
-                        word_id: 7,
-						word: "secure",
-						definition_cn: "adj."
-						}
 					],
-					example: "He is considered armed and dangerous.",
-				},
-				{
-					id: 2,
-                    word_id: 2,
-					word: "Test",
-					phonetic_symbol: "['dendʒərəs]",
-					definition_cn: "adj. 危险的",
+					example: "",
 				},
 			],),
 			/*
@@ -169,44 +150,28 @@ export default {
             relation: reactive({
                 synonyms: [ {
 						word_id: 3,
-						word: "unsafe",
-						definition_cn: "adj."
-						},
-						{
-						word_id: 4,
-						word: "risky",
-						definition_cn: "adj."
-						},
-						{
-						word_id: 5,
-						word: "hazard",
-						definition_cn: "n."
+						word: "",
+						definition_cn: ""
 						},
 					],
 					antonyms: [{
                         word_id: 6,
-						word: "safe",
-						definition_cn: "adj."
+						word: "",
+						definition_cn: ""
 						},
-						{
-                        word_id: 7,
-						word: "secure",
-						definition_cn: "adj."
-						}
 					],
-					example: "He is considered armed and dangerous.",
+					example: "",
             }),
 			learnWords: [ {
 					word_id: 1,
 					forget_times: 0,
 					simple: false,
-				}, {
-
-				}
+				},
 			],
 			
 			curId: ref(0),
 			forget_times: ref(0),
+			shown: ref(false),
 		}
 	},
 	methods: {
@@ -228,6 +193,7 @@ export default {
 				this.forget_times = 0
 				this.getRelated(this.group_words[0].word_id)
 				this.learnWords.splice(0, this.learnWords.length)
+				this.shown = false
 			})
 		},
 		saveGroup() {
@@ -237,14 +203,14 @@ export default {
 			})
 		},
 		delWord() {
-			alert("Delete cur word!")
+			//alert("Delete cur word!")
 			// 服务器删除
 			let pos = this.learnWords.findIndex((val)=>val.word_id==this.group_words[this.curId].word_id)
 			let len = this.learnWords.length
 			if(pos === -1) {
 				this.learnWords[len] = {word_id: this.group_words[this.curId].word_id, forget_times: 0, simple: true}
 			} else {
-				this.learnWords[pos] = {word_id: this.group_words[this.curId].word_id, forget_times: 0, simple: false}
+				this.learnWords[pos] = {word_id: this.group_words[this.curId].word_id, forget_times: 0, simple: true}
 			}
 			this.nextWord();
 		},
@@ -260,7 +226,8 @@ export default {
 				let times = this.learnWords[pos].forget_times + 1
 				this.learnWords[pos] = {word_id: this.group_words[this.curId].word_id, forget_times: times, simple: false}
 			}
-			this.nextWord()
+			this.showWord()
+			//this.nextWord()
 		},
 		nextWord() {
 			let len = this.group_words.length
@@ -274,6 +241,8 @@ export default {
 			if(pos === -1) {
 				this.learnWords[len] = {word_id: this.group_words[this.curId].word_id, forget_times: 0, simple: false}
 			}
+			this.shown = false
+			this.forget_times = 0
 			this.curId = this.curId + 1
 			this.getRelated(this.group_words[this.curId].word_id)
 		},
@@ -287,6 +256,10 @@ export default {
         		res.antonyms.forEach((ele) => this.relation.antonyms.push(ele))
       		})
 		},
+		showWord() {
+			this.shown = true
+			this.forget_times = 1
+		}
 	},
 	created() {
 		this.getGroupWord();
@@ -416,8 +389,8 @@ export default {
 		/* background-color: #679B9B; */
 	}
 	.word_button_box {
-		margin-top: 10%;
-		margin-left: 5%;
+		margin-top: 7%;
+		margin-left: 2%;
 		height: 10%;
 		width: 90%;
 		/* background-color: rgba(255, 255, 255, 0.6); */
@@ -439,6 +412,17 @@ export default {
 		top: 15%;
 		/* margin-right: 15%; */
 		margin-left: 20%;
+		background-color: rgba(60,179,113, 0.8);
+		font-size: medium;
+		font-weight: 300;
+	}
+
+	.info_button3 {
+		height: 70%;
+		width: 80%;
+		top: 12%;
+		/* margin-right: 15%; */
+		margin-left: 8%;
 		background-color: rgba(60,179,113, 0.8);
 		font-size: medium;
 		font-weight: 300;
