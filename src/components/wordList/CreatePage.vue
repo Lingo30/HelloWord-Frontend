@@ -1,5 +1,5 @@
 <template>
-  <n-modal style="background-color: white" :show="true">
+  <n-modal style="background-color: white" v-model:show="showFlag">
     <div class="container">
       <span style="font-size: 2em; margin-left: 5px; margin-bottom: 5px; height: 10%">
         词单导入
@@ -111,12 +111,10 @@ export default {
     NButton,
     NDivider,
   },
-  props: {
-    showFlag: Boolean,
-  },
   setup() {
     const dialog = useDialog()
     const message = useMessage()
+    let showFlag = ref(false)
     let pageIdx = ref(0)
     let lists = reactive([
       {
@@ -181,7 +179,7 @@ export default {
       })
       //TODO 向后端请求
       uploadFile(formData, progressFunc).then((res) => {
-        
+
       })
     }
 
@@ -209,6 +207,7 @@ export default {
     })
 
     return {
+      showFlag,
       pageIdx,
       lists,
       clickedListId,
