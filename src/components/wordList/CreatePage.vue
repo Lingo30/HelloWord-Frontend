@@ -172,7 +172,7 @@ export default {
           formData.append(key, data[key]);
         });
       }
-      formData.append(file.name, file.file);
+      formData.append('file', file.file);
       // console.log(formData);
       const progressFunc = ((progress) => {
         onProgress({percent: Math.ceil(progress.loaded / progress.total * 100)});
