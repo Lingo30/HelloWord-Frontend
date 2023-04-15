@@ -47,7 +47,7 @@ export function getInfo(uid) {
         user_id: uid
     })
     return request({
-        url: 'https://mock.apifox.cn/m2/2544762-0-default/75149824',
+        url: 'get_user_info/',
         method: 'post',
         data
     })
@@ -62,20 +62,18 @@ export function submitInfo(uid,userInfo,imgFile) {
     formData.append("img", imgFile);
 
     return request({
-        url: "73790186",
+        url: "submit_image/",
         method: "post",
-        data: formData,
         // 更改headers以上传文件
-        headers: {
-            "Content-Type": "multipart/form-data",
-        },
+        config:{headers:{'Content-Type':'multipart/form-data'}},
+        data:formData
     });
 }
 
 export function getRecommendTags() {
     const data = JSON.stringify({})
     return request({
-        url: 'https://mock.apifox.cn/m2/2544762-0-default/75150066',
+        url: 'get_recommend_tags/',
         method: 'post',
         data
     })
@@ -88,7 +86,7 @@ export function changePassword(uid,oldPwd,newPwd) {
         old_pwd: oldPwd
     })
     return request({
-        url: 'https://mock.apifox.cn/m2/2544762-0-default/75149784',
+        url: 'change_pwd/',
         method: 'post',
         data
     })

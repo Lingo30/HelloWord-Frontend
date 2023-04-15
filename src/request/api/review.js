@@ -6,7 +6,7 @@ export function wordsToStory(uid,words) {
         words: words,
     })
     return request({
-        url: "http://127.0.0.1:4523/m2/2544762-0-default/74274447",
+        url: "words_to_story/",
         method: 'post',
         data
     })
@@ -17,7 +17,7 @@ export function getTodayWords(uid) {
         user_id: uid,
     })
     return request({
-        url: "https://mock.apifox.cn/m2/2544762-0-default/74274396",
+        url: "get_today_words/",
         method: 'post',
         data
     })
@@ -28,7 +28,7 @@ export function getSentenceAnalysis(sentence) {
         sentence: sentence,
     })
     return request({
-        url: "https://mock.apifox.cn/m2/2544762-0-default/75139556",
+        url: "sentence_analysis/",
         method: 'post',
         data
     })
@@ -39,7 +39,7 @@ export function getArticleAnalysis(article) {
         user_article: article,
     })
     return request({
-        url: "https://mock.apifox.cn/m2/2544762-0-default/74275649",
+        url: "writing_analysis/",
         method: 'post',
         data
     })
@@ -50,7 +50,7 @@ export function getBlankText(uid) {
         user_id: uid,
     })
     return request({
-        url: "https://mock.apifox.cn/m2/2544762-0-default/74274147",
+        url: "get_blank_text/",
         method: 'post',
         data
     })

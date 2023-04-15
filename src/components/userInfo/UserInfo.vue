@@ -264,8 +264,10 @@ export default ({
     let userAvatar = ref(null);
     let showImage = ref(null);
 
+    let tmp='';
     function getImageFile(e) {
       userAvatar.value = e.target.files[0];
+      tmp=e.target.files[0];
       let img = new FileReader();
       img.readAsDataURL(userAvatar.value);
       // console.log("img:",img)
@@ -280,7 +282,7 @@ export default ({
     async function onSubmit(){
       const imgFile = new FormData();
       imgFile.append('avatar', userAvatar.value);
-      await submitInfo(store.state.user.uid,model,imgFile).then((res)=>{
+      await submitInfo(store.state.user.uid,model,tmp).then((res)=>{
         let success = res.state
         if (success) {
           showImage.value = res.url
