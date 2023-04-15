@@ -28,7 +28,7 @@
         </div>
       </n-card>
       <n-pagination
-          v-if="true"
+          v-if="showPagination"
           v-model:page="curPage"
           :page-count="pageNum"
           size="small"
@@ -48,7 +48,6 @@
       </n-pagination>
     </n-scrollbar>
   </div>
-
 </template>
 
 <script>
@@ -65,17 +64,17 @@ export default {
   },
   setup() {
     const words = reactive([])
-    for (let i = 0; i < 20; i++)
-      words.push({
-        wordId: i,
-        word: 'dangerous' + i,
-        pronounce: '【deng3eres】',
-        meaning: 'adj. 有危险的',
-      })
+    // for (let i = 0; i < 20; i++)
+    //   words.push({
+    //     wordId: i,
+    //     word: 'dangerous' + i,
+    //     pronounce: '【deng3eres】',
+    //     meaning: 'adj. 有危险的',
+    //   })
 
     let showPagination = ref(false)
     let listId = 0
-    let pageSize = 20//分页时每一页的大小
+    let pageSize = 5//分页时每一页的大小
     let pageNum = ref(10)//总页数
     let curPage = ref(1)//当前页数
 
@@ -86,7 +85,6 @@ export default {
       pageNum.value = Math.ceil(totalNum / pageSize)
       curPage.value = 1
       getWordsInfo(store.state.user.uid, listId, pageSize, curPage.value - 1).then((res) => {
-        //TODO
         words.splice(0, words.length);
         res.words.forEach((word) => words.push(word))
       })
@@ -94,9 +92,7 @@ export default {
 
     //分页展示
     function changePage(page) {
-      console.log(page);
       getWordsInfo(store.state.user.uid, listId, pageSize, page - 1).then((res) => {
-        //TODO
         words.splice(0, words.length);
         res.words.forEach((word) => words.push(word))
       })

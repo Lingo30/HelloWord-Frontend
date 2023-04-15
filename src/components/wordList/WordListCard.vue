@@ -52,7 +52,7 @@
 import {NCard, NText, NIcon} from 'naive-ui'
 import {AccessibilityOutline} from '@vicons/ionicons5'
 import {onMounted, reactive, ref} from "vue";
-import {getListInfo} from "@/request/api/wordlist";
+import {getUserWordlistInfo} from "@/request/api/wordlist";
 
 export default {
   name: "WordListCard",
@@ -76,12 +76,12 @@ export default {
     ]
 
     let info = reactive({
-      name: '四级',
-      num: 25,
-      creator: 'official',
+      name: '',
+      num: 0,
+      creator: '',
       date: {
-        month: 'Apr',
-        day: '08'
+        month: '',
+        day: ''
       }
     })
     let newName = ref(info.name)
@@ -100,13 +100,13 @@ export default {
     }
 
     onMounted(() => {
-      //TODO 根据 listId获取词单基本信息，并赋值给info
-      // getListInfo(props.listId).then((res) => {
-      //   info.name = res.name
-      //   info.num = res.num
-      //   info.creator = res.creator
-      //   info.date = res.date
-      // });
+      // 根据 listId获取用户词单的基本信息
+      getUserWordlistInfo(props.listId).then((res) => {
+        info.name = res.name
+        info.num = res.num
+        info.creator = res.creator
+        info.date = res.date
+      });
     })
 
     return {
@@ -149,6 +149,10 @@ export default {
 
 .card {
   border-radius: 10px;
+}
+
+.card:hover {
+  cursor: pointer;
 }
 
 .edit-font-color {
