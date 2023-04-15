@@ -67,7 +67,7 @@ export default {
   setup() {
     const wordCardListRef = ref(null)
     const wordListCardsRef = ref(null)
-    const listIds = reactive([1, 2, 3, 4, 5, 6, 7, 8,])
+    const listIds = reactive([/*1, 2, 3, 4, 5, 6, 7, 8,*/])
     const editFlag = ref(false)
     const removeList = []//待删除的id队列
     const tmpListIds = []//缓存编辑前的id队列
@@ -125,9 +125,9 @@ export default {
     }
 
     onMounted(() => {
-      //TODO 通过uid获取所有词单id
+      // 通过uid获取所有词单id
       getUserLists(store.state.user.uid).then((res) => {
-        listIds.splice(0, listIds.length)
+        // listIds.splice(0, listIds.length)
         res.ids.forEach((id) => listIds.push(Number(id)));
       })
     })

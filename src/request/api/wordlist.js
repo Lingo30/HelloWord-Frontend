@@ -1,6 +1,6 @@
 import request from "@/request/request";
 
-//TODO 根据用户id获取所有词单id
+// 根据用户id获取所有词单id
 export function getUserLists(uid) {
     /*
     返回数据格式:
@@ -9,17 +9,16 @@ export function getUserLists(uid) {
     }
      */
     const data = JSON.stringify({
-        user_id: uid
+        userId: uid
     })
     return request({
-        url: "",//TODO
-        method: "get",
+        url: "get_user_wordlists/",
+        method: "post",
         data,
     })
 }
 
-//TODO 删除用户的多个词单
-
+// 删除用户的多个词单
 // export function deleteLists(uid, listIds) {
 //     /*
 //         {
@@ -37,8 +36,8 @@ export function getUserLists(uid) {
 //     })
 // }
 
-//TODO 根据词单id获取词单名、作者、日期、单词总数等
-export function getListInfo(listId) {
+// 根据词单id获取用户的某个词单的词单名、作者、日期、单词总数等
+export function getUserWordlistInfo(listId) {
     /*
     返回数据格式：
     {
@@ -52,16 +51,16 @@ export function getListInfo(listId) {
     }
      */
     const data = JSON.stringify({
-        id: listId,
+        listId: listId,
     })
     return request({
-        url: "",//TODO
-        method: 'get',
+        url: "get_wordlist_info/",
+        method: 'post',
         data,
     })
 }
 
-//TODO 根据用户id、词单id获取wordNum个单词信息
+// 根据用户id、词单id获取wordNum个单词信息
 export function getWordsInfo(userId, listId, pageSize, curPage) {
     /*
     {
@@ -69,22 +68,21 @@ export function getWordsInfo(userId, listId, pageSize, curPage) {
             {
                 wordId:'',单词id
                 word:'',单词英文
-                pronounce:'',音标 TODO 后端数据库格式为'【aaa】'还是'aaa'
+                pronounce:'',音标
                 meaning:'',释义（如'adj. 危险的'）
             }
         ]
     }
-
-     */
+    */
     const data = JSON.stringify({
-        user_id: userId,
-        list_id: listId,
-        page_size: pageSize,//每页的单词数
-        cur_page: curPage,//当前页
+        userId: userId,
+        listId: listId,
+        pageSize: pageSize,//每页的单词数
+        curPage: curPage,//当前页
     })
     return request({
-        url: "",//TODO
-        method: 'get',
+        url: "get_words_info/",
+        method: 'post',
         data,
     })
 }
@@ -116,8 +114,7 @@ export function createFromOfficial(userId, listId) {
     })
 }
 
-//TODO 用户更新多个词单的词单名
-
+// 用户更新多个词单的词单名
 // export function updateListName(userId, lists) {
 //     /*
 //         state:true/false是否成功修改
@@ -127,7 +124,7 @@ export function createFromOfficial(userId, listId) {
 //         lists: lists
 //     })
 //     return request({
-//         url: '',//TODO
+//         url: '',
 //         method: "post",
 //         data
 //     })
@@ -147,6 +144,7 @@ export function editWordlists(userId, deleteLists, updateLists) {
     })
 }
 
+//TODO
 export function uploadFile(fileData, progressFunc) {
     // const data = JSON.stringify({
     //     file: file
@@ -154,9 +152,9 @@ export function uploadFile(fileData, progressFunc) {
 
     return request({
         url: "https://mock.apifox.cn/m2/2544762-0-default/73946029",//TODO
-        config:{headers:{'Content-Type':'multipart/form-data'}},
+        config: {headers: {'Content-Type': 'multipart-form-data'}},
         method: 'post',
         onUploadProgress: progressFunc,
-        data:fileData
+        data: fileData
     })
 }
