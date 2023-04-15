@@ -1,5 +1,6 @@
 <template>
   <div class="container">
+    <CreatePage ref="createPageRef"/>
     <div class="left">
       <div class="card-list">
         <n-scrollbar>
@@ -30,8 +31,8 @@
                     :bordered="false">
             完成
           </n-button>
-          <n-button v-else @click="createWordList" style="width: 100%" circle text-color="white" color="green"
-                    :bordered="false">
+          <n-button v-else @click="createPageRef.showFlag=true" style="width: 100%" circle text-color="white"
+                    color="green" :bordered="false">
             新建单词本
           </n-button>
         </div>
@@ -50,10 +51,13 @@ import WordCardList from "@/components/wordList/WordCardList.vue";
 import {onMounted, reactive, ref} from "vue";
 import store from "@/store";
 import {getUserLists, deleteLists} from "@/request/api/wordlist";
+import CreatePage from "@/components/wordList/CreatePage.vue";
+
 
 export default {
   name: "WordList",
   components: {
+    CreatePage,
     NScrollbar,
     WordCardList,
     WordListCard
@@ -65,6 +69,7 @@ export default {
     const removeList = []//待删除的id队列
     const tmpListIds = []//缓存编辑前的id队列
     const message = useMessage()
+    let createPageRef = ref(null)
 
     function clickWordList(id, totalNum) {
       wordCardListRef.value.showWords(id, totalNum)
@@ -77,10 +82,6 @@ export default {
       listIds.forEach(id => tmpListIds.push(id))
 
       editFlag.value = !editFlag.value
-    }
-
-    function createWordList() {
-      //TODO 路由跳转
     }
 
     function cancel() {
@@ -123,9 +124,10 @@ export default {
       wordCardListRef,
       listIds,
       editFlag,
+      createPageRef,
 
       editWordList,
-      createWordList,
+      // createWordList,
       cancel,
       finish,
       clickWordList,

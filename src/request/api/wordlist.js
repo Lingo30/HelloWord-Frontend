@@ -114,3 +114,17 @@ export function createFromOfficial(userId, listId) {
         data
     })
 }
+
+export function uploadFile(fileData, progressFunc) {
+    // const data = JSON.stringify({
+    //     file: file
+    // })
+
+    return request({
+        url: "https://mock.apifox.cn/m2/2544762-0-default/73946029",//TODO
+        config:{headers:{'Content-Type':'multipart/form-data'}},
+        method: 'post',
+        onUploadProgress: progressFunc,
+        data:fileData
+    })
+}

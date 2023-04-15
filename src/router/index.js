@@ -74,11 +74,6 @@ const routes = [
                 name: 'wordlist',
                 component: WordListPage,
             },
-            {
-                path: 'create',
-                name: 'createWordlist',
-                component: CreatePage,
-            },
             //对话界面
             {
                 path: 'chat',
