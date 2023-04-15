@@ -4,56 +4,80 @@
       <span style="font-size: 2em; margin-left: 5px; margin-bottom: 5px; height: 10%">
         词单导入
       </span>
+
       <div class="choose-button-group">
-        <n-button class="choose-button" :bordered="true">官方</n-button>
-        <n-button class="choose-button" :bordered="true">文件</n-button>
+        <n-button
+            class="choose-button"
+            :class="pageIdx===0?'choose-button-clicked':''"
+            @click="switchPage(0)"
+        >
+          官方
+        </n-button>
+        <n-button
+            class="choose-button"
+            :class="pageIdx===1?'choose-button-clicked':''"
+            @click="switchPage(1)"
+        >
+          文件
+        </n-button>
       </div>
       <n-divider style="margin: 0;padding: 0"/>
       <div class="content">
         <!--        官方的词单卡片-->
-        <n-scrollbar v-if="value==='official'">
-          <div class="card-list" v-show="value==='official'">
+        <n-scrollbar v-if="pageIdx===0">
+          <div class="card-list" v-show="pageIdx===0">
             <div
                 class="card"
-                v-for="(id,index) in 10"
-                :key="id">
+                v-for="(list,index) in lists"
+                :key="list.listId"
+            >
               <n-tooltip trigger="hover">
                 <template #trigger>
-                  <n-card size="medium">
+                  <n-card
+                      size="medium"
+                      :style="clickedListId===list.listId?{ backgroundColor: '#42b983'}:{}"
+                      @click="clickOfficialCard(list.listId)"
+                  >
                     {{ ' ' }}
                     <template #header>
                       <div class="head">
-                        <!--                    {{ info.name }}-->
-                        name
+                        {{ list.name }}
                       </div>
                     </template>
                     <template #header-extra>
-                      <!--                  {{ info.num + ' Items' }}-->
-                      item
+                      {{ list.num + ' Items' }}
                     </template>
                     <template #footer>
                       <div class="card-foot">
                         <!--                  <n-icon class="icon" size="20" :component="AccessibilityOutline"/>-->
-                        <!--                    {{ info.creator }}-->
-                        creator
+                        {{ list.creator }}
                       </div>
                     </template>
                   </n-card>
                 </template>
-                如果显示不完全的话，会显示完整名字
+                {{ list.name }}
               </n-tooltip>
             </div>
           </div>
         </n-scrollbar>
         <!--        文件导入-->
-        <div v-if="value==='file'" class="drop-area">
-          <p style="width: 180px;margin: 80px auto">将文件拖拽到此处即可完成文件上传。</p>
-        </div>
+        <n-upload
+            ref="uploadRef"
+            class="drop-area"
+            v-if="pageIdx===1"
+            directory-dnd
+            :action="uploadURL"
+            :custom-request="upload"
+        >
+          <n-upload-dragger>
+            <p style="width: 180px;margin: 80px auto">将文件拖拽到此处即可完成文件上传。</p>
+          </n-upload-dragger>
+        </n-upload>
       </div>
       <!--      底部输入词单名和确认-->
       <div class="foot">
-        <n-input class="input-name"/>
-        <n-button class="button">
+        <n-input class="input-name" v-model:value="myWordlistName"/>
+        <n-button class="button" @click="create(myWordlistName)">
           生成词单
         </n-button>
       </div>
@@ -66,9 +90,7 @@ import {
   useDialog,
   useMessage,
   NModal,
-  NSelect,
   NScrollbar,
-  NSpace,
   NTooltip,
   NInput,
   NButton,
@@ -76,16 +98,14 @@ import {
 } from "naive-ui";
 import router from "@/router";
 import store from "@/store";
-import {createFromOfficial, getOfficialLists} from "@/request/api/wordlist";
+import {createFromOfficial, getOfficialLists, uploadFile} from "@/request/api/wordlist";
 import {onMounted, reactive, ref} from "vue";
 
 export default {
   name: "CreatePage",
   components: {
     NModal,
-    NSelect,
     NScrollbar,
-    NSpace,
     NTooltip,
     NInput,
     NButton,
@@ -97,31 +117,87 @@ export default {
   setup() {
     const dialog = useDialog()
     const message = useMessage()
-    let optionRef = ref('official')
-    let listIds = reactive([1, 2])//所有官方词单
+    let pageIdx = ref(0)
+    let lists = reactive([
+      {
+        listId: 1,
+        name: "四级",
+        creator: '官方',
+        num: 4321
+      },
+      {
+        listId: 2,
+        name: "机器学习",
+        creator: 'He K',
+        num: 111
+      },
+      {
+        listId: 3,
+        name: "chemicallllllllllllllllllllllllllllllllllllllllllll",
+        creator: 'E. J. Corey',
+        num: 999
+      },
+    ])//所有官方词单
+    let clickedListId = ref(undefined)//选择的官方词单id
+    let uploadURL = ref('' + store.state.user.uid)
+    let myWordlistName = ref('')
 
-    function create(listId) {
-      //TODO 根据官方词单创建词单
-      createFromOfficial(store.state.user.uid, listId).then((res) => {
-        if (res.state) {
-          message.success("创建成功")
-        } else {
-          message.error('创建失败')
-        }
-      })
-      router.push({name: 'wordlist'})
+    function switchPage(idx) {
+      pageIdx.value = idx
     }
 
-    function clickWordList(listId) {
-      dialog.info({
-        title: '提示',
-        content: '为此词单创建副本？',
-        positiveText: '确定',
-        negativeText: '取消',
-        onPositiveClick: () => {
-          create(listId)
-        },
+    function clickOfficialCard(id) {
+      if (clickedListId.value === id) {
+        clickedListId.value = undefined
+      } else {
+        clickedListId.value = id
+      }
+    }
+
+    //从后端解析
+    function upload(
+        {
+          file,
+          data,
+          headers,
+          withCredentials,
+          action,
+          onFinish,
+          onError,
+          onProgress,
+        }
+    ) {
+      const formData = new FormData();
+      console.log(file.file);
+      if (data) {
+        Object.keys(data).forEach((key) => {
+          formData.append(key, data[key]);
+        });
+      }
+      formData.append(file.name, file.file);
+      // console.log(formData);
+      const progressFunc = ((progress) => {
+        onProgress({percent: Math.ceil(progress.loaded / progress.total * 100)});
       })
+      //TODO 向后端请求
+      uploadFile(formData, progressFunc).then((res) => {
+        
+      })
+    }
+
+    function create(listName) {
+      if (listName === '') {
+        message.error('请输入词单名')
+        return
+      }
+      //TODO 根据官方词单创建词单
+      // createFromOfficial(store.state.user.uid, listId).then((res) => {
+      //   if (res.state) {
+      //     message.success("创建成功")
+      //   } else {
+      //     message.error('创建失败')
+      //   }
+      // })
     }
 
     onMounted(() => {
@@ -133,10 +209,16 @@ export default {
     })
 
     return {
-      value: optionRef,
-      listIds,
+      pageIdx,
+      lists,
+      clickedListId,
+      uploadURL,
+      myWordlistName,
 
-      clickWordList,
+      switchPage,
+      clickOfficialCard,
+      upload,
+      create,
     }
   }
 }
@@ -165,7 +247,12 @@ export default {
   width: 100px;
   border-radius: 0;
   margin: 0;
-  padding:0;
+  padding: 0;
+  background-color: rgb(239, 239, 245);
+}
+
+.choose-button-clicked {
+  background-color: white;
 }
 
 .content {
@@ -191,9 +278,18 @@ export default {
   margin: 5px;
 }
 
+.card:hover {
+  cursor: pointer;
+}
+
 .head {
   text-align: left;
   font-size: 0.8em;
+  width: 100%;
+  /*设置省略输出*/
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
 }
 
 .card-foot {
@@ -218,16 +314,9 @@ export default {
 
 .drop-area {
   display: flex;
-  width: 200px;
-  height: 200px;
+  flex-direction: column;
+  width: 400px;
+  height: 300px;
   color: rgba(0, 0, 0, 0.45);
-  text-align: center;
-  background-color: #fafafa;
-  border: 1px dashed #d9d9d9;
-  margin: auto;
-}
-
-.drop-active {
-  background-color: rgba(231, 234, 246, 0.8);
 }
 </style>
