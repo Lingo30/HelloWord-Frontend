@@ -10,8 +10,9 @@ const request = axios.create({
 // request 拦截器
 request.interceptors.request.use(
     config => {
-        config.headers['Content-Type'] = 'application/json;charset=utf-8';
-
+        if (config.headers['Content-Type'] !== 'multipart/form-data') {
+            config.headers['Content-Type'] = 'application/json;charset=utf-8';
+        }
         return config
     },
     error => {
