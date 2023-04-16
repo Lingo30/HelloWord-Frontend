@@ -6,7 +6,7 @@
           :bordered="false"
           hoverable
           v-for="(word,index) in words"
-          :key="index"
+          :key="word.wordId"
       >
         <template #header>
           <div class="head">
@@ -18,7 +18,7 @@
         </template>
         <template #header-extra>
           <n-text class="font-color">
-            {{ word.pronounce }}
+            {{ word.symbol }}
           </n-text>
         </template>
         <div class="content">
@@ -27,6 +27,8 @@
           </n-text>
         </div>
       </n-card>
+    </n-scrollbar>
+    <div class="foot">
       <n-pagination
           v-if="showPagination"
           v-model:page="curPage"
@@ -46,7 +48,11 @@
           </div>
         </template>
       </n-pagination>
-    </n-scrollbar>
+      <n-button class="set-learn-button" size="tiny" v-show="showPagination&&!selectedFlag"
+                @click="selectWordlist(listId)">
+        设为背诵词单
+      </n-button>
+    </div>
   </div>
 </template>
 
@@ -68,19 +74,21 @@ export default {
     //   words.push({
     //     wordId: i,
     //     word: 'dangerous' + i,
-    //     pronounce: '【deng3eres】',
+    //     symbol: '【deng3eres】',
     //     meaning: 'adj. 有危险的',
     //   })
 
     let showPagination = ref(false)
-    let listId = 0
+    let listId = ref(0)
     let pageSize = 5//分页时每一页的大小
     let pageNum = ref(10)//总页数
     let curPage = ref(1)//当前页数
+    let selectedFlag = ref(false)
 
     //默认展示第一页
     function showWords(listId, totalNum) {
       showPagination.value = true
+      selectedFlag.value = store.state.user.selectWordlist === listId
       this.listId = listId
       pageNum.value = Math.ceil(totalNum / pageSize)
       curPage.value = 1
@@ -98,14 +106,25 @@ export default {
       })
     }
 
+    function selectWordlist(listId) {
+      //TODO 服务器更新正在背诵的词单
+      //本地更新
+      store.state.user.selectWordlist = listId
+      selectedFlag.value = store.state.user.selectWordlist === listId
+      //TODO 提示更新成功/失败
+    }
+
     return {
       words,
       showPagination,
       pageNum,
       curPage,
+      selectedFlag,
+      listId,
 
       showWords,
       changePage,
+      selectWordlist,
     }
   }
 }
@@ -132,10 +151,24 @@ export default {
 
 .head {
   text-align: left;
-  font-size: 2em;
+  font-size: 1.5em;
 }
 
 .content {
   text-align: left;
+}
+
+.foot {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.set-learn-button {
+  color: white;
+  background-color: green;
+  margin: 0;
+  padding: 12px;
+  border-radius: 100px;
 }
 </style>
