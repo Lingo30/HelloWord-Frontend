@@ -1,5 +1,6 @@
 import {createRouter, createWebHistory} from 'vue-router'
 import WordPage from "@/components/learn/WordPage.vue";
+import WordReviewPage from "@/components/learn/WordReviewPage.vue";
 import StatisticPage from "@/components/statistic/StatisticPage.vue";
 import ReviewPage from "@/components/review/ReviewPage.vue";
 import Login from "@/components/login/Login.vue";
@@ -60,6 +61,14 @@ const routes = [
                 name: 'learn',
                 component: WordPage,
                 // component: WordPage
+                //TODO WordPage存在bug component: WordPage
+            },
+            //单词复习页面
+            {
+                path: 'wordReview',
+                name: 'wordReview',
+                component: WordReviewPage,
+                // component: WordReviewPage
                 //TODO WordPage存在bug component: WordPage
             },
             //拓展界面

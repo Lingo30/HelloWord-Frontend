@@ -116,6 +116,7 @@ import {getGroupWordAPI, searchWordAPI, deleteWordAPI, saveGroupAPI, getRelatedA
 import store from "@/store";
 import {reactive, ref } from 'vue';
 import { th } from 'date-fns/locale';
+import router from '@/router';
 
 export default {
 	name: "WordPage",
@@ -127,19 +128,6 @@ export default {
 					word: "",
 					phonetic_symbol: "",
 					definition_cn: "",
-					synonyms: [ {
-						word_id: 3,
-						word: "",
-						definition_cn: ""
-						},
-					],
-					antonyms: [{
-                        word_id: 6,
-						word: "",
-						definition_cn: ""
-						},
-					],
-					example: "",
 				},
 			],),
 			/*
@@ -194,6 +182,8 @@ export default {
 				this.getRelated(this.group_words[0].word_id)
 				this.learnWords.splice(0, this.learnWords.length)
 				this.shown = false
+				store.state.user.groupWords.splice(0, store.state.user.groupWords.length)
+				this.group_words.forEach((ele) => store.state.user.groupWords.push(ele))
 			})
 		},
 		saveGroup() {
@@ -233,7 +223,7 @@ export default {
 			let len = this.group_words.length
 			if(this.curId === len - 1) {
 				this.saveGroup()
-				this.getGroupWord();
+				router.push('/user/wordReview')
 				return
 			}
 			let pos = this.learnWords.findIndex((val)=>val.word_id==this.group_words[this.curId].word_id)
