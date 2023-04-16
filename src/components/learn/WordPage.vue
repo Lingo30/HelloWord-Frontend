@@ -112,7 +112,7 @@
 <script>
 import {useMessage} from 'naive-ui'
 // import {searchWordAPI, getWordAPI} from "@/request/api/user";
-import {getGroupWordAPI, searchWordAPI, deleteWordAPI, saveGroupAPI, getRelatedAPI} from "@/request/api/learn";
+import {get_group_words_in_list, searchWordAPI, deleteWordAPI, group_word_learn_save, get_word_releation} from "@/request/api/learn";
 import store from "@/store";
 import {reactive, ref } from 'vue';
 import { th } from 'date-fns/locale';
@@ -174,7 +174,7 @@ export default {
 		// 	})
 		// },
 		getGroupWord() {
-			getGroupWordAPI(store.state.user.uid).then((res) => {
+			get_group_words_in_list(store.state.user.uid).then((res) => {
 				this.group_words.splice(0, this.group_words.length)
         		res.group_words.forEach((ele) => this.group_words.push(ele))
 				this.curId = 0
@@ -187,7 +187,7 @@ export default {
 			})
 		},
 		saveGroup() {
-			saveGroupAPI(store.state.user.uid, this.learnWords).then((res) => {
+			group_word_learn_save(store.state.user.uid, this.learnWords).then((res) => {
 				// pass
 				
 			})
@@ -238,7 +238,7 @@ export default {
 		},
 		getRelated() {
 			//TODO 通过uid获取所有词单id
-			getRelatedAPI(this.group_words[this.curId].word_id).then((res) => {
+			get_word_releation(this.group_words[this.curId].word_id).then((res) => {
 				this.relation.example = res.example
 				this.relation.synonyms.splice(0, this.relation.synonyms.length)
         		res.synonyms.forEach((ele) => this.relation.synonyms.push(ele))
