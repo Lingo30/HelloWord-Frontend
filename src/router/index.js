@@ -1,6 +1,7 @@
 import {createRouter, createWebHistory} from 'vue-router'
 import WordPage from "@/components/learn/WordPage.vue";
 import WordReviewPage from "@/components/learn/WordReviewPage.vue";
+import FinishPage from "@/components/learn/FinishPage.vue";
 import StatisticPage from "@/components/statistic/StatisticPage.vue";
 import ReviewPage from "@/components/review/ReviewPage.vue";
 import Login from "@/components/login/Login.vue";
@@ -68,6 +69,13 @@ const routes = [
                 path: 'wordReview',
                 name: 'wordReview',
                 component: WordReviewPage,
+                // component: WordReviewPage
+                //TODO WordPage存在bug component: WordPage
+            },
+            {
+                path: 'finish',
+                name: 'finish',
+                component: FinishPage,
                 // component: WordReviewPage
                 //TODO WordPage存在bug component: WordPage
             },

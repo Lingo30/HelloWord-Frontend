@@ -34,7 +34,7 @@
               <div class="imgTitle">阅读写作</div>
               <router-link to="/user/writing"><img
                 class="carousel-img"
-                src="../../assets/img/write.jpeg"
+                src="../../assets/img/write.jpg"
               ></router-link>
             </n-carousel-item>
           </n-carousel>

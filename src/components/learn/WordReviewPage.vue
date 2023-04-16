@@ -1,9 +1,5 @@
 <template>
-    <div>
-        <!-- 侧边栏 -->
-        <!-- <sidebar v-on:listenToChild="ChildToParent"></sidebar> -->
-        <!-- 页首 -->
-        
+    <div>        
         <!-- content -->
         <div class="class_table">
             <div class="main_box">
