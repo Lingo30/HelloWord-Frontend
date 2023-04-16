@@ -87,14 +87,11 @@ export function getWordsInfo(userId, listId, pageSize, curPage) {
     })
 }
 
-//TODO 获取所有官方词单（公共词单）
+// 获取所有官方词单（公共词单）的词单信息
 export function getOfficialLists() {
-    /*
-        ids:[]
-     */
     return request({
-        url: '',//TODO
-        method: 'get'
+        url: 'get_official_wordlists/',
+        method: 'post',
     })
 }
 
@@ -104,11 +101,25 @@ export function createFromOfficial(userId, listId) {
         state:true/false是否成功创建
      */
     const data = JSON.stringify({
-        user_id: userId,
-        list_id: listId,
+        userId: userId,
+        listId: listId,
     })
     return request({
         url: "",//TODO
+        method: 'post',
+        data
+    })
+}
+
+//TODO 通过检索文件得到单词列表，再根据单词列表生成词单
+export function createFromFile(userId, listName, words) {
+    const data = JSON.stringify({
+        userId: userId,
+        name: listName,
+        words: words,
+    })
+    return request({
+        url: '',//TODO
         method: 'post',
         data
     })

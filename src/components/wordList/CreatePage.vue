@@ -64,20 +64,23 @@
         <n-upload
             ref="uploadRef"
             class="drop-area"
-            v-if="pageIdx===1"
+            v-else-if="pageIdx===1&&showFileResultFlag"
             directory-dnd
-            :action="uploadURL"
             :custom-request="upload"
         >
           <n-upload-dragger>
             <p style="width: 180px;margin: 80px auto">将文件拖拽到此处即可完成文件上传。</p>
           </n-upload-dragger>
         </n-upload>
+        <!--        文件导入后的展示-->
+        <div class="file-show" v-else>
+          <n-text v-for="(word,index) in fileWords" :key="index">{{ word }}</n-text>
+        </div>
       </div>
       <!--      底部输入词单名和确认-->
       <div class="foot">
         <n-input class="input-name" v-model:value="myWordlistName"/>
-        <n-button class="button" @click="create(myWordlistName)">
+        <n-button class="button" @click="create(myWordlistName, pageIdx)">
           生成词单
         </n-button>
       </div>
@@ -98,7 +101,7 @@ import {
 } from "naive-ui";
 import router from "@/router";
 import store from "@/store";
-import {createFromOfficial, getOfficialLists, uploadFile} from "@/request/api/wordlist";
+import {createFromFile, createFromOfficial, getOfficialLists, uploadFile} from "@/request/api/wordlist";
 import {onMounted, reactive, ref} from "vue";
 
 export default {
@@ -137,7 +140,13 @@ export default {
       },
     ])//所有官方词单
     let clickedListId = ref(undefined)//选择的官方词单id
-    let uploadURL = ref('' + store.state.user.uid)
+    let showFileResultFlag = ref(false)//是否完成文件解析展示
+    let fileWords = reactive([
+      'this',
+      'is',
+      'a',
+      'word'
+    ])
     let myWordlistName = ref('')
 
     function switchPage(idx) {
@@ -183,10 +192,20 @@ export default {
       })
     }
 
-    function create(listName) {
+    function create(listName, createMethod) {
+      //createMethod=0时为官方词单，createMethod=1时为文件创建词单
       if (listName === '') {
         message.error('请输入词单名')
         return
+      }
+      if (createMethod === 0) {
+        //官方词单
+        createFromOfficial(store.state.user.uid, listName, clickedListId.value).then((res) => {
+
+        })
+      } else {
+        //文件创建词单
+        createFromFile(store.state.user.uid, listName,)
       }
       //TODO 根据官方词单创建词单
       // createFromOfficial(store.state.user.uid, listId).then((res) => {
@@ -199,11 +218,20 @@ export default {
     }
 
     onMounted(() => {
-      //TODO 获取所有官方词单id
-      // getOfficialLists().then((res) => {
-      //   listIds.splice(0, listIds.length)
-      //   res.ids.forEach((id) => listIds.push(id));
-      // })
+      // 默认在第一个页面，获取所有官方词单
+      let success = false
+      let errMsg = '网络错误'
+      getOfficialLists().then((res) => {
+        success = res.state
+        if (res.state) {
+          lists.splice(0, lists.length)
+          res.lists.forEach((wordlist) => lists.push(wordlist))
+        }
+      }).finally(() => {
+        if (!success) {
+          message.error(errMsg)
+        }
+      })
     })
 
     return {
@@ -211,7 +239,8 @@ export default {
       pageIdx,
       lists,
       clickedListId,
-      uploadURL,
+      showFileResultFlag,
+      fileWords,
       myWordlistName,
 
       switchPage,
@@ -293,6 +322,14 @@ export default {
 
 .card-foot {
   text-align: left;
+}
+
+.file-show {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: left;
 }
 
 .foot {
