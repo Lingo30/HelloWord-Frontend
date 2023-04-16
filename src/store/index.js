@@ -8,6 +8,12 @@ export default createStore({
             login: false,//用户是否已登录
             uid:0,//用户id
             wordNum:0,//每日背诵单词数
+            groupWords: [
+                {
+                    word: "",
+                    definition_cn: "",
+                }
+            ],
         },
         modifyVisible: false,
     },
