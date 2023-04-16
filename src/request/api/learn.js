@@ -1,7 +1,7 @@
 import request from "@/request/request";
 
 //TODO 根据用户id获取所有词单id
-export function getGroupWordAPI(uid) {
+export function get_group_words_in_list(uid) {
     /*
     返回数据格式:
     {   // 返回len为10的单词列表
@@ -53,7 +53,7 @@ export function deleteWordAPI(uid, id) {
 }
 
 // TODO 存储每组单词背完后的状态
-export function saveGroupAPI(uid, words) {
+export function group_word_learn_save(uid, words) {
     /*
         words: [ 
             {
@@ -79,7 +79,7 @@ export function saveGroupAPI(uid, words) {
 }
 
 // TODO 获取某个单词的关联信息，如同义词、反义词、例句等等
-export function getRelatedAPI(word_id) {
+export function get_word_releation(word_id) {
     /*
         relation:    
         {
