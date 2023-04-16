@@ -57,10 +57,10 @@
 </template>
 
 <script>
-import {NCard, NScrollbar} from "naive-ui";
+import {NCard, NScrollbar, useMessage} from "naive-ui";
 import {reactive, ref} from "vue";
 import store from "@/store";
-import {getWordsInfo} from "@/request/api/wordlist";
+import {getWordsInfo, updateLearnWordlist} from "@/request/api/wordlist";
 
 export default {
   name: "WordCardList",
@@ -69,6 +69,7 @@ export default {
     NScrollbar
   },
   setup() {
+    const message = useMessage()
     const words = reactive([])
     // for (let i = 0; i < 20; i++)
     //   words.push({
@@ -108,10 +109,25 @@ export default {
 
     function selectWordlist(listId) {
       //TODO 服务器更新正在背诵的词单
-      //本地更新
-      store.state.user.selectWordlist = listId
-      selectedFlag.value = store.state.user.selectWordlist === listId
-      //TODO 提示更新成功/失败
+      let success = false
+      let errMsg = '网络错误'
+      updateLearnWordlist(store.state.user.uid, listId).then((res) => {
+        success = res.state
+        if (!success) {
+          errMsg = res.msg
+        }
+      }).finally(() => {
+        //本地更新
+        if (success) {
+          //更新成功
+          store.state.user.selectWordlist = listId
+          selectedFlag.value = store.state.user.selectWordlist === listId
+          message.success('更新成功')
+        } else {
+          //更新失败
+          message.error(errMsg)
+        }
+      })
     }
 
     return {

@@ -43,15 +43,18 @@
                 {{ info.creator }}
               </n-text>
             </div>
-            <n-icon-wrapper v-if="store.state.user.selectWordlist === listId" :size="24" :border-radius="10">
-              <n-icon :size="18" :component="Checkmark16Filled"/>
-            </n-icon-wrapper>
-            <!--            进度条-->
-            <n-progress
-                :percentage="Math.floor(info.learned*10000/info.num)/100"
-                :status="info.num!==info.learned?'default':'success'"
-                :indicator-placement="'inside'"
-            />
+            <div style="display: flex;justify-content: space-between">
+              <!--            进度条-->
+              <n-progress
+                  style="width: 80%"
+                  :percentage="Math.floor(info.learned*10000/info.num)/100"
+                  :status="info.num!==info.learned?'default':'success'"
+                  :indicator-placement="'inside'"
+              />
+              <n-icon-wrapper v-if="store.state.user.selectWordlist === listId" :size="16" :border-radius="10">
+                <n-icon :size="14" :component="Checkmark16Filled"/>
+              </n-icon-wrapper>
+            </div>
           </div>
         </template>
       </n-card>
@@ -196,7 +199,7 @@ export default {
 
 .foot {
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
   text-align: left;
 }
 

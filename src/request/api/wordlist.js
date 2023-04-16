@@ -154,3 +154,17 @@ export function uploadFile(fileData, progressFunc) {
         data: fileData
     })
 }
+
+// TODO 更新用户选择进行学习的词单
+export function updateLearnWordlist(userId, listId) {
+    const data = JSON.stringify({
+        userId: userId,
+        listId: listId
+    })
+
+    return request({
+        url: 'update_learn_wordlist/',//TODO
+        method: 'post',
+        data
+    })
+}
