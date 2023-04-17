@@ -175,15 +175,20 @@ export default {
 		// },
 		getGroupWord() {
 			get_group_words_in_list(store.state.user.uid).then((res) => {
-				this.group_words.splice(0, this.group_words.length)
-        		res.group_words.forEach((ele) => this.group_words.push(ele))
-				this.curId = 0
-				this.forget_times = 0
-				this.getRelated(this.group_words[0].word_id)
-				this.learnWords.splice(0, this.learnWords.length)
-				this.shown = false
-				store.state.user.groupWords.splice(0, store.state.user.groupWords.length)
-				this.group_words.forEach((ele) => store.state.user.groupWords.push(ele))
+				alert(res.state)
+				if(res.state==true) {
+					this.group_words.splice(0, this.group_words.length)
+					res.group_words.forEach((ele) => this.group_words.push(ele))
+					this.curId = 0
+					this.forget_times = 0
+					this.getRelated(this.group_words[0].word_id)
+					this.learnWords.splice(0, this.learnWords.length)
+					this.shown = false
+					store.state.user.groupWords.splice(0, store.state.user.groupWords.length)
+					this.group_words.forEach((ele) => store.state.user.groupWords.push(ele))
+				} else {
+					router.push('/user/finish')
+				}
 			})
 		},
 		saveGroup() {
