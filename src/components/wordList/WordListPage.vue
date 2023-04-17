@@ -67,7 +67,7 @@ export default {
   setup() {
     const wordCardListRef = ref(null)
     const wordListCardsRef = ref(null)
-    const listIds = reactive([/*1, 2, 3, 4, 5, 6, 7, 8,*/])
+    const listIds = reactive([3,/*1, 2, 3, 4, 5, 6, 7, 8,*/])
     const editFlag = ref(false)
     const removeList = []//待删除的id队列
     const tmpListIds = []//缓存编辑前的id队列

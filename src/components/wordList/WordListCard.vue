@@ -41,6 +41,12 @@
             <n-text class="font-color">
               {{ info.creator }}
             </n-text>
+            <!--            进度条-->
+            <n-progress
+                :percentage="Math.floor(info.learned*10000/info.num)/100"
+                :status="info.num!==info.learned?'default':'success'"
+                :indicator-placement="'inside'"
+            />
           </div>
         </template>
       </n-card>
@@ -77,7 +83,8 @@ export default {
 
     let info = reactive({
       name: '',
-      num: 0,
+      num: 10000000,
+      learned: 9999999,
       creator: '',
       date: {
         month: '',
@@ -104,6 +111,7 @@ export default {
       getUserWordlistInfo(props.listId).then((res) => {
         info.name = res.name
         info.num = res.num
+        info.learned = res.learned
         info.creator = res.creator
         info.date = res.date
       });
