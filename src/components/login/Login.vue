@@ -123,6 +123,7 @@ export default {
       store.state.user.login = true
       store.state.user.uid = data.uid
       store.state.user.wordNum = data.wordNum
+      store.state.user.selectWordlist = data.selectWordlist
       //TODO 把用户名和密码自动保存到本地，可能会有安全隐患?
       localStorage.setItem(USERNAME, name)
       localStorage.setItem(PASSWORD, pwd)

@@ -10,6 +10,7 @@
               :list-id="id"
               :color-idx="index"
               :editFlag="editFlag"
+              :clicked="clickedId===id"
               ref="wordListCardsRef"
               @update-name="updateName"
               @handle-click="clickWordList"
@@ -68,6 +69,7 @@ export default {
     const wordCardListRef = ref(null)
     const wordListCardsRef = ref(null)
     const listIds = reactive([3,/*1, 2, 3, 4, 5, 6, 7, 8,*/])
+    const clickedId = ref()
     const editFlag = ref(false)
     const removeList = []//待删除的id队列
     const tmpListIds = []//缓存编辑前的id队列
@@ -76,6 +78,7 @@ export default {
     let createPageRef = ref(null)
 
     function clickWordList(id, totalNum) {
+      clickedId.value = id
       wordCardListRef.value.showWords(id, totalNum)
     }
 
@@ -103,6 +106,16 @@ export default {
     }
 
     function removeWordList(id) {
+      //正在学习的词单不能被删除
+      if (id === store.state.user.selectWordlist) {
+        message.error('不能删除正在学习的词单')
+        return
+      }
+      //正在查看的词单被删除时，自动跳转到浏览正在学习的词单
+      if (id === clickedId.value) {
+        clickedId.value = store.state.user.selectWordlist
+        wordListCardsRef.value[listIds.indexOf(store.state.user.selectWordlist)].handleClick()
+      }
       removeList.push(id)
       listIds.splice(listIds.indexOf(id), 1)
     }
@@ -125,16 +138,26 @@ export default {
     }
 
     onMounted(() => {
+      clickedId.value = store.state.user.selectWordlist
+      wordListCardsRef.value[listIds.indexOf(store.state.user.selectWordlist)].handleClick()
       // 通过uid获取所有词单id
-      getUserLists(store.state.user.uid).then((res) => {
-        // listIds.splice(0, listIds.length)
-        res.ids.forEach((id) => listIds.push(Number(id)));
-      })
+      // getUserLists(store.state.user.uid).then((res) => {
+      //   listIds.splice(0, listIds.length)
+      //   if (res.state) {
+      //     res.ids.forEach((id) => listIds.push(Number(id)));
+      //     if (listIds.length > 0) {
+      //       //自动获取正在背诵词单的单词列表
+      //       wordListCardsRef.value[listIds.indexOf(store.state.user.selectWordlist)].handleClick()
+      //       clickedId.value = store.state.user.selectWordlist
+      //     }
+      //   }
+      // })
     })
 
     return {
       wordCardListRef,
       wordListCardsRef,
+      clickedId,
       listIds,
       editFlag,
       createPageRef,
@@ -204,9 +227,10 @@ export default {
   margin-top: 10px;
   margin-left: 20px;
   width: 500px;
-  height: 500px;
+  height: 550px;
   padding: 30px;
   display: flex;
+  flex-direction: column;
   align-items: center;
   background-color: rgba(112, 162, 161, 0.4);
   border-radius: 10px;

@@ -152,8 +152,9 @@ const router = createRouter({
 //                     if (success) {
 //                         //TODO 存储本地变量
 //                         store.state.user.login = true
-//                         store.state.user.uid = 1
-//                         store.state.user.wordNum = 20
+//                         store.state.user.uid = res.data.uid
+//                         store.state.user.wordNum = res.data.wordNum
+//                         store.state.user.selectWordlist = res.data.selectWordlist
 //                         //设置路由
 //                         toLogin = false
 //                     }

@@ -13,9 +13,9 @@
           @click="handleClick"
           :style="{backgroundColor:bgColor[colorIdx%bgColor.length]}"
           class="card"
+          :class="clicked?'card-clicked':''"
           :closable="editFlag"
           @close="handleClose"
-          hoverable
       >
         <template #header>
           <div class="head">
@@ -37,16 +37,24 @@
         </template>
         <template #footer>
           <div class="foot">
-            <n-icon class="icon" size="20" :component="AccessibilityOutline"/>
-            <n-text class="font-color">
-              {{ info.creator }}
-            </n-text>
-            <!--            进度条-->
-            <n-progress
-                :percentage="Math.floor(info.learned*10000/info.num)/100"
-                :status="info.num!==info.learned?'default':'success'"
-                :indicator-placement="'inside'"
-            />
+            <div class="creator">
+              <n-icon class="icon" size="20" :component="AccessibilityOutline"/>
+              <n-text class="font-color">
+                {{ info.creator }}
+              </n-text>
+            </div>
+            <div style="display: flex;justify-content: space-between">
+              <!--            进度条-->
+              <n-progress
+                  style="width: 80%"
+                  :percentage="Math.floor(info.learned*10000/info.num)/100"
+                  :status="info.num!==info.learned?'default':'success'"
+                  :indicator-placement="'inside'"
+              />
+              <n-icon-wrapper v-if="store.state.user.selectWordlist === listId" :size="16" :border-radius="10">
+                <n-icon :size="14" :component="Checkmark16Filled"/>
+              </n-icon-wrapper>
+            </div>
           </div>
         </template>
       </n-card>
@@ -57,8 +65,10 @@
 <script>
 import {NCard, NText, NIcon} from 'naive-ui'
 import {AccessibilityOutline} from '@vicons/ionicons5'
+import Checkmark16Filled from "@vicons/fluent/Checkmark16Filled";
 import {onMounted, reactive, ref} from "vue";
 import {getUserWordlistInfo} from "@/request/api/wordlist";
+import store from "@/store";
 
 export default {
   name: "WordListCard",
@@ -66,6 +76,7 @@ export default {
     listId: Number,
     colorIdx: Number,
     editFlag: Boolean,
+    clicked: Boolean,
   },
   emits: ['handleClick', 'handleClose', 'updateName'],
   components: {
@@ -119,9 +130,11 @@ export default {
 
     return {
       AccessibilityOutline,
+      Checkmark16Filled,
       bgColor,
       info,
       newName,
+      store,
 
       handleClick,
       handleClose,
@@ -161,6 +174,11 @@ export default {
 
 .card:hover {
   cursor: pointer;
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.2);
+}
+
+.card-clicked {
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.2);
 }
 
 .edit-font-color {
@@ -180,7 +198,13 @@ export default {
 }
 
 .foot {
+  display: flex;
+  flex-direction: column;
   text-align: left;
+}
+
+.creator {
+  /*text-align: left;*/
 }
 
 .icon {
