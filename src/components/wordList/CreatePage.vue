@@ -98,7 +98,10 @@
       <!--      底部输入词单名和确认-->
       <div class="foot">
         <n-input class="input-name" v-model:value="myWordlistName"/>
-        <n-button class="button" @click="create(myWordlistName, pageIdx)">
+        <n-button
+            class="button"
+            @click="create(myWordlistName, pageIdx)"
+            :disabled="!(pageIdx===0&&clickedListId!==undefined||pageIdx===1&&showFileResultFlag)">
           生成词单
         </n-button>
       </div>
@@ -119,10 +122,9 @@ import {
   NList,
   NListItem,
 } from "naive-ui";
-import router from "@/router";
 import store from "@/store";
 import {createFromFile, createFromOfficial, getOfficialLists, uploadFile} from "@/request/api/wordlist";
-import {onMounted, reactive, ref} from "vue";
+import {reactive, ref} from "vue";
 
 export default {
   name: "CreatePage",
@@ -225,8 +227,24 @@ export default {
         onProgress({percent: Math.ceil(progress.loaded / progress.total * 100)});
       })
       //TODO 向后端请求
+      let success = false
+      let errMsg = '网络错误'
       uploadFile(formData, progressFunc).then((res) => {
-
+        success = res.state
+        if (success) {
+          fileWords.splice(0, fileWords.length)
+          res.wordlist.forEach((word) => {
+            fileWords.push(word)
+          })
+        } else {
+          errMsg = res.msg
+        }
+      }).finally(() => {
+        if (success) {
+          showFileResultFlag.value = !showFileResultFlag.value
+        } else {
+          message.error(errMsg)
+        }
       })
     }
 
@@ -257,11 +275,24 @@ export default {
             message.error(errMsg)
           }
         })
-      } else {
-        //TODO 文件创建词单
-        createFromFile(store.state.user.uid, listName,).then((res) => {
-
+      } else if (createMethod === 1 && showFileResultFlag.value) {
+        // 文件创建词单
+        let words = []
+        fileWords.forEach((word) => words.push(word.wordId))
+        createFromFile(store.state.user.uid, listName, words).then((res) => {
+          success = res.state
+          errMsg = res.msg
+          listId = res.listId
+        }).finally(() => {
+          if (success) {
+            emit('addWordlist', listId)
+            message.success("添加成功")
+          } else {
+            message.error(errMsg)
+          }
         })
+      } else {
+        message.error("未知错误：CreatePage 292")
       }
     }
 

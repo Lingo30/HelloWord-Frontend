@@ -120,7 +120,7 @@ export function createFromFile(userId, listName, words) {
         words: words,
     })
     return request({
-        url: '',//TODO
+        url: 'get_wordList_from_file/',
         method: 'post',
         data
     })
@@ -159,7 +159,7 @@ export function editWordlists(userId, deleteLists, updateLists) {
 //TODO
 export function uploadFile(fileData, progressFunc) {
     return request({
-        url: "https://mock.apifox.cn/m2/2544762-0-default/73946029",//TODO
+        url: "get_wordList_from_file/",//TODO
         headers: {'Content-Type': 'multipart/form-data'},
         method: 'post',
         onUploadProgress: progressFunc,
