@@ -153,7 +153,7 @@ router.beforeEach((to, from, next) => {
             if (username !== null && password !== null) {
                 let toLogin = true
                 loginAPI(username, md5(password)).then((res) => {
-                    let success = true
+                    let success = res.state
                     if (success) {
                         //TODO 存储本地变量
                         store.state.user.login = true
