@@ -170,7 +170,7 @@ import { ArchiveOutline as ArchiveIcon } from "@vicons/ionicons5";
 import {useMessage} from "naive-ui"
 import store from "@/store";
 import router from "@/router";
-import {changePassword, getInfo, getRecommendTags, submitInfo} from "@/request/api/user";
+import {changePassword, getInfo, getRecommendTags, submitAvatar, submitInfo} from "@/request/api/user";
 import md5 from "js-md5";
 import DynamicTags from "@/components/userInfo/DynamicTags";
 
@@ -190,6 +190,7 @@ export default ({
           model.days = res.info.days;
           model.wordLists = res.info.lists;
           model.tags = res.info.tags;
+          showImage.value = res.info.avatar_path;
         }
         else {
           msg.error(res.msg)
@@ -265,7 +266,7 @@ export default ({
     let showImage = ref(null);
 
     let tmp='';
-    function getImageFile(e) {
+    async function getImageFile(e) {
       userAvatar.value = e.target.files[0];
       tmp=e.target.files[0];
       let img = new FileReader();
@@ -275,6 +276,15 @@ export default ({
         showImage.value = target.result; //将img转化为二进制数据
         // console.log(showImage.value)
       };
+      await submitAvatar(tmp).then((res)=>{
+        let success = res.state
+        if (success) {
+          showImage.value = res.url
+        }
+        else {
+          msg.error(res.msg)
+        }
+      })
     }
 
     const msg = useMessage()
@@ -282,12 +292,9 @@ export default ({
     async function onSubmit(){
       const imgFile = new FormData();
       imgFile.append('avatar', userAvatar.value);
-      await submitInfo(store.state.user.uid,model,tmp).then((res)=>{
+      await submitInfo(store.state.user.uid,model).then((res)=>{
         let success = res.state
-        if (success) {
-          showImage.value = res.url
-        }
-        else {
+        if (!success) {
           msg.error(res.msg)
         }
       })
