@@ -79,7 +79,7 @@
       >
 
         <n-form-item label="邮箱" path="email">
-          <span class="text">{{model.email}}</span>
+          <span class="text">{{ model.email }}</span>
         </n-form-item>
         <n-form-item label="昵称" path="name">
           <n-input v-model:value="model.name" placeholder="昵称" class="text"/>
@@ -123,30 +123,30 @@
     >
       <div style="margin-bottom: 30px">
         <n-form
-          ref="pwdForm"
-          :model="password"
-          :rules="pwdRules"
-          label-placement="left"
-          label-width="auto"
-          require-mark-placement="right-hanging"
+            ref="pwdForm"
+            :model="password"
+            :rules="pwdRules"
+            label-placement="left"
+            label-width="auto"
+            require-mark-placement="right-hanging"
         >
           <n-form-item label="原密码" path="oldPassword">
             <n-input
                 type="password"
                 show-password-on="click"
-                v-model:value="password.oldPwd" placeholder="请输入原密码" />
+                v-model:value="password.oldPwd" placeholder="请输入原密码"/>
           </n-form-item>
           <n-form-item label="新密码" path="newPassword">
             <n-input
                 type="password"
                 show-password-on="click"
-                v-model:value="password.newPwd" placeholder="请输入新密码" />
+                v-model:value="password.newPwd" placeholder="请输入新密码"/>
           </n-form-item>
           <n-form-item label="确认密码" path="checkPassword">
             <n-input
                 type="password"
                 show-password-on="click"
-                v-model:value="password.confirm" placeholder="请再次输入密码" />
+                v-model:value="password.confirm" placeholder="请再次输入密码"/>
           </n-form-item>
           <div style="display: flex; justify-content: flex-end">
             <n-button style="margin-right: 10px" round @click="handleClose">
@@ -166,13 +166,14 @@
 <script>
 
 import {ref, reactive, onMounted, onUnmounted, onBeforeMount} from "vue";
-import { ArchiveOutline as ArchiveIcon } from "@vicons/ionicons5";
+import {ArchiveOutline as ArchiveIcon} from "@vicons/ionicons5";
 import {useMessage} from "naive-ui"
 import store from "@/store";
 import router from "@/router";
 import {changePassword, getInfo, getRecommendTags, submitAvatar, submitInfo} from "@/request/api/user";
 import md5 from "js-md5";
 import DynamicTags from "@/components/userInfo/DynamicTags";
+import {PASSWORD, USERNAME} from "@/store/local";
 
 export default ({
   name: "UserInfo",
@@ -180,7 +181,7 @@ export default ({
 
   setup() {
     async function load() {
-      await getInfo(store.state.user.uid).then((res)=>{
+      await getInfo(store.state.user.uid).then((res) => {
         let state = res.state
         // console.log(res.info.avatar_path);
         if (state) {
@@ -191,18 +192,18 @@ export default ({
           model.days = res.info.days;
           model.wordLists = res.info.lists;
           model.tags = res.info.tags;
-        }
-        else {
+        } else {
           msg.error(res.msg)
         }
       })
-      getRecommendTags().then((res)=>{
+      getRecommendTags().then((res) => {
         res.tags.forEach(tag => {
-          serverRecommendedTags.value.push({name:tag, selected: false})
+          serverRecommendedTags.value.push({name: tag, selected: false})
         })
       })
     }
-    onBeforeMount(()=>{
+
+    onBeforeMount(() => {
       load()
     })
     // 手动创建和清除 ResizeObserver 避免ResizeObserver 回调函数的循环嵌套
@@ -227,13 +228,13 @@ export default ({
     const serverRecommendedTags = ref([]);
 
     const model = reactive({
-      avatarPath:   null,
-      email:        null,
-      words:        null,
-      name:         null,
-      days:         null,
-      wordLists:    null,
-      tags:         [],
+      avatarPath: null,
+      email: null,
+      words: null,
+      name: null,
+      days: null,
+      wordLists: null,
+      tags: [],
     });
 
     /* ********************** 用户标签相关逻辑 ******************/
@@ -264,22 +265,22 @@ export default ({
     /* ********************** 上传相关逻辑 ******************/
     let userAvatar = ref(null);
 
-    let tmp='';
+    let tmp = '';
+
     async function getImageFile(e) {
       userAvatar.value = e.target.files[0];
-      tmp=e.target.files[0];
+      tmp = e.target.files[0];
       let img = new FileReader();
       img.readAsDataURL(userAvatar.value);
       // console.log("img:",img)
       img.onload = () => {
         // console.log(showImage.value)
       };
-      await submitAvatar(tmp).then((res)=>{
+      await submitAvatar(tmp).then((res) => {
         let success = res.state
         if (success) {
           model.avatarPath = res.url
-        }
-        else {
+        } else {
           msg.error(res.msg)
         }
       })
@@ -287,22 +288,26 @@ export default ({
 
     const msg = useMessage()
 
-    async function onSubmit(){
+    async function onSubmit() {
       const imgFile = new FormData();
       imgFile.append('avatar', userAvatar.value);
-      await submitInfo(store.state.user.uid,model).then((res)=>{
+      await submitInfo(store.state.user.uid, model).then((res) => {
         let success = res.state
         if (success) {
           msg.success('修改成功')
-        } {
+        }
+        {
           msg.error(res.msg)
         }
       })
     }
+
     /* ********************** 上传相关逻辑 ******************/
 
     function logout() {
       store.state.user.login = false;
+      localStorage.removeItem(USERNAME);
+      localStorage.removeItem(PASSWORD);
       router.push('/login/');
     }
 
@@ -329,18 +334,17 @@ export default ({
         return;
       }
       let format = /^(?=.*[a-zA-Z])(?=.*[0-9])[a-zA-Z0-9~!@&%#_]{6,15}$/gi
-      if(!format.test(password.newPwd)){
+      if (!format.test(password.newPwd)) {
         msg.error('密码长度应在6-15位，且同时包含字母与数字')
         return;
       }
       const tempOld = md5(password.oldPwd);
       const tempNew = md5(password.newPwd);
-      changePassword(store.state.user.uid,tempOld,tempNew).then((res)=>{
+      changePassword(store.state.user.uid, tempOld, tempNew).then((res) => {
         let success = res.state
         if (success) {
           msg.success("修改成功")
-        }
-        else {
+        } else {
           msg.error(res.msg)
         }
       })
@@ -381,9 +385,9 @@ export default ({
           trigger: ["change"],
           validator(rule, value) {
             if (value.length !== 0) {
-              value[value.length-1] = value[value.length-1].trim();
-              const last = value[value.length-1];
-              for (let i = 0;i<value.length-1;i++) {
+              value[value.length - 1] = value[value.length - 1].trim();
+              const last = value[value.length - 1];
+              for (let i = 0; i < value.length - 1; i++) {
                 if (last === value[i]) {
                   value.pop();
                   return new Error("标签重复啦");
@@ -392,7 +396,7 @@ export default ({
             }
             serverRecommendedTags.value.forEach(recommendedTag => {
               let flag = false;
-              for (let i = 0;i<value.length;i++) {
+              for (let i = 0; i < value.length; i++) {
                 if (value[i] === recommendedTag.name) {
                   recommendedTag.selected = true;
                   flag = true;
