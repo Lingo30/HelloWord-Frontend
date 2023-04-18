@@ -88,6 +88,6 @@ export default {
     width: 200px;
   }
   #left {
-    margin-right: 11vh;
+    margin-right: 8vh;
   }
 </style>

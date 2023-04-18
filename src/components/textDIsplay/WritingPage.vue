@@ -68,7 +68,7 @@ export default {
   }
   /*使input嵌入到n-button中*/
   #left {
-    margin-right: 50px;
+    margin-right: 8vh;
     display: inline-flex;
     position: relative;
     overflow: hidden;

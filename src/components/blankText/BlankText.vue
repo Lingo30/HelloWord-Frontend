@@ -3,7 +3,7 @@
     <n-space class="all-container">
       <n-space class="text-card">
         <n-card hoverable class="TextContainer">
-          <n-scrollbar style="max-height: 550px;">
+          <n-scrollbar style="max-height: 72vh;">
             <div class="content-box">
             <span v-for="(char, index) in content" :key="index">
               <template v-if="isBlank(index)">
@@ -23,7 +23,7 @@
           </n-scrollbar>
         </n-card>
         <n-card :title="showAnswers?'看看哪儿错了？':'你可以试着填入这些词'" hoverable class="used-words-box">
-          <n-scrollbar style="max-height: 505px;">
+          <n-scrollbar style="max-height: 70vh;">
             <n-list hoverable v-if="showAnswers">
               <n-list-item v-for="(word,index) in realAnswers" :key="index">
                 <n-thing style="font-size: 20px;">{{index+1}}: {{word}}</n-thing>
@@ -54,7 +54,15 @@ import store from "@/store";
 export default {
   name: "BlankText",
   setup() {
-    const content = ref('');
+    const content = ref('Once upon a time in the magical world of Valoran, there lived a young Summoner named Lily. She had a deep fascination with the champions and their unique abilities. She would often watch their battles and dream of one day becoming a skilled Summoner herself.\n' +
+        '\n' +
+        'One day, Lily received an invitation to attend the prestigious League of Legends tournament in Valoran. She was overjoyed and immediately set out on her journey. Upon arriving, she was mesmerized by the grandeur of the arena and the cheering crowds.\n' +
+        '\n' +
+        'As the tournament began, Lily was excited to see her favorite champion, Vayne, in action. Vayne was known for her exceptional marksmanship and swift agility. However, during the match, Vayne was injured and couldn\'t continue the battle.\n' +
+        '\n' +
+        'Feeling disheartened, Lily knew that the team needed a miracle to win. Suddenly, a new champion appeared in the arena, wielding a massive sword and donning armor made of obsidian. It was none other than the legendary warrior, Jarvan IV.\n' +
+        '\n' +
+        'With his incredible strength and unwavering courage, Jarvan IV led the team to victory, impressing Lily and the entire crowd. From that day on, Lily became a devoted fan of Jarvan IV and vowed to one day master the art of Summoning and become a great Summoner just like him.');
     const wordList = reactive([]);
     const userAnswers = reactive([]);
     const init = ref(true)
@@ -83,7 +91,7 @@ export default {
 
     }
     onBeforeMount(()=>{
-      load()
+      // load()
     })
 
     // 判断是否是单词空的第一个字符
@@ -176,9 +184,10 @@ export default {
     text-align: center;
   }
   .TextContainer {
-    height: 600px;
-    width: 800px;
+    height: 78vh;
+    width: 73vh;
     text-align: left;
+    /*background-color: red;*/
   }
 
   .content-box {
@@ -198,23 +207,23 @@ export default {
     position: relative;
     bottom: 0;
     margin-top: 1px;
-    width: 500px;
+    width: 63vh;
     left: 50%;
-    transform: translate(18%, 15%);
+    transform: translate(21%, 15%);
   }
 
   .left {
-    margin-right: 11vh;
+    margin-right: 8vh;
   }
   .button {
     width: 200px;
   }
 
   .used-words-box {
-    font-size: 25px;
+    font-size: 20px;
     margin-left: 15px;
-    height: 600px;
-    width: 270px;
+    height: 78vh;
+    width: 73vh;
     text-align: left;
   }
 
@@ -228,11 +237,11 @@ export default {
   }
 
   .card-box {
-    height: 700px;
-    width: 1200px;
+    height: 95vh;
+    width: 160vh;
     background-image: url("../../assets/img/logo.png");
     margin-left: 9%;
-    margin-top: 2%;
+    margin-top: 1%;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -246,8 +255,8 @@ export default {
     display: flex;
     justify-content: flex-end;
     transform: translate(-50%, -50%);
-    height: 600px;
-    width: 1100px;
+    height: 80vh;
+    width: 150vh;
     margin:auto;
   }
 </style>
