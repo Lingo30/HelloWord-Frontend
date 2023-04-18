@@ -96,16 +96,17 @@ export function getOfficialLists() {
 }
 
 //TODO 用户根据已有的官方词单创建词单
-export function createFromOfficial(userId, listId) {
+export function createFromOfficial(userId, listName, listId) {
     /*
         state:true/false是否成功创建
      */
     const data = JSON.stringify({
         userId: userId,
         listId: listId,
+        name: listName,
     })
     return request({
-        url: "",//TODO
+        url: "add_wordlist_from_official/",
         method: 'post',
         data
     })

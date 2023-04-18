@@ -43,7 +43,7 @@
                   <n-card
                       size="medium"
                       :style="clickedListId===list.listId?{ backgroundColor: '#42b983'}:{}"
-                      @click="clickOfficialCard(list.listId)"
+                      @click="clickOfficialCard(list.listId,list.name)"
                   >
                     {{ ' ' }}
                     <template #header>
@@ -118,7 +118,6 @@ import {
   NDivider,
   NList,
   NListItem,
-  NGradientText,
 } from "naive-ui";
 import router from "@/router";
 import store from "@/store";
@@ -136,7 +135,6 @@ export default {
     NDivider,
     NList,
     NListItem,
-    NGradientText,
   },
   setup() {
     const dialog = useDialog()
@@ -193,11 +191,12 @@ export default {
       pageIdx.value = idx
     }
 
-    function clickOfficialCard(id) {
+    function clickOfficialCard(id, name) {
       if (clickedListId.value === id) {
         clickedListId.value = undefined
       } else {
         clickedListId.value = id
+        myWordlistName.value = name
       }
     }
 
@@ -242,23 +241,26 @@ export default {
         message.error('请输入词单名')
         return
       }
+      let success = false
+      let errMsg = '网络错误'
       if (createMethod === 0) {
         //官方词单
         createFromOfficial(store.state.user.uid, listName, clickedListId.value).then((res) => {
-
+          success = res.state
+          errMsg = res.msg
+        }).finally(() => {
+          if (success) {
+            message.success("添加成功")
+          } else {
+            message.error(errMsg)
+          }
         })
       } else {
-        //文件创建词单
-        createFromFile(store.state.user.uid, listName,)
+        //TODO 文件创建词单
+        createFromFile(store.state.user.uid, listName,).then((res) => {
+
+        })
       }
-      //TODO 根据官方词单创建词单
-      // createFromOfficial(store.state.user.uid, listId).then((res) => {
-      //   if (res.state) {
-      //     message.success("创建成功")
-      //   } else {
-      //     message.error('创建失败')
-      //   }
-      // })
     }
 
     function init() {

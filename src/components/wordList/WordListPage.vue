@@ -140,7 +140,7 @@ export default {
     }
 
     onMounted(() => {
-      clickedId.value = store.state.user.selectWordlist
+      // clickedId.value = store.state.user.selectWordlist
       // 通过uid获取所有词单id
       getUserLists(store.state.user.uid).then((res) => {
         listIds.splice(0, listIds.length)
