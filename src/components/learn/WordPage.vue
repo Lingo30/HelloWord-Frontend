@@ -176,9 +176,9 @@ export default {
 		// },
 		getGroupWord() {
 			get_group_words_in_list(store.state.user.uid).then((res) => {
-				alert(res.hasBook)
+				// alert(res.hasBook)
 				if(res.hasBook==false) {
-					alert(111)
+					// alert(111)
 					router.push('/user/wordlist')
 					return
 				} else {

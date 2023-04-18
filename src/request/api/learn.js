@@ -34,6 +34,7 @@ export function get_group_words_in_list(uid) {
     })
     return request({
         url: "get_group_words_in_list/",//TODO
+        // url: "https://mock.apifox.cn/m2/2544762-0-default/74128965",
         method: "post",
         data,
     })
@@ -74,6 +75,7 @@ export function group_word_learn_save(uid, words, list_id) {
     })
     return request({
         url: "group_word_learn_save/",
+        // url: "https://mock.apifox.cn/m2/2544762-0-default/74152544",
         method: 'post',
         data
     })
@@ -106,6 +108,7 @@ export function get_word_releation(word_id) {
     })
     return request({
         url: "get_word_releation/",
+        // url: "https://mock.apifox.cn/m2/2544762-0-default/74153185",
         method: 'post',
         data
     })
