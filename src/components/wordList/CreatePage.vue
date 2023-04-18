@@ -136,7 +136,8 @@ export default {
     NList,
     NListItem,
   },
-  setup() {
+  emits: ['addWordlist'],
+  setup(props, {emit}) {
     const dialog = useDialog()
     const message = useMessage()
     let showFlag = ref(false)
@@ -184,7 +185,7 @@ export default {
         word: 'word',
         meaning: 'n. 单词',
       },
-    ])
+    ])//文件解析生成的单词
     let myWordlistName = ref('')
 
     function switchPage(idx) {
@@ -214,14 +215,12 @@ export default {
         }
     ) {
       const formData = new FormData();
-      console.log(file.file);
       if (data) {
         Object.keys(data).forEach((key) => {
           formData.append(key, data[key]);
         });
       }
       formData.append('file', file.file);
-      // console.log(formData);
       const progressFunc = ((progress) => {
         onProgress({percent: Math.ceil(progress.loaded / progress.total * 100)});
       })
@@ -243,13 +242,16 @@ export default {
       }
       let success = false
       let errMsg = '网络错误'
+      let listId = undefined
       if (createMethod === 0) {
         //官方词单
         createFromOfficial(store.state.user.uid, listName, clickedListId.value).then((res) => {
           success = res.state
           errMsg = res.msg
+          listId = res.listId
         }).finally(() => {
           if (success) {
+            emit('addWordlist', listId)
             message.success("添加成功")
           } else {
             message.error(errMsg)

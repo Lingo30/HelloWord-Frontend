@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <CreatePage ref="createPageRef"/>
+    <CreatePage ref="createPageRef" @add-wordlist="addWordlist"/>
     <div class="left">
       <div class="card-list">
         <n-scrollbar>
@@ -139,6 +139,11 @@ export default {
       editFlag.value = !editFlag.value
     }
 
+    //成功创建新词单后，添加到页面中
+    function addWordlist(listId) {
+      listIds.unshift(listId)
+    }
+
     onMounted(() => {
       // clickedId.value = store.state.user.selectWordlist
       // 通过uid获取所有词单id
@@ -168,6 +173,7 @@ export default {
       finish,
       clickWordList,
       removeWordList,
+      addWordlist,
     }
   }
 }
