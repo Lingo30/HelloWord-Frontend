@@ -54,15 +54,16 @@ import store from "@/store";
 export default {
   name: "BlankText",
   setup() {
-    const content = ref('Once upon a time in the magical world of Valoran, there lived a young Summoner named Lily. She had a deep fascination with the champions and their unique abilities. She would often watch their battles and dream of one day becoming a skilled Summoner herself.\n' +
-        '\n' +
-        'One day, Lily received an invitation to attend the prestigious League of Legends tournament in Valoran. She was overjoyed and immediately set out on her journey. Upon arriving, she was mesmerized by the grandeur of the arena and the cheering crowds.\n' +
-        '\n' +
-        'As the tournament began, Lily was excited to see her favorite champion, Vayne, in action. Vayne was known for her exceptional marksmanship and swift agility. However, during the match, Vayne was injured and couldn\'t continue the battle.\n' +
-        '\n' +
-        'Feeling disheartened, Lily knew that the team needed a miracle to win. Suddenly, a new champion appeared in the arena, wielding a massive sword and donning armor made of obsidian. It was none other than the legendary warrior, Jarvan IV.\n' +
-        '\n' +
-        'With his incredible strength and unwavering courage, Jarvan IV led the team to victory, impressing Lily and the entire crowd. From that day on, Lily became a devoted fan of Jarvan IV and vowed to one day master the art of Summoning and become a great Summoner just like him.');
+    // const content = ref('Once upon a time in the magical world of Valoran, there lived a young Summoner named Lily. She had a deep fascination with the champions and their unique abilities. She would often watch their battles and dream of one day becoming a skilled Summoner herself.\n' +
+    //     '\n' +
+    //     'One day, Lily received an invitation to attend the prestigious League of Legends tournament in Valoran. She was overjoyed and immediately set out on her journey. Upon arriving, she was mesmerized by the grandeur of the arena and the cheering crowds.\n' +
+    //     '\n' +
+    //     'As the tournament began, Lily was excited to see her favorite champion, Vayne, in action. Vayne was known for her exceptional marksmanship and swift agility. However, during the match, Vayne was injured and couldn\'t continue the battle.\n' +
+    //     '\n' +
+    //     'Feeling disheartened, Lily knew that the team needed a miracle to win. Suddenly, a new champion appeared in the arena, wielding a massive sword and donning armor made of obsidian. It was none other than the legendary warrior, Jarvan IV.\n' +
+    //     '\n' +
+    //     'With his incredible strength and unwavering courage, Jarvan IV led the team to victory, impressing Lily and the entire crowd. From that day on, Lily became a devoted fan of Jarvan IV and vowed to one day master the art of Summoning and become a great Summoner just like him.');
+    const content = ref('');
     const wordList = reactive([]);
     const userAnswers = reactive([]);
     const init = ref(true)
@@ -240,8 +241,8 @@ export default {
     height: 95vh;
     width: 160vh;
     background-image: url("../../assets/img/logo.png");
-    margin-left: 9%;
-    margin-top: 1%;
+    margin-left: 15vh;
+    margin-top: 2vh;
     display: flex;
     justify-content: center;
     align-items: center;

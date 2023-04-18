@@ -135,8 +135,8 @@ export default {
     height: 95vh;
     width: 160vh;
     background-image: url("../../assets/img/logo.png");
-    margin-left: 9%;
-    margin-top: 1%;
+    margin-left: 15vh;
+    margin-top: 2vh;
     display: flex;
     justify-content: center;
     align-items: center;

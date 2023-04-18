@@ -53,14 +53,24 @@ export function getInfo(uid) {
     })
 }
 
-export function submitInfo(uid,userInfo,imgFile) {
+export function submitInfo(uid,userInfo) {
+    // 上传文件需要使用FormData对象，
+    const data = JSON.stringify({
+        user_id: uid,
+        user_info: userInfo
+    })
+    return request({
+        url: 'submit_info/',
+        method: 'post',
+        data
+    })
+}
+
+export function submitAvatar(imgFile) {
 
     // 上传文件需要使用FormData对象，
     const formData = new FormData();
-    formData.append("user_id", uid);
-    formData.append("user_info", JSON.stringify(userInfo));
     formData.append("img", imgFile);
-
     return request({
         url: "submit_image/",
         method: "post",
