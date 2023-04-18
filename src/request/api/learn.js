@@ -33,8 +33,8 @@ export function get_group_words_in_list(uid) {
         user_id: uid
     })
     return request({
-        url: "get_group_words_in_list/",//TODO
-        // url: "https://mock.apifox.cn/m2/2544762-0-default/74128965",
+        // url: "get_group_words_in_list/",//TODO
+        url: "https://mock.apifox.cn/m2/2544762-0-default/74128965",
         method: "post",
         data,
     })
@@ -56,12 +56,12 @@ export function deleteWordAPI(uid, id) {
 // TODO 存储每组单词背完后的状态
 export function group_word_learn_save(uid, words, list_id) {
     /*
-        words: [ 
+        words: [
             {
                 word_id: 1,
                 forget_times: 0,
                 simple: false,
-            }, 
+            },
             {
 
             }
@@ -84,7 +84,7 @@ export function group_word_learn_save(uid, words, list_id) {
 // TODO 获取某个单词的关联信息，如同义词、反义词、例句等等
 export function get_word_releation(word_id) {
     /*
-        relation:    
+        relation:
         {
             synonyms: [
                     {

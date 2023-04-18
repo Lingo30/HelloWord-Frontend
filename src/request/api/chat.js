@@ -6,7 +6,8 @@ export function sendChatAPI(uid, question) {
         question: question
     })
     return request({
-        url: "http://127.0.0.1:4523/m2/2544762-0-default/74212367",
+        // url: "http://127.0.0.1:4523/m2/2544762-0-default/74212367",
+        url: "user_send/",
         method: 'post',
         data
     })
@@ -17,7 +18,8 @@ export function getHistoryChatAPI(uid) {
         user_id: uid,
     })
     return request({
-        url: "https://mock.apifox.cn/m2/2544762-0-default/74215801",
+        // url: "https://mock.apifox.cn/m2/2544762-0-default/74215801",
+        url: "get_log_history/",
         method: 'post',
         data
     })
