@@ -3,7 +3,7 @@
     <n-space style="margin-left: 200px;margin-bottom: 20px">
       <div class="avatar-wrapper">
         <div>
-          <img :src="model.avatarPath" style="height: 120px;width: 120px">
+          <n-image :src="model.avatarPath" width="100" height="100"></n-image>
         </div>
         <div class="file-upload">
           <n-button round type="primary" ghost class="upload-button">上传头像</n-button>
@@ -183,7 +183,6 @@ export default ({
     async function load() {
       await getInfo(store.state.user.uid).then((res) => {
         let state = res.state
-        console.log(res.info.avatar_path);
         if (state) {
           model.avatarPath = res.info.avatar_path;
           model.email = res.info.email;
@@ -195,6 +194,8 @@ export default ({
         } else {
           msg.error(res.msg)
         }
+        console.log(res.info.avatar_path);
+        console.log(model.avatarPath);
       })
       getRecommendTags().then((res) => {
         res.tags.forEach(tag => {
