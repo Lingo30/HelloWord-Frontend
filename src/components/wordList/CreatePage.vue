@@ -1,5 +1,10 @@
 <template>
-  <n-modal style="background-color: white" v-model:show="showFlag">
+  <n-modal
+      style="background-color: white"
+      v-model:show="showFlag"
+      @after-enter="init"
+      @after-leave="exit"
+  >
     <div class="container">
       <span style="font-size: 2em; margin-left: 5px; margin-bottom: 5px; height: 10%">
         词单导入
@@ -21,7 +26,9 @@
           文件
         </n-button>
       </div>
+
       <n-divider style="margin: 0;padding: 0"/>
+
       <div class="content">
         <!--        官方的词单卡片-->
         <n-scrollbar v-if="pageIdx===0">
@@ -64,7 +71,7 @@
         <n-upload
             ref="uploadRef"
             class="drop-area"
-            v-else-if="pageIdx===1&&showFileResultFlag"
+            v-else-if="pageIdx===1&&!showFileResultFlag"
             directory-dnd
             :custom-request="upload"
         >
@@ -73,9 +80,20 @@
           </n-upload-dragger>
         </n-upload>
         <!--        文件导入后的展示-->
-        <div class="file-show" v-else>
-          <n-text v-for="(word,index) in fileWords" :key="index">{{ word }}</n-text>
-        </div>
+        <n-card class="file-show" v-else-if="pageIdx===1&&showFileResultFlag" closable @close="closeFileShowResult">
+          <div class="file-show">
+            <n-list hoverable>
+              <n-list-item style="padding-top: 5px;padding-bottom: 5px" v-for="(word,index) in fileWords" :key="index">
+                <n-text>{{ word.word }}</n-text>
+                <template #suffix>
+                  <div style="width: 100px">
+                    {{ word.meaning }}
+                  </div>
+                </template>
+              </n-list-item>
+            </n-list>
+          </div>
+        </n-card>
       </div>
       <!--      底部输入词单名和确认-->
       <div class="foot">
@@ -97,7 +115,10 @@ import {
   NTooltip,
   NInput,
   NButton,
-  NDivider
+  NDivider,
+  NList,
+  NListItem,
+  NGradientText,
 } from "naive-ui";
 import router from "@/router";
 import store from "@/store";
@@ -113,6 +134,9 @@ export default {
     NInput,
     NButton,
     NDivider,
+    NList,
+    NListItem,
+    NGradientText,
   },
   setup() {
     const dialog = useDialog()
@@ -120,32 +144,48 @@ export default {
     let showFlag = ref(false)
     let pageIdx = ref(0)
     let lists = reactive([
-      {
-        listId: 1,
-        name: "四级",
-        creator: '官方',
-        num: 4321
-      },
-      {
-        listId: 2,
-        name: "机器学习",
-        creator: 'He K',
-        num: 111
-      },
-      {
-        listId: 3,
-        name: "chemicallllllllllllllllllllllllllllllllllllllllllll",
-        creator: 'E. J. Corey',
-        num: 999
-      },
+      // {
+      //   listId: 1,
+      //   name: "四级",
+      //   creator: '官方',
+      //   num: 4321
+      // },
+      // {
+      //   listId: 2,
+      //   name: "机器学习",
+      //   creator: 'He K',
+      //   num: 111
+      // },
+      // {
+      //   listId: 3,
+      //   name: "chemicallllllllllllllllllllllllllllllllllllllllllll",
+      //   creator: 'E. J. Corey',
+      //   num: 999
+      // },
     ])//所有官方词单
     let clickedListId = ref(undefined)//选择的官方词单id
     let showFileResultFlag = ref(false)//是否完成文件解析展示
     let fileWords = reactive([
-      'this',
-      'is',
-      'a',
-      'word'
+      {
+        wordId: 0,
+        word: 'this',
+        meaning: 'pron. 这',
+      },
+      {
+        wordId: 1,
+        word: 'is',
+        meaning: 'v. 是',
+      },
+      {
+        wordId: 2,
+        word: 'a',
+        meaning: 'art. 一',
+      },
+      {
+        wordId: 3,
+        word: 'word',
+        meaning: 'n. 单词',
+      },
     ])
     let myWordlistName = ref('')
 
@@ -192,6 +232,10 @@ export default {
       })
     }
 
+    function closeFileShowResult() {
+      showFileResultFlag.value = !showFileResultFlag.value
+    }
+
     function create(listName, createMethod) {
       //createMethod=0时为官方词单，createMethod=1时为文件创建词单
       if (listName === '') {
@@ -217,7 +261,8 @@ export default {
       // })
     }
 
-    onMounted(() => {
+    function init() {
+      pageIdx.value = 0
       // 默认在第一个页面，获取所有官方词单
       let success = false
       let errMsg = '网络错误'
@@ -232,7 +277,12 @@ export default {
           message.error(errMsg)
         }
       })
-    })
+    }
+
+    function exit() {
+      pageIdx.value = 0
+      lists.splice(0, lists.length)
+    }
 
     return {
       showFlag,
@@ -243,9 +293,12 @@ export default {
       fileWords,
       myWordlistName,
 
+      init,
+      exit,
       switchPage,
       clickOfficialCard,
       upload,
+      closeFileShowResult,
       create,
     }
   }
