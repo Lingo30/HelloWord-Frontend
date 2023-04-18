@@ -68,7 +68,7 @@ export default {
   setup() {
     const wordCardListRef = ref(null)
     const wordListCardsRef = ref(null)
-    const listIds = reactive([3,/*1, 2, 3, 4, 5, 6, 7, 8,*/])
+    const listIds = reactive([/*1, 2, 3, 4, 5, 6, 7, 8,*/])
     const clickedId = ref()
     const editFlag = ref(false)
     const removeList = []//待删除的id队列
@@ -93,6 +93,7 @@ export default {
     }
 
     function cancel() {
+      wordListCardsRef.value.forEach((cardRef) => cardRef.cancelUpdate())
       listIds.splice(0, listIds.length)
       tmpListIds.forEach(id => listIds.push(id))
       editFlag.value = !editFlag.value
@@ -127,6 +128,7 @@ export default {
         success = res.state
       }).finally(() => {
         if (success) {
+          wordListCardsRef.value.forEach((cardRef) => cardRef.finishUpdate())
           message.success("修改成功")
         } else {
           listIds.splice(0, listIds.length)
@@ -139,19 +141,17 @@ export default {
 
     onMounted(() => {
       clickedId.value = store.state.user.selectWordlist
-      wordListCardsRef.value[listIds.indexOf(store.state.user.selectWordlist)].handleClick()
       // 通过uid获取所有词单id
-      // getUserLists(store.state.user.uid).then((res) => {
-      //   listIds.splice(0, listIds.length)
-      //   if (res.state) {
-      //     res.ids.forEach((id) => listIds.push(Number(id)));
-      //     if (listIds.length > 0) {
-      //       //自动获取正在背诵词单的单词列表
-      //       wordListCardsRef.value[listIds.indexOf(store.state.user.selectWordlist)].handleClick()
-      //       clickedId.value = store.state.user.selectWordlist
-      //     }
-      //   }
-      // })
+      getUserLists(store.state.user.uid).then((res) => {
+        listIds.splice(0, listIds.length)
+        if (res.state) {
+          res.ids.forEach((id) => listIds.push(Number(id)));
+          if (listIds.length > 0) {
+            //自动获取正在背诵词单的单词列表
+            clickedId.value = store.state.user.selectWordlist
+          }
+        }
+      })
     })
 
     return {

@@ -102,7 +102,7 @@ export default {
         day: ''
       }
     })
-    let newName = ref(info.name)
+    let newName = ref('')
 
     function handleClick() {
       if (props.editFlag) return
@@ -117,6 +117,14 @@ export default {
       emit('updateName', listId, name)
     }
 
+    function cancelUpdate() {
+      newName.value = info.name
+    }
+
+    function finishUpdate() {
+      info.name = newName.value;
+    }
+
     onMounted(() => {
       // 根据 listId获取用户词单的基本信息
       getUserWordlistInfo(props.listId).then((res) => {
@@ -125,6 +133,7 @@ export default {
         info.learned = res.learned
         info.creator = res.creator
         info.date = res.date
+        newName.value = info.name
       });
     })
 
@@ -139,6 +148,8 @@ export default {
       handleClick,
       handleClose,
       updateName,
+      cancelUpdate,
+      finishUpdate,
     }
   }
 }
