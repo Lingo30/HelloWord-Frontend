@@ -33,7 +33,7 @@ export function get_group_words_in_list(uid) {
         user_id: uid
     })
     return request({
-        url: "https://mock.apifox.cn/m2/2544762-0-default/74128965",//TODO
+        url: "get_group_words_in_list/",//TODO
         method: "post",
         data,
     })
@@ -53,7 +53,7 @@ export function deleteWordAPI(uid, id) {
 }
 
 // TODO 存储每组单词背完后的状态
-export function group_word_learn_save(uid, words) {
+export function group_word_learn_save(uid, words, list_id) {
     /*
         words: [ 
             {
@@ -69,10 +69,11 @@ export function group_word_learn_save(uid, words) {
     */
     const data = JSON.stringify({
         user_id: uid,   //用户id
-        words: words  //本组单词学习情况
+        words: words,  //本组单词学习情况
+        list_id: list_id,
     })
     return request({
-        url: "https://mock.apifox.cn/m2/2544762-0-default/74152544",
+        url: "group_word_learn_save/",
         method: 'post',
         data
     })
@@ -104,7 +105,7 @@ export function get_word_releation(word_id) {
         word_id: word_id
     })
     return request({
-        url: "https://mock.apifox.cn/m2/2544762-0-default/74153185",
+        url: "get_word_releation/",
         method: 'post',
         data
     })
