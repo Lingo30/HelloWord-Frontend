@@ -101,7 +101,7 @@ export default {
 
     //分页展示
     function changePage(page) {
-      getWordsInfo(store.state.user.uid, listId, pageSize, page - 1).then((res) => {
+      getWordsInfo(store.state.user.uid, listId.value, pageSize, page - 1).then((res) => {
         words.splice(0, words.length);
         res.words.forEach((word) => words.push(word))
       })
