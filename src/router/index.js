@@ -13,7 +13,10 @@ import WritingPage from "@/components/textDIsplay/WritingPage";
 import StoryPage from "@/components/textDIsplay/StoryPage";
 import BlankText from "@/components/blankText/BlankText";
 import UserInfo from "@/components/userInfo/UserInfo";
-import CreatePage from "@/components/wordList/CreatePage.vue";
+import store from '@/store/index'
+import {PASSWORD, USERNAME} from "@/store/local";
+import {loginAPI} from "@/request/api/user";
+import md5 from 'js-md5';
 
 const routes = [
     //格式要求示例
@@ -130,50 +133,52 @@ const router = createRouter({
 })
 
 // 全局守卫
-// let hasTryLogin = false
-// router.beforeEach((to, from, next) => {
-//     if (store.state.user.login) {
-//         if (to.name === 'login') {
-//             router.push('/user')
-//         } else {
-//             next()
-//         }
-//     } else {
-//         if (hasTryLogin) {
-//             hasTryLogin = false
-//             next()
-//         } else {
-//             const username = localStorage.getItem(USERNAME)
-//             const password = localStorage.getItem(PASSWORD)
-//             if (username !== null && password !== null) {
-//                 let toLogin = true
-//                 loginAPI(username, md5(password)).then((res) => {
-//                     let success = true
-//                     if (success) {
-//                         //TODO 存储本地变量
-//                         store.state.user.login = true
-//                         store.state.user.uid = res.data.uid
-//                         store.state.user.wordNum = res.data.wordNum
-//                         store.state.user.selectWordlist = res.data.selectWordlist
-//                         //设置路由
-//                         toLogin = false
-//                     }
-//                 }).finally(() => {
-//                     if (toLogin) {
-//                         hasTryLogin = true
-//                         router.push({name: 'login'})
-//                     } else {
-//                         router.push('/user')
-//                     }
-//                 })
-//             } else {
-//                 hasTryLogin = true
-//                 router.push({name: 'login'})
-//             }
-//         }
-//
-//     }
-//
-// })
+let hasTryLogin = false
+let firtPathName = ''
+router.beforeEach((to, from, next) => {
+    if (store.state.user.login) {
+        if (to.name === 'login') {
+            router.push('/user')
+        } else {
+            next()
+        }
+    } else {
+        if (hasTryLogin) {
+            hasTryLogin = false
+            next()
+        } else {
+            firtPathName = to.name
+            const username = localStorage.getItem(USERNAME)
+            const password = localStorage.getItem(PASSWORD)
+            if (username !== null && password !== null) {
+                let toLogin = true
+                loginAPI(username, md5(password)).then((res) => {
+                    let success = true
+                    if (success) {
+                        //TODO 存储本地变量
+                        store.state.user.login = true
+                        store.state.user.uid = res.data.uid
+                        store.state.user.wordNum = res.data.wordNum
+                        store.state.user.selectWordlist = res.data.selectWordlist
+                        //设置路由
+                        toLogin = false
+                    }
+                }).finally(() => {
+                    if (toLogin) {
+                        hasTryLogin = true
+                        router.push({name: 'login'})
+                    } else {
+                        router.push({name: firtPathName})
+                    }
+                })
+            } else {
+                hasTryLogin = true
+                router.push({name: 'login'})
+            }
+        }
+
+    }
+
+})
 
 export default router
