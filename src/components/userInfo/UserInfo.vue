@@ -3,7 +3,7 @@
     <n-space style="margin-left: 200px;margin-bottom: 20px">
       <div class="avatar-wrapper">
         <div>
-          <img :src="showImage" style="height: 120px;width: 120px">
+          <img :src="model.avatarPath" style="height: 120px;width: 120px">
         </div>
         <div class="file-upload">
           <n-button round type="primary" ghost class="upload-button">上传头像</n-button>
@@ -182,6 +182,7 @@ export default ({
     async function load() {
       await getInfo(store.state.user.uid).then((res)=>{
         let state = res.state
+        // console.log(res.info.avatar_path);
         if (state) {
           model.avatarPath = res.info.avatar_path;
           model.email = res.info.email;
@@ -190,7 +191,6 @@ export default ({
           model.days = res.info.days;
           model.wordLists = res.info.lists;
           model.tags = res.info.tags;
-          showImage.value = res.info.avatar_path;
         }
         else {
           msg.error(res.msg)
@@ -263,7 +263,6 @@ export default ({
 
     /* ********************** 上传相关逻辑 ******************/
     let userAvatar = ref(null);
-    let showImage = ref(null);
 
     let tmp='';
     async function getImageFile(e) {
@@ -272,14 +271,13 @@ export default ({
       let img = new FileReader();
       img.readAsDataURL(userAvatar.value);
       // console.log("img:",img)
-      img.onload = ({ target }) => {
-        showImage.value = target.result; //将img转化为二进制数据
+      img.onload = () => {
         // console.log(showImage.value)
       };
       await submitAvatar(tmp).then((res)=>{
         let success = res.state
         if (success) {
-          showImage.value = res.url
+          model.avatarPath = res.url
         }
         else {
           msg.error(res.msg)
@@ -294,7 +292,9 @@ export default ({
       imgFile.append('avatar', userAvatar.value);
       await submitInfo(store.state.user.uid,model).then((res)=>{
         let success = res.state
-        if (!success) {
+        if (success) {
+          msg.success('修改成功')
+        } {
           msg.error(res.msg)
         }
       })
@@ -359,7 +359,6 @@ export default ({
       serverRecommendedTags,
       onSubmit,
       inputRef,
-      showImage,
       getImageFile,
       userAvatar,
       avatarRef,
