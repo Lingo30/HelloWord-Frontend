@@ -134,6 +134,9 @@ export default {
         info.creator = res.creator
         info.date = res.date
         newName.value = info.name
+        if (props.clicked) {
+          handleClick()
+        }
       });
     })
 
