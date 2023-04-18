@@ -47,8 +47,10 @@ export default {
         return
       }
       getArticleAnalysis(inputValue).then((res)=>{
-        // console.log(res.comment);
-        textBoxRef.value.analysis = res.comment
+        console.log(res.comment.analysis);
+        textBoxRef.value.analysis = res.comment.analysis
+        textBoxRef.value.rateValue = parseFloat(res.comment.rating)/2
+
       })
       // console.log(textBoxRef.value.analysis);
     }

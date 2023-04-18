@@ -183,7 +183,7 @@ export default ({
     async function load() {
       await getInfo(store.state.user.uid).then((res) => {
         let state = res.state
-        // console.log(res.info.avatar_path);
+        console.log(res.info.avatar_path);
         if (state) {
           model.avatarPath = res.info.avatar_path;
           model.email = res.info.email;

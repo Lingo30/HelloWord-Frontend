@@ -38,6 +38,9 @@
           <div class="translationText">
             {{analysis}}
           </div>
+          <div class="rate-box">
+            <n-rate class="rate" :value="rateValue" v-if="active" readonly allow-half></n-rate>
+          </div>
 
         </n-card>
       </n-space>
@@ -72,12 +75,13 @@ export default {
     inputValue: {
       type: String,
       default: "",
-    }
+    },
   },
   setup(props,{emit}) {
     let msg = useMessage()
     let selectedText = ref(null);
     let analysis = ref("");
+    let rateValue = ref(0)
     const inputHeight = computed(() => (props.active ? "550px" : "450px"));
     function onSelect(event) {
       selectedText.value = event.target.value.substring(
@@ -119,6 +123,7 @@ export default {
 
     return {
       value: ref(null),
+      rateValue,
       textValue,
       analysis,
       onSelect,
@@ -239,5 +244,8 @@ export default {
   .tag {
     font-size: 18px;
     align-items: center;
+  }
+  .rate-box {
+
   }
 </style>

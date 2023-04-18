@@ -41,7 +41,8 @@ export function getArticleAnalysis(article) {
     return request({
         url: "writing_analysis/",
         method: 'post',
-        data
+        data: data,
+        timeout: 20000
     })
 }
 
