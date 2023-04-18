@@ -1,20 +1,20 @@
 <template>
   <n-space vertical id="CardBox">
     <n-space id="AllContainer">
-      <n-space id="TextCard">
-        <n-card hoverable id="InputCard">
+      <n-space class="TextCard">
+        <n-card hoverable class="InputCard">
           <n-space>
             <n-input
                 class="Input" @select="onSelect"
-                     :placeholder="staticText"
-                     :bordered="!active"
-                     v-model:value="textValue"
-                     type="textarea"
-                     size="small"
-                     :style="{ height: inputHeight}"
-                     :autosize="{
-                      maxRows: 20
-                    }"
+                :placeholder="staticText"
+                :bordered="!active"
+                v-model:value="textValue"
+                type="textarea"
+                size="small"
+                :style="{ height: inputHeight}"
+                :autosize="{
+                    maxRows: 20
+                  }"
             />
           </n-space>
           <n-space v-if="!active" class="TodayWords">
@@ -88,6 +88,7 @@ export default {
         let success = res.state
         if (success) {
           analysis.value = res.translation
+          // structure
         }
         else {
           msg.error(res.msg)
@@ -131,11 +132,11 @@ export default {
 
 <style scoped>
   #CardBox {
-    height: 700px;
-    width: 1200px;
+    height: 95vh;
+    width: 160vh;
     background-image: url("../../assets/img/logo.png");
     margin-left: 9%;
-    margin-top: 2%;
+    margin-top: 1%;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -149,48 +150,58 @@ export default {
     justify-content: flex-end;
     transform: translate(-50%, -48.5%);
   }
-  #TextCard {
+  .TextCard {
     position: relative;
     top: 50%;
     left: 50%;
     display: flex;
     justify-content: flex-end;
     transform: translate(-50%, -50%);
-    height: 600px;
-    width: 1100px;
-    margin:auto;
+    height: 80vh;
+    width: 150vh;
+    margin: auto;
   }
   .Input{
-    font-size: 25px;
-    width: 750px;
+    font-size: 20px;
+    width: 75vh;
     margin:auto;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+    /*background-color: red;*/
   }
-  #InputCard {
-    height: 600px;
-    width: 800px;
+  .InputCard {
+    /*height: 600px;*/
+    /*width: 800px;*/
+    height: 78vh;
+    width: 73vh;
     text-align: left;
   }
   .translation {
-    font-size: 25px;
+    font-size: 20px;
     margin-left: 15px;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
     padding: 0.5rem;
     border-radius: 4px;
-    height: 600px;
-    width: 270px;
+    /*height: 600px;*/
+    /*width: 270px;*/
+    height: 78vh;
+    width: 73vh;
     text-align: left;
   }
   .translationText {
-    font-size: 25px;
-    width: 210px;
-    height: 550px;
+    font-size: 20px;
+    width: 68vh;
+    height: 74vh;
     overflow-wrap: break-word;
     word-wrap: break-word;
     overflow-y: auto;
     position: relative;
+    /*background-color: red;*/
+    transform: translate(-50%, -50%);
+    margin:auto;
+    top: 48%;
+    left: 50%;
   }
 
   /* 滚动条样式 */
@@ -213,15 +224,17 @@ export default {
     position: relative;
     bottom: 0;
     margin-top: 1px;
-    width: 500px;
+    width: 63vh;
     left: 50%;
-    transform: translate(18%, 15%);
+    transform: translate(21%, 15%);
+    /*background-color: red;*/
   }
   .TodayWords {
-    width: 750px;
-    height: 100px;
+    width: 66.5vh;
+    height: 13vh;
     margin-top: 15px;
     align-items: center;
+    /*background-color: red;*/
   }
   .tag {
     font-size: 18px;
