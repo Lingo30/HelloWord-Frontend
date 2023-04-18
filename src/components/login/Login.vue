@@ -7,7 +7,7 @@
         <div class="background">
         </div>
         <!-- 右侧的注册盒子 -->
-        <div v-if="loginPageFlag" class="content-login">
+        <div v-show="loginPageFlag" class="content-login">
           <div class="content-login-info">
             <div class="H1">欢迎来到HelloWord</div>
             <br>
@@ -30,8 +30,19 @@
                     placeholder="密码"
                 />
               </div>
+              <!--                验证码-->
+              <div style="margin:25px 0px; display: flex;justify-content: center">
+                <!--                <img src="../../assets/img/key.png" height="12" width="12">-->
+                <input
+                    style="width: 35%"
+                    v-model="verifyInput"
+                    name="验证码"
+                    placeholder="验证码"
+                />
+                <div id="loginVerify"></div>
+              </div>
               <div style="margin: 26px;">
-                <button @click="login(username, password)" class="loginButton">
+                <button @click="login(username, password,verifyInput)" class="loginButton">
                   登录
                 </button>
               </div>
@@ -42,7 +53,7 @@
             </div>
           </div>
         </div>
-        <div v-else class="content-login">
+        <div v-show="!loginPageFlag" class="content-login">
           <div class="content-login-info">
             <div class="content-title">Register</div>
             <div ref="loginForm">
@@ -72,8 +83,19 @@
                     placeholder="确认密码"
                 />
               </div>
+              <!--                验证码-->
+              <div style="margin:25px 0px; display: flex;justify-content: center">
+                <!--                <img src="../../assets/img/key.png" height="12" width="12">-->
+                <input
+                    style="width: 35%"
+                    v-model="verifyInput"
+                    name="验证码"
+                    placeholder="验证码"
+                />
+                <div id="registerVerify"></div>
+              </div>
               <div style="margin: 26px;">
-                <button @click="register(username,password, passwordConfirm)" class="loginButton">
+                <button @click="register(username,password, passwordConfirm,verifyInput)" class="loginButton">
                   注册
                 </button>
               </div>
@@ -90,16 +112,17 @@
 
 
 <script>
-import {ref} from "vue";
+import {onMounted, ref} from "vue";
 import md5 from 'js-md5';
 import {useMessage} from 'naive-ui'
 import {registerAPI, loginAPI} from "@/request/api/user";
 import store from "@/store";
 import router from "@/router";
 import {USERNAME, PASSWORD} from "@/store/local";
+import {GVerify} from "@/components/login/GVerify"
 
 export default {
-  name: 'HelloWorld',
+  name: 'Login',
   props: {
     msg: String
   },
@@ -108,6 +131,10 @@ export default {
     let username = ref('');
     let password = ref('');
     let passwordConfirm = ref('');
+    let verifyInput = ref('')//验证码
+
+    let loginVerifyCode = null
+    let registerVerifyCode = null
 
     const message = useMessage();
 
@@ -116,6 +143,7 @@ export default {
       username.value = ""
       password.value = ""
       passwordConfirm.value = ""
+      verifyInput.value = ""
     }
 
     function saveUserInfo(data, name, pwd) {
@@ -129,7 +157,12 @@ export default {
       localStorage.setItem(PASSWORD, pwd)
     }
 
-    function register(name, pwd, pwdConfirm) {
+    function register(name, pwd, pwdConfirm, verify) {
+      if (!registerVerifyCode.validate(verify)) {
+        message.error('验证码错误')
+        loginVerifyCode.refresh()
+        return;
+      }
       if (pwd !== pwdConfirm) {
         message.error("密码前后不一致");
         return
@@ -159,7 +192,13 @@ export default {
       })
     }
 
-    function login(name, pwd) {
+    function login(name, pwd, verify) {
+      if (!loginVerifyCode.validate(verify)) {
+        message.error('验证码错误')
+        loginVerifyCode.refresh()
+        return;
+      }
+
       if (name === '' || pwd === '') {
         message.error("用户名或密码不能为空");
         return;
@@ -185,11 +224,18 @@ export default {
       })
     }
 
+    onMounted(() => {
+      registerVerifyCode = new GVerify('registerVerify')
+      loginVerifyCode = new GVerify('loginVerify')
+    })
+
     return {
       loginPageFlag,
       username,
       password,
       passwordConfirm,
+      verifyInput,
+
 
       change,
       register,
@@ -336,5 +382,19 @@ input:-webkit-autofill::first-line {
   font-size: 15px;
   /* 修改默认字体的样式 */
   font-weight: bold;
+}
+
+#loginVerify {
+  /*width: 30px;*/
+  height: 25px;
+  display: inline-flex;
+  /*position: relative;*/
+}
+
+#registerVerify {
+  /*width: 30px;*/
+  height: 25px;
+  display: inline-flex;
+  /*position: relative;*/
 }
 </style>
