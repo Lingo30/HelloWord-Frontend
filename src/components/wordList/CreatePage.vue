@@ -1,5 +1,10 @@
 <template>
-  <n-modal style="background-color: white" v-model:show="showFlag">
+  <n-modal
+      style="background-color: white"
+      v-model:show="showFlag"
+      @after-enter="init"
+      @after-leave="exit"
+  >
     <div class="container">
       <span style="font-size: 2em; margin-left: 5px; margin-bottom: 5px; height: 10%">
         词单导入
@@ -21,7 +26,9 @@
           文件
         </n-button>
       </div>
+
       <n-divider style="margin: 0;padding: 0"/>
+
       <div class="content">
         <!--        官方的词单卡片-->
         <n-scrollbar v-if="pageIdx===0">
@@ -36,7 +43,7 @@
                   <n-card
                       size="medium"
                       :style="clickedListId===list.listId?{ backgroundColor: '#42b983'}:{}"
-                      @click="clickOfficialCard(list.listId)"
+                      @click="clickOfficialCard(list.listId,list.name)"
                   >
                     {{ ' ' }}
                     <template #header>
@@ -64,20 +71,34 @@
         <n-upload
             ref="uploadRef"
             class="drop-area"
-            v-if="pageIdx===1"
+            v-else-if="pageIdx===1&&!showFileResultFlag"
             directory-dnd
-            :action="uploadURL"
             :custom-request="upload"
         >
           <n-upload-dragger>
             <p style="width: 180px;margin: 80px auto">将文件拖拽到此处即可完成文件上传。</p>
           </n-upload-dragger>
         </n-upload>
+        <!--        文件导入后的展示-->
+        <n-card class="file-show" v-else-if="pageIdx===1&&showFileResultFlag" closable @close="closeFileShowResult">
+          <div class="file-show">
+            <n-list hoverable>
+              <n-list-item style="padding-top: 5px;padding-bottom: 5px" v-for="(word,index) in fileWords" :key="index">
+                <n-text>{{ word.word }}</n-text>
+                <template #suffix>
+                  <div style="width: 100px">
+                    {{ word.meaning }}
+                  </div>
+                </template>
+              </n-list-item>
+            </n-list>
+          </div>
+        </n-card>
       </div>
       <!--      底部输入词单名和确认-->
       <div class="foot">
         <n-input class="input-name" v-model:value="myWordlistName"/>
-        <n-button class="button" @click="create(myWordlistName)">
+        <n-button class="button" @click="create(myWordlistName, pageIdx)">
           生成词单
         </n-button>
       </div>
@@ -94,11 +115,13 @@ import {
   NTooltip,
   NInput,
   NButton,
-  NDivider
+  NDivider,
+  NList,
+  NListItem,
 } from "naive-ui";
 import router from "@/router";
 import store from "@/store";
-import {createFromOfficial, getOfficialLists, uploadFile} from "@/request/api/wordlist";
+import {createFromFile, createFromOfficial, getOfficialLists, uploadFile} from "@/request/api/wordlist";
 import {onMounted, reactive, ref} from "vue";
 
 export default {
@@ -110,45 +133,71 @@ export default {
     NInput,
     NButton,
     NDivider,
+    NList,
+    NListItem,
   },
-  setup() {
+  emits: ['addWordlist'],
+  setup(props, {emit}) {
     const dialog = useDialog()
     const message = useMessage()
     let showFlag = ref(false)
     let pageIdx = ref(0)
     let lists = reactive([
-      {
-        listId: 1,
-        name: "四级",
-        creator: '官方',
-        num: 4321
-      },
-      {
-        listId: 2,
-        name: "机器学习",
-        creator: 'He K',
-        num: 111
-      },
-      {
-        listId: 3,
-        name: "chemicallllllllllllllllllllllllllllllllllllllllllll",
-        creator: 'E. J. Corey',
-        num: 999
-      },
+      // {
+      //   listId: 1,
+      //   name: "四级",
+      //   creator: '官方',
+      //   num: 4321
+      // },
+      // {
+      //   listId: 2,
+      //   name: "机器学习",
+      //   creator: 'He K',
+      //   num: 111
+      // },
+      // {
+      //   listId: 3,
+      //   name: "chemicallllllllllllllllllllllllllllllllllllllllllll",
+      //   creator: 'E. J. Corey',
+      //   num: 999
+      // },
     ])//所有官方词单
     let clickedListId = ref(undefined)//选择的官方词单id
-    let uploadURL = ref('' + store.state.user.uid)
+    let showFileResultFlag = ref(false)//是否完成文件解析展示
+    let fileWords = reactive([
+      {
+        wordId: 0,
+        word: 'this',
+        meaning: 'pron. 这',
+      },
+      {
+        wordId: 1,
+        word: 'is',
+        meaning: 'v. 是',
+      },
+      {
+        wordId: 2,
+        word: 'a',
+        meaning: 'art. 一',
+      },
+      {
+        wordId: 3,
+        word: 'word',
+        meaning: 'n. 单词',
+      },
+    ])//文件解析生成的单词
     let myWordlistName = ref('')
 
     function switchPage(idx) {
       pageIdx.value = idx
     }
 
-    function clickOfficialCard(id) {
+    function clickOfficialCard(id, name) {
       if (clickedListId.value === id) {
         clickedListId.value = undefined
       } else {
         clickedListId.value = id
+        myWordlistName.value = name
       }
     }
 
@@ -166,14 +215,12 @@ export default {
         }
     ) {
       const formData = new FormData();
-      console.log(file.file);
       if (data) {
         Object.keys(data).forEach((key) => {
           formData.append(key, data[key]);
         });
       }
       formData.append('file', file.file);
-      // console.log(formData);
       const progressFunc = ((progress) => {
         onProgress({percent: Math.ceil(progress.loaded / progress.total * 100)});
       })
@@ -183,40 +230,79 @@ export default {
       })
     }
 
-    function create(listName) {
+    function closeFileShowResult() {
+      showFileResultFlag.value = !showFileResultFlag.value
+    }
+
+    function create(listName, createMethod) {
+      //createMethod=0时为官方词单，createMethod=1时为文件创建词单
       if (listName === '') {
         message.error('请输入词单名')
         return
       }
-      //TODO 根据官方词单创建词单
-      // createFromOfficial(store.state.user.uid, listId).then((res) => {
-      //   if (res.state) {
-      //     message.success("创建成功")
-      //   } else {
-      //     message.error('创建失败')
-      //   }
-      // })
+      let success = false
+      let errMsg = '网络错误'
+      let listId = undefined
+      if (createMethod === 0) {
+        //官方词单
+        createFromOfficial(store.state.user.uid, listName, clickedListId.value).then((res) => {
+          success = res.state
+          errMsg = res.msg
+          listId = res.listId
+        }).finally(() => {
+          if (success) {
+            emit('addWordlist', listId)
+            message.success("添加成功")
+          } else {
+            message.error(errMsg)
+          }
+        })
+      } else {
+        //TODO 文件创建词单
+        createFromFile(store.state.user.uid, listName,).then((res) => {
+
+        })
+      }
     }
 
-    onMounted(() => {
-      //TODO 获取所有官方词单id
-      // getOfficialLists().then((res) => {
-      //   listIds.splice(0, listIds.length)
-      //   res.ids.forEach((id) => listIds.push(id));
-      // })
-    })
+    function init() {
+      pageIdx.value = 0
+      // 默认在第一个页面，获取所有官方词单
+      let success = false
+      let errMsg = '网络错误'
+      getOfficialLists().then((res) => {
+        success = res.state
+        if (res.state) {
+          lists.splice(0, lists.length)
+          res.lists.forEach((wordlist) => lists.push(wordlist))
+        }
+      }).finally(() => {
+        if (!success) {
+          message.error(errMsg)
+        }
+      })
+    }
+
+    function exit() {
+      pageIdx.value = 0
+      lists.splice(0, lists.length)
+    }
 
     return {
       showFlag,
       pageIdx,
       lists,
       clickedListId,
-      uploadURL,
+      showFileResultFlag,
+      fileWords,
       myWordlistName,
 
+      init,
+      exit,
       switchPage,
       clickOfficialCard,
       upload,
+      closeFileShowResult,
       create,
     }
   }
@@ -293,6 +379,14 @@ export default {
 
 .card-foot {
   text-align: left;
+}
+
+.file-show {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: left;
 }
 
 .foot {
