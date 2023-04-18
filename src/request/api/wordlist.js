@@ -120,7 +120,7 @@ export function createFromFile(userId, listName, words) {
         words: words,
     })
     return request({
-        url: 'get_wordList_from_file/',
+        url: 'add_wordlist_from_file/',
         method: 'post',
         data
     })
