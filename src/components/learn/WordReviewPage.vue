@@ -5,12 +5,12 @@
             <div class="main_box">
                 <div class="left_box">
                     <div class="info_word" v-for='index in 5' :key='index'>
-                        <div class="word_Title">
+                        <div class="word_Title" v-if="index - 1 < this.words.length">
                             <div class="content_box">
                                 {{ this.words[index - 1].word }}
                             </div>
                         </div>
-                        <div class="word_Meaning">
+                        <div class="word_Meaning" v-if="index - 1 < this.words.length">
                             <div class="content_box">
                                 {{this.words[index - 1].definition_cn}}
                             </div>
@@ -19,12 +19,12 @@
                 </div>
                 <div class="right_box">
                     <div class="info_word" v-for='index in 5' :key='index'>
-                        <div class="word_Title">
+                        <div class="word_Title" v-if="index + 4 < this.words.length">
                             <div class="content_box">
                                 {{this.words[index + 4].word}}
                             </div>
                         </div>
-                        <div class="word_Meaning">
+                        <div class="word_Meaning" v-if="index + 4 < this.words.length">
                             <div class="content_box">
                                 {{this.words[index + 4].definition_cn}}
                             </div>
