@@ -144,26 +144,7 @@ export default {
     const message = useMessage()
     let showFlag = ref(false)
     let pageIdx = ref(0)
-    let lists = reactive([
-      // {
-      //   listId: 1,
-      //   name: "四级",
-      //   creator: '官方',
-      //   num: 4321
-      // },
-      // {
-      //   listId: 2,
-      //   name: "机器学习",
-      //   creator: 'He K',
-      //   num: 111
-      // },
-      // {
-      //   listId: 3,
-      //   name: "chemicallllllllllllllllllllllllllllllllllllllllllll",
-      //   creator: 'E. J. Corey',
-      //   num: 999
-      // },
-    ])//所有官方词单
+    let lists = reactive([])//所有官方词单
     let clickedListId = ref(undefined)//选择的官方词单id
     let showFileResultFlag = ref(false)//是否完成文件解析展示
     let fileWords = reactive([
@@ -270,6 +251,7 @@ export default {
         }).finally(() => {
           if (success) {
             emit('addWordlist', listId)
+            showFlag.value = false
             message.success("添加成功")
           } else {
             message.error(errMsg)
@@ -286,6 +268,7 @@ export default {
         }).finally(() => {
           if (success) {
             emit('addWordlist', listId)
+            showFlag.value = false
             message.success("添加成功")
           } else {
             message.error(errMsg)
