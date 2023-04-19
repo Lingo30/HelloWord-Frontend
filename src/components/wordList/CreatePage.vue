@@ -85,14 +85,14 @@
             <n-card class="file-show" closable @close="closeFileShowResult">
               <n-list class="file-show" hoverable>
                 <n-list-item style="padding-top: 5px;padding-bottom: 5px" v-for="(word,index) in fileWords"
-                             :key="index">
+                             :key="word.wordId">
                   <n-text>{{ word.word }}</n-text>
                   <template #suffix>
                     <div style="display: flex;width: 350px;justify-content: right;align-items: center">
                       {{ word.meaning }}
-                      <!--                      <n-button style="margin-left: 10px">-->
-                      <!--                        删除-->
-                      <!--                      </n-button>-->
+                      <n-button style="margin-left: 10px" @click="deleteWordFromFile(word.wordId)">
+                        删除
+                      </n-button>
                     </div>
                   </template>
                 </n-list-item>
@@ -235,6 +235,18 @@ export default {
       })
     }
 
+    function deleteWordFromFile(wordId) {
+      for (let i = 0; i < fileWords.length; i++) {
+        if (fileWords[i].wordId === wordId) {
+          fileWords.splice(i, 1)
+          break
+        }
+      }
+      if (fileWords.length === 0) {
+        showFileResultFlag.value = !showFileResultFlag.value
+      }
+    }
+
     function closeFileShowResult() {
       showFileResultFlag.value = !showFileResultFlag.value
     }
@@ -326,6 +338,7 @@ export default {
       switchPage,
       clickOfficialCard,
       upload,
+      deleteWordFromFile,
       closeFileShowResult,
       create,
     }
