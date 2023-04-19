@@ -1,6 +1,14 @@
 <template>
   <n-space vertical class="card-box">
     <n-space class="all-container">
+      <n-space class="export-box">
+        <n-button type="info" ghost @click="handleExportInput" class="export-btn">
+          <template #icon>
+            <n-icon><log-in-icon /></n-icon>
+          </template>
+          导出
+        </n-button>
+      </n-space>
       <n-space class="text-card">
         <n-card hoverable class="TextContainer">
           <n-scrollbar style="max-height: 72vh;">
@@ -50,9 +58,13 @@
 import {onBeforeMount, reactive, ref} from "vue";
 import {getBlankText} from "@/request/api/review";
 import store from "@/store";
+import { LogInOutline as LogInIcon } from '@vicons/ionicons5'
 
 export default {
   name: "BlankText",
+  components: {
+    LogInIcon
+  },
   setup() {
     // const content = ref('Once upon a time in the magical world of Valoran, there lived a young Summoner named Lily. She had a deep fascination with the champions and their unique abilities. She would often watch their battles and dream of one day becoming a skilled Summoner herself.\n' +
     //     '\n' +
@@ -73,6 +85,7 @@ export default {
     async function load () {
       init.value = true
       await getBlankText(store.state.user.uid).then((res)=>{
+        console.log(res);
         content.value = res.content
         wordList.splice(0);
         wordList.push(...res.wordList);
@@ -92,7 +105,7 @@ export default {
 
     }
     onBeforeMount(()=>{
-      // load()
+      load()
     })
 
     // 判断是否是单词空的第一个字符
@@ -155,8 +168,27 @@ export default {
       });
     }
 
+    // 导出文本
+    function handleExportInput() {
+      // 使用Blob对象和URL.createObjectURL()方法创建一个临时的URL，
+      // 然后通过创建一个隐藏的<a>标签来触发下载。
+      const fileName = "blank.txt";
+      const contentType = "text/plain;charset=utf-8";
+      const blob = new Blob([content.value], { type: contentType });
+      const url = URL.createObjectURL(blob);
+
+      const hiddenLink = document.createElement("a");
+      hiddenLink.href = url;
+      hiddenLink.download = fileName;
+      hiddenLink.style.display = "none";
+      document.body.appendChild(hiddenLink);
+      hiddenLink.click();
+      document.body.removeChild(hiddenLink);
+    }
+
     return {
       inputs,
+      handleExportInput,
       init,
       usedWords,
       realAnswers,
@@ -259,5 +291,13 @@ export default {
     height: 80vh;
     width: 150vh;
     margin:auto;
+  }
+
+  .export-box {
+    width: 149vh;
+  }
+
+  .export-btn {
+    margin-left: 62.5vh;
   }
 </style>

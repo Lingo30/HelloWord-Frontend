@@ -41,13 +41,14 @@ export function getArticleAnalysis(article) {
     return request({
         url: "writing_analysis/",
         method: 'post',
-        data
+        data: data,
+        timeout: 20000
     })
 }
 
 export function getBlankText(uid) {
     const data = JSON.stringify({
-        user_id: uid,
+        user_id: parseInt(uid),
     })
     return request({
         url: "get_blank_text/",
