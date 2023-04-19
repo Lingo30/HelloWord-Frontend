@@ -80,20 +80,26 @@
           </n-upload-dragger>
         </n-upload>
         <!--        文件导入后的展示-->
-        <n-card class="file-show" v-else-if="pageIdx===1&&showFileResultFlag" closable @close="closeFileShowResult">
-          <div class="file-show">
-            <n-list hoverable>
-              <n-list-item style="padding-top: 5px;padding-bottom: 5px" v-for="(word,index) in fileWords" :key="index">
-                <n-text>{{ word.word }}</n-text>
-                <template #suffix>
-                  <div style="width: 100px">
-                    {{ word.meaning }}
-                  </div>
-                </template>
-              </n-list-item>
-            </n-list>
-          </div>
-        </n-card>
+        <div style="display: flex;height: 100%;width: 100%" v-else-if="pageIdx===1&&showFileResultFlag">
+          <n-scrollbar>
+            <n-card class="file-show" closable @close="closeFileShowResult">
+              <n-list class="file-show" hoverable>
+                <n-list-item style="padding-top: 5px;padding-bottom: 5px" v-for="(word,index) in fileWords"
+                             :key="index">
+                  <n-text>{{ word.word }}</n-text>
+                  <template #suffix>
+                    <div style="display: flex;width: 350px;justify-content: right;align-items: center">
+                      {{ word.meaning }}
+<!--                      <n-button style="margin-left: 10px">-->
+<!--                        删除-->
+<!--                      </n-button>-->
+                    </div>
+                  </template>
+                </n-list-item>
+              </n-list>
+            </n-card>
+          </n-scrollbar>
+        </div>
       </div>
       <!--      底部输入词单名和确认-->
       <div class="foot">
