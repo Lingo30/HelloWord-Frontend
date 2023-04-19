@@ -3,57 +3,58 @@
 		<!-- 侧边栏 -->
 		<!-- <sidebar v-on:listenToChild="ChildToParent"></sidebar> -->
 		<!-- 页首 -->
-		
+
 		<!-- content -->
 		<div class="class_table">
-			<div class="word_box"> 
-				<!-- <div class="word_search">
-					<div class="search">
-						<n-input
-						v-model:value="value" 
-						type="text"
-						placeholder="您需要查询的单词" 
-						style="border-radius: 15px;"
-					/>
-					</div>
-					<div class="search_button">
-						<n-button type="primary" style="border-radius: 10px;" @click="searchWord()">
-							查找
-						</n-button>
-					</div>
-				</div> -->
-				<div class="word_card_box">
-					<n-card class="word_card shadow-lg">
-						<!-- <div class="word"> -->
-							<div class="word_name">
-								{{group_words[curId].word}}
-							</div>
-							<div class="word_meaning_box">
-								<div class="word_reading" v-if="shown==true">
-									音标: {{group_words[curId].phonetic_symbol}}
-								</div>
-								<div class="word_meaning" v-if="shown==true">
-									{{group_words[curId].definition_cn}}
-								</div>
-								<router-link to="" class="delword" @click="delWord" v-if="shown==true">不再学习</router-link>
-							</div>
-							
-							<div class="word_button_box">
-								<n-button round type="success" class="info_button3" @click="nextWord" v-if="shown==true && forget_times==1">
-									下一个
-								</n-button>
-								<n-button large strong primary round type="error" class="info_button1" @click="forgetWord" v-if="shown==false && forget_times==0">
-									不认识
-								</n-button>
-								<n-button  round type="success" class="info_button2" @click="showWord" v-if="shown==false && forget_times==0">
-									认识
-								</n-button>
-							</div>
-							
-						<!-- </div> -->
-					</n-card>
-				</div>
-		</div>
+      <n-card class="word_card shadow-lg">
+        <!-- <div class="word"> -->
+        <div class="word_name">
+          {{group_words[curId].word}}
+        </div>
+        <div class="word_meaning_box">
+          <div class="word_reading" v-if="shown==true">
+            音标: {{group_words[curId].phonetic_symbol}}
+          </div>
+          <div class="word_meaning" v-if="shown==true">
+            {{group_words[curId].definition_cn}}
+          </div>
+          <router-link to="" class="delword" @click="delWord" v-if="shown==true">不再学习</router-link>
+        </div>
+
+        <div class="word_button_box">
+          <n-button round type="success" class="info_button3" @click="nextWord" v-if="shown==true && forget_times==1">
+            下一个
+          </n-button>
+          <n-button large strong primary round type="error" class="info_button1" @click="forgetWord" v-if="shown==false && forget_times==0">
+            不认识
+          </n-button>
+          <n-button  round type="success" class="info_button2" @click="showWord" v-if="shown==false && forget_times==0">
+            认识
+          </n-button>
+        </div>
+
+        <!-- </div> -->
+      </n-card>
+<!--			<div class="word_box">-->
+<!--				&lt;!&ndash; <div class="word_search">-->
+<!--					<div class="search">-->
+<!--						<n-input-->
+<!--						v-model:value="value"-->
+<!--						type="text"-->
+<!--						placeholder="您需要查询的单词"-->
+<!--						style="border-radius: 15px;"-->
+<!--					/>-->
+<!--					</div>-->
+<!--					<div class="search_button">-->
+<!--						<n-button type="primary" style="border-radius: 10px;" @click="searchWord()">-->
+<!--							查找-->
+<!--						</n-button>-->
+<!--					</div>-->
+<!--				</div> &ndash;&gt;-->
+<!--				<div class="word_card_box">-->
+<!--					-->
+<!--				</div>-->
+<!--		</div>-->
 			<div class="info_card shadow-lg">
 				<n-card :bordered="false" class="info_card1 shadow-lg">
 					<div class="info_box">
@@ -86,7 +87,7 @@
 									{{ antonym.definition_cn }}
 								</div>
 							</div>
-							
+
 						</div>
 					</div>
 				</n-card>
@@ -103,11 +104,11 @@
 			</div>
 		</div>
 	</div>
-  
-	
-	
+
+
+
   </template>
-  
+
 
 <script>
 import {useMessage} from 'naive-ui'
@@ -131,7 +132,7 @@ export default {
 				},
 			],),
 			/*
-			id, word_id, word, 
+			id, word_id, word,
             phonetic_symbol, definition_cn, WordMeaning,
 			synonyms[], antonyms[], example
 			*/
@@ -156,7 +157,7 @@ export default {
 					simple: false,
 				},
 			],
-			
+
 			curId: ref(0),
 			forget_times: ref(0),
 			shown: ref(false),
@@ -202,7 +203,7 @@ export default {
 		saveGroup() {
 			group_word_learn_save(store.state.user.uid, this.learnWords, this.list_id).then((res) => {
 				// pass
-				
+
 			})
 		},
 		delWord() {
@@ -220,7 +221,7 @@ export default {
 		forgetWord() {
 			let len = this.group_words.length
 			this.group_words[len] = this.group_words[this.curId]
-			
+
 			let pos = this.learnWords.findIndex((val)=>val.word_id==this.group_words[this.curId].word_id)
 			len = this.learnWords.length
 			if(pos === -1) {
@@ -269,23 +270,27 @@ export default {
 	}
 }
 </script>
-  
+
 <style scoped>
 	.class_table {
-		position: absolute;
-		width: 100%;
-		top: 0%;
-		bottom: 0%;
-		left: 2.5%;
-		/* background-color: rgba(38,164,116, 0.3); */
-		/* opacity: 30%; */
-		display: inline-flex;
-	}
+    position:absolute;
+    width:70%;
+    height:80%;
+    top:50%;
+    left:50%;
+    display:flex;
+    align-items: center;
+    justify-content: center;
+    transform:translate(-50%,-50%);
+    background-color: rgba(255,255,255,0.3);
+    box-shadow: 10px 12px 16px 10px  rgba(0,0,0,0.24), 10px 17px 50px 10px #4E655D;
+  }
 	.word_box {
 		position: relative;
-		margin-left: 3%;
+    margin-left:0%;
 		width: 50%;
-		/* background-color: aqua; */
+    height: 90%;
+    /*background-color: aqua;*/
 		display: flex;
 		flex-direction: column;
 	}
@@ -310,21 +315,23 @@ export default {
 		overflow: hidden;
 	}
 
-	
+
 	.word_card_box {
 		/* position: relative; */
 		/* margin-left: 3%; */
-		margin-top: 15%;
-		width: 100%;
-		top: 15%;
-		height: 80%;
-		opacity: 90%;
-		/* background-color: rgba(38,164,116, 0.3); */
+		/*margin-top: 15%;*/
+		/*width: 100%;*/
+		/*top: 15%;*/
+		/*height: 80%;*/
+		/*opacity: 90%;*/
+		/* background-color: rgba(38,164,116, 0.3);*/
+    width: 100%;
+    height: 100%;
 	}
 	.word_card {
-		height: 95%;
-		width: 58%;
-		left: 22%;
+		height: 90%;
+		width: 40%;
+    /*left: 15%;*/
 		background-image: url(https://naive-ui.oss-cn-beijing.aliyuncs.com/carousel-img/carousel1.jpeg);
 		/* background-color: rgba(38,164,116, 0.3); */
 		display: flex;
@@ -443,12 +450,15 @@ export default {
 
 	.info_card {
 		position: relative;
-		top: 15%;
-		width: 30%;
-		margin-left: 5%;
-		height: 75%;
-		opacity: 90%;
+		/*top: 15%;*/
+		/*width: 30%;*/
+		/*margin-left: 5%;*/
+		/*height: 75%;*/
+		/*opacity: 90%;*/
+    width: 40%;
+    height: 90%;
 		background-color: #679B9B;
+    margin-left: 5%;
 		display: vertical;
 		border-radius: 20px;
 		/* flex-wrap: wrap;
@@ -495,7 +505,6 @@ export default {
 	}
 
 	.info_title {
-		height: 30%;
 		overflow: hidden;
 		font-size: xx-large;
 		font-weight: 800;
@@ -557,5 +566,5 @@ export default {
 		overflow: hidden;
 		/* padding: 0%; */
 	}
-  
+
   </style>

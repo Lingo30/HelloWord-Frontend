@@ -1,5 +1,5 @@
 <template>
-    <div>        
+    <div>
         <!-- content -->
         <div class="class_table">
             <div class="main_box">
@@ -26,8 +26,8 @@
     </div>
 
   </template>
-  
-  
+
+
 <script>
 import router from '@/router';
 import store from "@/store";
@@ -36,14 +36,14 @@ import { create } from 'lodash';
   export default {
     name: "FinishPage",
     methods: {
-        
+
     },
     created() {
-        
+
     }
   }
   </script>
-  
+
   <style scoped>
     .class_table {
         position: absolute;
@@ -57,16 +57,19 @@ import { create } from 'lodash';
         display: inline-flex;
     }
     .main_box{
-        position: absolute;
-        width: 80%;
-        height: 80%;
-        top: 10%;
-        left: 8%;
-        background-color: rgba(255, 255, 255, 0.5);
-        /* background-color: rgba(129,227,185, 0.8);; */
-        border-radius: 30px;
-        display: flex;
-        flex-direction: column;
+      position:absolute;
+      width:70%;
+      height:80%;
+      top:50%;
+      left:50%;
+      display:flex;
+      align-items: center;
+      justify-content: center;
+
+      transform:translate(-50%,-50%);
+      background-color: rgba(255,255,255,0.3);
+      box-shadow: 10px 12px 16px 10px  rgba(0,0,0,0.24), 10px 17px 50px 10px #4E655D;
+      flex-direction: column;
     }
 
     .finish_box {
@@ -132,5 +135,5 @@ import { create } from 'lodash';
         font-size: xx-large;
         font-weight: 600;
     }
-  
+
 </style>

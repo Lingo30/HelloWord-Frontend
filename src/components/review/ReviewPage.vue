@@ -3,7 +3,7 @@
       <!-- 侧边栏 -->
       <!-- <sidebar v-on:listenToChild="ChildToParent"></sidebar> -->
       <!-- 页首 -->
-      
+
       <!-- content -->
       <div class="class_table">
           <div class="main_box">
@@ -12,7 +12,7 @@
             effect="card"
             prev-slide-style="transform: translateX(-150%) translateZ(-800px);"
             next-slide-style="transform: translateX(50%) translateZ(-800px);"
-          
+
             autoplay
             interval="2000"
           >
@@ -39,13 +39,13 @@
             </n-carousel-item>
           </n-carousel>
           </div>
-         
-  
+
+
       </div>
   </div>
 
-  
-  
+
+
 </template>
 
 
@@ -56,26 +56,27 @@ export default {
 </script>
 
 <style scoped>
-  .class_table {
-      position: absolute;
-      width: 100%;
-      top: 0%;
-      bottom: 0%;
-      left: 2.5%;
-      /* background-color: rgba(38,164,116, 0.3); */
-      /* opacity: 30%; */
-      display: inline-flex;
-  }
-  .main_box{
-      position: absolute;
-      width: 80%;
-      height: 80%;
-      top: 10%;
-      left: 8%;
-      background-color: rgba(255, 255, 255, 0.5);
-      border-radius: 30px;
-  }
-  .carousel-img {
+.class_table {
+  position:absolute;
+  width:70%;
+  height:80%;
+  top:50%;
+  left:50%;
+  display:flex;
+  align-items: center;
+  justify-content: center;
+
+  transform:translate(-50%,-50%);
+  background-color: rgba(255,255,255,0.3);
+  box-shadow: 10px 12px 16px 10px  rgba(0,0,0,0.24), 10px 17px 50px 10px #4E655D;
+}
+.main_box{
+  position: absolute;
+  width: 90%;
+  height: 80%;
+  border-radius: 30px;
+}
+.carousel-img {
   /* margin: 0 auto; */
   /* padding-top: 50px; */
   /* padding-bottom: 50px; */
@@ -87,19 +88,19 @@ export default {
   height: 70%;
   object-fit: cover;
   border-radius: 20px;
-  }
-  .imgTitle {
-      position: relative;
-      margin-top: 8%;
-      /* margin-left: 5%; */
-      font-size: 55px;
-      line-height: 25px;
-      font-family: YouSheBiaoTiYuan;
-  }
+}
+.imgTitle {
+  position: relative;
+  margin-top: 8%;
+  /* margin-left: 5%; */
+  font-size: 55px;
+  line-height: 25px;
+  font-family: YouSheBiaoTiYuan;
+}
 
-  .n-card {
-      overflow: hidden;
-      /* padding: 0%; */
-  }
+.n-card {
+  overflow: hidden;
+  /* padding: 0%; */
+}
 
 </style>

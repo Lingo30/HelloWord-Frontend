@@ -8,14 +8,14 @@
         </div>
         <!-- 右侧的注册盒子 -->
         <div class="content-login">
-          <NScrollbar class="chat" style="max-height: 500px">
-            <div>
-              <div class="chat_top">
-                <img src="../../assets/img/kaleidoBlank.png" height="170" width="150">
-              </div>
+          <div class="chat_top">
+            <img src="../../assets/img/kaleidoBlank.png" height="170" width="150">
+          </div>
+          <div class="chat_parent" style="overflow:scroll;">
+            <div ref="chat_box" class="chat" style="overflow-x:hidden; overflow-y:auto; max-height:500px" >
               <ChatMessage v-for="(item, index) in messages" v-bind:key="index" :type=item.type :time=item.time :content=item.content></ChatMessage>
             </div>
-          </NScrollbar>
+          </div>
           <div class="bottom">
             <NInput class="message" v-model:value="question" round placeholder="Type a message...">
             </NInput>
@@ -36,6 +36,7 @@ import {NInput , NButton, NScrollbar} from 'naive-ui';
 import ChatMessage from "@/components/chatPage/ChatMessage";
 import {getHistoryChatAPI, sendChatAPI} from "@/request/api/chat";
 import {ref} from 'vue'
+import store from "@/store";
 
 export default {
   components:{
@@ -59,7 +60,7 @@ export default {
   },
   methods: {
     sendChat() {
-      sendChatAPI(10, this.question).then((res) => {
+      sendChatAPI(store.state.user.uid, this.question).then((res) => {
         let q = {
           time:res.receive_time,
           type: false,
@@ -72,6 +73,9 @@ export default {
           content: res.post_message,
         };
         this.messages.push(p);
+        this.question="";
+        this.$refs.chat_box.scrollTop = 10000;
+        this.$refs.chat_box.scrollTop = 10000; /*TODO*/
       })
     },
     getHistory() {
@@ -95,6 +99,30 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+
+.chat_parent::-webkit-scrollbar {
+  width: 0 !important;
+}
+.chat_parent::-webkit-scrollbar {
+  width: 0 !important;height: 0;
+}
+
+/* 滚动条样式 */
+.chat::-webkit-scrollbar {
+  width: 6px;
+  transition: width 1s;
+}
+.chat::-webkit-scrollbar-track {
+  background-color: rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+}
+.chat::-webkit-scrollbar-thumb {
+  background-color: #999;
+  border-radius: 10px;
+  box-shadow: inset 0 0 3px rgba(0, 0, 0, 0.2);
+}
+
 /* top */
 .chat_top{
   width: 100%;
