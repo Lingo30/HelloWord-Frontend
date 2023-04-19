@@ -90,9 +90,9 @@
                   <template #suffix>
                     <div style="display: flex;width: 350px;justify-content: right;align-items: center">
                       {{ word.meaning }}
-<!--                      <n-button style="margin-left: 10px">-->
-<!--                        删除-->
-<!--                      </n-button>-->
+                      <!--                      <n-button style="margin-left: 10px">-->
+                      <!--                        删除-->
+                      <!--                      </n-button>-->
                     </div>
                   </template>
                 </n-list-item>
@@ -286,14 +286,18 @@ export default {
     }
 
     function init() {
+      //清空上次打开的状态
       pageIdx.value = 0
+      lists.splice(0, lists.length)
+      clickedListId.value = undefined
+      showFileResultFlag.value = false
+      myWordlistName.value = ''
       // 默认在第一个页面，获取所有官方词单
       let success = false
       let errMsg = '网络错误'
       getOfficialLists().then((res) => {
         success = res.state
         if (res.state) {
-          lists.splice(0, lists.length)
           res.lists.forEach((wordlist) => lists.push(wordlist))
         }
       }).finally(() => {
