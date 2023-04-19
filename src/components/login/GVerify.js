@@ -1,7 +1,7 @@
-function GVerify(options) { // 创建一个图形验证码对象，接收options对象为参数
+function GVerify(options, canvasName) { // 创建一个图形验证码对象，接收options对象为参数
     this.options = { // 默认options参数值
         id: '', // 容器Id
-        canvasId: 'verifyCanvas', // canvas的ID
+        canvasId: 'verifyCanvas' + canvasName, // canvas的ID
         width: '40', // 默认canvas宽度
         height: '15', // 默认canvas高度
         type: 'number', // 图形验证码默认类型blend:数字字母混合类型、number:纯数字、letter:纯字母
@@ -45,7 +45,7 @@ GVerify.prototype = {
     /** 生成验证码**/
     refresh: function () {
         const canvas = document.getElementById(this.options.canvasId)
-        let ctx={}
+        let ctx = {}
         if (canvas.getContext) {
             ctx = canvas.getContext('2d')
         }
