@@ -71,7 +71,7 @@
                     v-model="password"
                     type="password"
                     name="密码"
-                    placeholder="密码"
+                    placeholder="密码（6-15位，包含字母与数字）"
                 />
               </div>
               <div style="margin:25px 0px">
@@ -152,7 +152,7 @@ export default {
       store.state.user.uid = data.uid
       store.state.user.wordNum = data.wordNum
       store.state.user.selectWordlist = data.selectWordlist
-      //TODO 把用户名和密码自动保存到本地，可能会有安全隐患?
+      // 把用户名和密码自动保存到本地
       localStorage.setItem(USERNAME, name)
       localStorage.setItem(PASSWORD, pwd)
     }
@@ -160,36 +160,40 @@ export default {
     function register(name, pwd, pwdConfirm, verify) {
       if (!registerVerifyCode.validate(verify)) {
         message.error('验证码错误')
-        loginVerifyCode.refresh()
-        return;
-      }
-      if (pwd !== pwdConfirm) {
+      } else if (pwd !== pwdConfirm) {
         message.error("密码前后不一致");
-        return
-      }
-      if (name === '' || pwd === '') {
+      } else if (name === '' || pwd === '') {
         message.error("用户名或密码不能为空");
-        return;
-      }
-
-      const encodePwd = md5(pwd);
-      let success = false
-      let data
-      let wrMsg = '网络错误'
-      registerAPI(name, encodePwd).then((res) => {
-        success = res.state
-        data = res.data
-        wrMsg = res.msg
-      }).finally(() => {
-        if (success) {
-          saveUserInfo(data, name, pwd);
-          message.success("注册成功");
-          //设置路由
-          router.push('/user')
+      } else {
+        let format = /^(?=.*[a-zA-Z])(?=.*[0-9])[a-zA-Z0-9~!@&%#_]{6,15}$/gi
+        if (!format.test(password.value)) {
+          message.error('密码长度应在6-15位，且同时包含字母与数字')
+          password.value = ''
+          passwordConfirm.value = ''
         } else {
-          message.error(wrMsg);
+          const encodePwd = md5(pwd);
+          let success = false
+          let data
+          let wrMsg = '网络错误'
+          registerAPI(name, encodePwd).then((res) => {
+            success = res.state
+            data = res.data
+            wrMsg = res.msg
+          }).finally(() => {
+            if (success) {
+              saveUserInfo(data, name, pwd);
+              message.success("注册成功");
+              //设置路由
+              router.push('/user')
+            } else {
+              message.error(wrMsg);
+              registerVerifyCode.refresh()
+            }
+          })
+          return
         }
-      })
+      }
+      registerVerifyCode.refresh()
     }
 
     function login(name, pwd, verify) {
@@ -201,6 +205,7 @@ export default {
 
       if (name === '' || pwd === '') {
         message.error("用户名或密码不能为空");
+        loginVerifyCode.refresh()
         return;
       }
 
@@ -220,13 +225,14 @@ export default {
           router.push('/user')
         } else {
           message.error(wrMsg);
+          loginVerifyCode.refresh()
         }
       })
     }
 
     onMounted(() => {
-      registerVerifyCode = new GVerify('registerVerify')
-      loginVerifyCode = new GVerify('loginVerify')
+      registerVerifyCode = new GVerify('registerVerify', 'register')
+      loginVerifyCode = new GVerify('loginVerify', 'login')
     })
 
     return {
@@ -235,7 +241,6 @@ export default {
       password,
       passwordConfirm,
       verifyInput,
-
 
       change,
       register,
