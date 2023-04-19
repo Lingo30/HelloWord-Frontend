@@ -75,7 +75,7 @@ export function submitAvatar(imgFile) {
         url: "submit_image/",
         method: "post",
         // 更改headers以上传文件
-        config:{headers:{'Content-Type':'multipart/form-data'}},
+        headers: {'Content-Type': 'multipart/form-data'},
         data:formData
     });
 }
