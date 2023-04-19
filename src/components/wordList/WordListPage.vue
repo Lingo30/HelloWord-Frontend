@@ -1,5 +1,6 @@
 <template>
-  <div class="container">
+  <n-space class="container">
+    <TodayAim></TodayAim>
     <CreatePage ref="createPageRef" @add-wordlist="addWordlist"/>
     <div class="left">
       <div class="card-list">
@@ -44,7 +45,7 @@
     <div class="right">
       <WordCardList ref="wordCardListRef"/>
     </div>
-  </div>
+  </n-space>
 </template>
 
 <script>
@@ -55,11 +56,13 @@ import {onMounted, reactive, ref} from "vue";
 import store from "@/store";
 import {getUserLists, editWordlists} from "@/request/api/wordlist";
 import CreatePage from "@/components/wordList/CreatePage.vue";
+import TodayAim from "@/components/wordList/TodayAim";
 
 
 export default {
   name: "WordList",
   components: {
+    TodayAim,
     CreatePage,
     NScrollbar,
     WordCardList,
