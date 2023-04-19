@@ -8,7 +8,8 @@ export function wordsToStory(uid,words) {
     return request({
         url: "words_to_story/",
         method: 'post',
-        data
+        data:data,
+        timeout: 20000
     })
 }
 
@@ -30,7 +31,8 @@ export function getSentenceAnalysis(sentence) {
     return request({
         url: "sentence_analysis/",
         method: 'post',
-        data
+        data:data,
+        timeout: 20000
     })
 }
 
@@ -53,6 +55,7 @@ export function getBlankText(uid) {
     return request({
         url: "get_blank_text/",
         method: 'post',
-        data
+        data:data,
+        timeout: 20000
     })
 }

@@ -40,18 +40,19 @@ export default {
     onMounted(() => {
     });
 
-    function onRightButtonClick() {
+    async function onRightButtonClick() {
       const inputValue = textBoxRef.value.textValue;
       if (inputValue === '') {
         msg.warning("写点东西再问我叭")
         return
       }
-      getArticleAnalysis(inputValue).then((res)=>{
+      textBoxRef.value.analysisSpin = true;
+      await getArticleAnalysis(inputValue).then((res)=>{
         console.log(res.comment.analysis);
         textBoxRef.value.analysis = res.comment.analysis
         textBoxRef.value.rateValue = parseFloat(res.comment.rating)/2
-
       })
+      textBoxRef.value.analysisSpin = false;
       // console.log(textBoxRef.value.analysis);
     }
     return {
