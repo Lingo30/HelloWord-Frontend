@@ -33,8 +33,8 @@ export function get_group_words_in_list(uid) {
         user_id: uid
     })
     return request({
-        // url: "get_group_words_in_list/",//TODO
-        url: "https://mock.apifox.cn/m2/2544762-0-default/74128965",
+        url: "get_group_words_in_list/",//TODO
+        // url: "https://mock.apifox.cn/m2/2544762-0-default/74128965",
         method: "post",
         data,
     })

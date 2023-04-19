@@ -11,8 +11,10 @@
           <div class="chat_top">
             <img src="../../assets/img/kaleidoBlank.png" height="170" width="150">
           </div>
-          <div ref="chat_box" class="chat" style="overflow-x:hidden; overflow-y:auto;" >
+          <div class="chat_parent" style="overflow:scroll;">
+            <div ref="chat_box" class="chat" style="overflow-x:hidden; overflow-y:auto; max-height:500px" >
               <ChatMessage v-for="(item, index) in messages" v-bind:key="index" :type=item.type :time=item.time :content=item.content></ChatMessage>
+            </div>
           </div>
           <div class="bottom">
             <NInput class="message" v-model:value="question" round placeholder="Type a message...">
@@ -72,9 +74,8 @@ export default {
         };
         this.messages.push(p);
         this.question="";
-        console.log(this.$refs.chat_box.scrollTop);
-        this.$refs.chat_box.scrollTop = this.$refs.chat_box.scrollHeight;
-        console.log(this.$refs.chat_box.scrollTop);
+        this.$refs.chat_box.scrollTop = 10000;
+        this.$refs.chat_box.scrollTop = 10000; /*TODO*/
       })
     },
     getHistory() {
@@ -98,6 +99,13 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+
+.chat_parent::-webkit-scrollbar {
+  width: 0 !important;
+}
+.chat_parent::-webkit-scrollbar {
+  width: 0 !important;height: 0;
+}
 
 /* 滚动条样式 */
 .chat::-webkit-scrollbar {
