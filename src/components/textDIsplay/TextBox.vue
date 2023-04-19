@@ -17,45 +17,55 @@
       </n-space>
       <n-space class="TextCard">
         <n-card hoverable class="InputCard">
-          <n-space>
-            <n-input
-                class="Input" @select="onSelect"
-                :placeholder="staticText"
-                :bordered="!active"
-                v-model:value="textValue"
-                type="textarea"
-                size="small"
-                :style="{ height: inputHeight}"
-                :autosize="{
+          <n-spin :show="inputSpin">
+            <template #description>
+              别急，我在努力编QAQ
+            </template>
+            <n-space>
+              <n-input
+                  class="Input" @select="onSelect"
+                  :placeholder="staticText"
+                  :bordered="!active"
+                  v-model:value="textValue"
+                  type="textarea"
+                  size="small"
+                  :style="{ height: inputHeight}"
+                  :autosize="{
                     maxRows: 20
                   }"
-            />
-          </n-space>
-          <n-space v-if="!active" class="TodayWords">
-            <div style="font-weight: bold;font-size: 18px">Today's new words:</div>
-            <n-space>
-              <n-tag
-                  class="tag"
-                  v-for="(wordObj, index) in words"
-                  :key="wordObj.id"
-                  :checked="selectedWords.includes(wordObj.word)"
-                  checkable
-                  @update:checked="handleTagChecked(index)"
-              >
-                {{ wordObj.word }}
-              </n-tag>
+              />
             </n-space>
-          </n-space>
-
+            <n-space v-if="!active" class="TodayWords">
+              <div style="font-weight: bold;font-size: 18px">Today's new words:</div>
+              <n-space>
+                <n-tag
+                    class="tag"
+                    v-for="(wordObj, index) in words"
+                    :key="wordObj.id"
+                    :checked="selectedWords.includes(wordObj.word)"
+                    checkable
+                    @update:checked="handleTagChecked(index)"
+                >
+                  {{ wordObj.word }}
+                </n-tag>
+              </n-space>
+            </n-space>
+          </n-spin>
         </n-card>
         <n-card hoverable class="translation">
-          <div v-if="active" class="rate-box">
-            {{"Rate:  "}}
-            <n-rate style="margin-left: 8px" class="rate" :value="rateValue" v-if="active" readonly allow-half></n-rate>
-          </div>
-          <div class="translationText">
-            {{analysis}}
-          </div>
+          <n-spin :show="analysisSpin">
+            <template #description>
+              我康康你写了些什么呀
+            </template>
+            <div v-if="active" class="rate-box">
+              {{"Rate:  "}}
+              <n-rate style="margin-left: 8px" class="rate" :value="rateValue" v-if="active" readonly allow-half></n-rate>
+            </div>
+            <div class="translationText">
+              {{analysis}}
+            </div>
+          </n-spin>
+
         </n-card>
       </n-space>
       <n-space id="ButtonContainer">
@@ -81,7 +91,7 @@ export default {
     },
     staticText: {
       type: String,
-      default: "在这里输入",
+      default: "在这里写点东西",
     },
     words: {
       type: Array,
@@ -101,14 +111,19 @@ export default {
     let selectedText = ref(null);
     let analysis = ref("");
     let rateValue = ref(0)
+    const analysisSpin = ref(false);
+    const inputSpin = ref(false);
     const inputHeight = computed(() => (props.active ? "550px" : "450px"));
-    function onSelect(event) {
+
+    async function onSelect(event) {
       selectedText.value = event.target.value.substring(
           event.target.selectionStart,
           event.target.selectionEnd,
       );
-      getSentenceAnalysis(selectedText.value).then((res)=>{
+      analysisSpin.value = true;
+      await getSentenceAnalysis(selectedText.value).then((res)=>{
         let success = res.state
+        console.log(res);
         if (success) {
           analysis.value = res.translation
           // structure
@@ -117,6 +132,7 @@ export default {
           msg.error(res.msg)
         }
       })
+      analysisSpin.value = false;
       // console.log(selectedText);
     }
 
@@ -168,6 +184,8 @@ export default {
     return {
       value: ref(null),
       rateValue,
+      inputSpin,
+      analysisSpin,
       handleExportInput,
       handleExportTranslation,
       textValue,
@@ -193,6 +211,7 @@ export default {
     justify-content: center;
     align-items: center;
     position: relative;
+    /*background-color: yellow;*/
   }
   #AllContainer {
     position: absolute;
@@ -244,16 +263,16 @@ export default {
   .translationText {
     font-size: 20px;
     width: 68vh;
-    height: 74vh;
+    height: 67vh;
     overflow-wrap: break-word;
     word-wrap: break-word;
     overflow-y: auto;
     position: relative;
     /*background-color: red;*/
-    transform: translate(-50%, -50%);
-    margin:auto;
-    top: 48%;
-    left: 50%;
+    /*transform: translate(-50%, -50%);*/
+    /*margin:auto;*/
+    /*top: 1vh;*/
+    right: 1.5vh;
   }
 
   /* 滚动条样式 */
@@ -278,7 +297,7 @@ export default {
     margin-top: 1px;
     width: 63vh;
     left: 50%;
-    transform: translate(21%, 15%);
+    transform: translate(20%, -15%);
     /*background-color: red;*/
   }
   .TodayWords {

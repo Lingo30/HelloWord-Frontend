@@ -1,5 +1,6 @@
 <template>
-  <TextBox :active="inputActive"
+  <TextBox ref="textBoxRef"
+            :active="inputActive"
            :words="words"
            :staticText="inputPlaceholder"
            :input-value="story"
@@ -27,6 +28,7 @@ export default {
   setup() {
     const message = useMessage()
     const words = ref([])
+    const textBoxRef = ref(null)
 
     const load = () => {
       getTodayWords(store.state.user.uid).then((res)=>{
@@ -51,9 +53,11 @@ export default {
     function onLeftButtonClick() {
       // console.log("left")
     }
-    function onRightButtonClick() {
+    async function onRightButtonClick() {
       // console.log(story.value)
-      wordsToStory(store.state.user.uid,selectedWords).then((res) => {
+      textBoxRef.value.inputSpin = true
+      // console.log(selectedWords.value)
+      await wordsToStory(store.state.user.uid,selectedWords.value).then((res) => {
         // console.log(res);
         let success = res.state
         if (success) {
@@ -64,6 +68,7 @@ export default {
           message.error(msg);
         }
       })
+      textBoxRef.value.inputSpin = false
     }
 
     function handleSelectedWords(retWords) {
@@ -72,6 +77,7 @@ export default {
     }
     return {
       words,
+      textBoxRef,
       story,
       handleSelectedWords,
       inputActive,

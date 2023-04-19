@@ -9,10 +9,15 @@
           导出
         </n-button>
       </n-space>
+
       <n-space class="text-card">
-        <n-card hoverable class="TextContainer">
-          <n-scrollbar style="max-height: 72vh;">
-            <div class="content-box">
+        <n-spin :show="showSpin">
+          <template #description>
+            我在努力哇
+          </template>
+          <n-card hoverable class="TextContainer">
+            <n-scrollbar style="max-height: 72vh;">
+              <div class="content-box">
             <span v-for="(char, index) in content" :key="index">
               <template v-if="isBlank(index)">
                 <input
@@ -27,11 +32,13 @@
               </template>
               <span v-else>{{ char }}</span>
             </span>
-            </div>
-          </n-scrollbar>
-        </n-card>
+              </div>
+            </n-scrollbar>
+          </n-card>
+
+        </n-spin>
         <n-card :title="showAnswers?'看看哪儿错了？':'你可以试着填入这些词'" hoverable class="used-words-box">
-          <n-scrollbar style="max-height: 70vh;">
+          <n-scrollbar style="max-height: 68vh;">
             <n-list hoverable v-if="showAnswers">
               <n-list-item v-for="(word,index) in realAnswers" :key="index">
                 <n-thing style="font-size: 20px;">{{index+1}}: {{word}}</n-thing>
@@ -44,6 +51,7 @@
             </n-list>
           </n-scrollbar>
         </n-card>
+
       </n-space>
       <n-space class="btn-box">
         <n-button round class="left button" type="primary" @click="changeArticle">换一篇文章吧</n-button>
@@ -81,28 +89,34 @@ export default {
     const init = ref(true)
     const realAnswers = reactive([]);
     const usedWords = ref(null)
+    const showSpin = ref(false);
 
     async function load () {
       init.value = true
+      let arr = []
+      showSpin.value = true;
       await getBlankText(store.state.user.uid).then((res)=>{
-        console.log(res);
-        content.value = res.content
-        wordList.splice(0);
-        wordList.push(...res.wordList);
+        const success = res.state
+        if (success) {
+          // console.log(res)
+          content.value = res.content
+          wordList.splice(0);
+          wordList.push(...res.wordList);
+          realAnswers.splice(0);
+          realAnswers.push(...res.answer);
+          arr = [...res.originWords];
+        }
       })
-      wordList.forEach((loc)=>{
-        realAnswers.push(content.value.substring(loc.start,loc.end))
-      })
-
-      const arr = [...realAnswers]
-
+      // console.log(wordList.length);
+      // console.log(realAnswers.length);
+      // 随机打乱答案
       for (let i = arr.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [arr[i], arr[j]] = [arr[j], arr[i]];
       }
 
       usedWords.value = new Set(arr)
-
+      showSpin.value = false;
     }
     onBeforeMount(()=>{
       load()
@@ -141,8 +155,8 @@ export default {
 
     // 获取正确答案
     const getRealAnswer = (index) => {
-      const word = wordList[index];
-      return content.value.slice(word.start, word.end).toLowerCase();
+      // const word = wordList[index];
+      return realAnswers[index];
     };
 
     // 验证答案
@@ -190,6 +204,7 @@ export default {
       inputs,
       handleExportInput,
       init,
+      showSpin,
       usedWords,
       realAnswers,
       changeArticle,
