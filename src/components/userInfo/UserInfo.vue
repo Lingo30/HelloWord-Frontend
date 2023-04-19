@@ -194,8 +194,6 @@ export default ({
         } else {
           msg.error(res.msg)
         }
-        console.log(res.info.avatar_path);
-        console.log(model.avatarPath);
       })
       getRecommendTags().then((res) => {
         res.tags.forEach(tag => {

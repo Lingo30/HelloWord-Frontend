@@ -48,7 +48,7 @@ export function getArticleAnalysis(article) {
 
 export function getBlankText(uid) {
     const data = JSON.stringify({
-        user_id: uid,
+        user_id: parseInt(uid),
     })
     return request({
         url: "get_blank_text/",

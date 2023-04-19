@@ -1,6 +1,20 @@
 <template>
   <n-space vertical id="CardBox">
     <n-space id="AllContainer">
+      <n-space class="export-box">
+        <n-button type="info" ghost @click="handleExportInput" class="export-btn">
+          <template #icon>
+            <n-icon><log-in-icon /></n-icon>
+          </template>
+          导出
+        </n-button>
+        <n-button type="info" ghost @click="handleExportTranslation" class="export-btn">
+          <template #icon>
+            <n-icon><log-in-icon /></n-icon>
+          </template>
+          导出
+        </n-button>
+      </n-space>
       <n-space class="TextCard">
         <n-card hoverable class="InputCard">
           <n-space>
@@ -35,13 +49,13 @@
 
         </n-card>
         <n-card hoverable class="translation">
+          <div v-if="active" class="rate-box">
+            {{"Rate:  "}}
+            <n-rate style="margin-left: 8px" class="rate" :value="rateValue" v-if="active" readonly allow-half></n-rate>
+          </div>
           <div class="translationText">
             {{analysis}}
           </div>
-          <div class="rate-box">
-            <n-rate class="rate" :value="rateValue" v-if="active" readonly allow-half></n-rate>
-          </div>
-
         </n-card>
       </n-space>
       <n-space id="ButtonContainer">
@@ -54,6 +68,7 @@
 
 <script>
 import {computed,ref} from "vue";
+import { LogInOutline as LogInIcon } from '@vicons/ionicons5'
 import {getSentenceAnalysis} from "@/request/api/review";
 import {useMessage} from "naive-ui";
 
@@ -77,6 +92,10 @@ export default {
       default: "",
     },
   },
+  components: {
+    LogInIcon
+  },
+
   setup(props,{emit}) {
     let msg = useMessage()
     let selectedText = ref(null);
@@ -120,13 +139,41 @@ export default {
       // console.log(textValue.value)
     };
 
+    // 导出文本
+    function handleExportInput() {
+      handleExport(textValue.value,"input.txt");
+    }
+
+    function handleExportTranslation() {
+      handleExport(analysis.value,"analysis.txt");
+    }
+
+    function handleExport(text,fileName) {
+      // 使用Blob对象和URL.createObjectURL()方法创建一个临时的URL，
+      // 然后通过创建一个隐藏的<a>标签来触发下载。
+      const contentType = "text/plain;charset=utf-8";
+      const blob = new Blob([text], { type: contentType });
+      const url = URL.createObjectURL(blob);
+
+      const hiddenLink = document.createElement("a");
+      hiddenLink.href = url;
+      hiddenLink.download = fileName;
+      hiddenLink.style.display = "none";
+      document.body.appendChild(hiddenLink);
+      hiddenLink.click();
+      document.body.removeChild(hiddenLink);
+    }
+
 
     return {
       value: ref(null),
       rateValue,
+      handleExportInput,
+      handleExportTranslation,
       textValue,
       analysis,
       onSelect,
+      LogInIcon,
       selectedWords,
       handleTagChecked,
       inputHeight,
@@ -246,6 +293,16 @@ export default {
     align-items: center;
   }
   .rate-box {
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+  }
 
+  .export-box {
+    width: 149vh;
+  }
+
+  .export-btn {
+    margin-left: 62.5vh;
   }
 </style>
