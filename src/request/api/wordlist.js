@@ -180,3 +180,40 @@ export function updateLearnWordlist(userId, listId) {
         data
     })
 }
+
+export function getLearnedWords(uid) {
+    const data = JSON.stringify({
+        userId: uid
+    })
+
+    return request({
+        url: 'get_today_learned_words_sum/',//TODO
+        method: 'post',
+        data
+    })
+}
+
+export function getAim(uid) {
+    const data = JSON.stringify({
+        userId: uid
+    })
+
+    return request({
+        url: 'get_today_aim/',//TODO
+        method: 'post',
+        data
+    })
+}
+
+export function setAim(uid,aim) {
+    const data = JSON.stringify({
+        userId: uid,
+        num: aim
+    })
+
+    return request({
+        url: 'set_daily_num/',//TODO
+        method: 'post',
+        data
+    })
+}
