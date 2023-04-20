@@ -9,7 +9,8 @@ export function sendChatAPI(uid, question) {
         // url: "http://127.0.0.1:4523/m2/2544762-0-default/74212367",
         url: "user_send/",
         method: 'post',
-        data
+        data:data,
+        timeout: 20000
     })
 }
 
