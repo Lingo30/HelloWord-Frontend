@@ -35,7 +35,7 @@
           <div class="card-list" v-show="pageIdx===0">
             <div
                 class="card"
-                v-for="(list,index) in lists"
+                v-for="list in lists"
                 :key="list.listId"
             >
               <n-tooltip trigger="hover">
@@ -82,23 +82,29 @@
         <!--        文件导入后的展示-->
         <div style="display: flex;height: 100%;width: 100%" v-else-if="pageIdx===1&&showFileResultFlag">
           <n-scrollbar>
-            <n-card class="file-show" closable @close="closeFileShowResult">
-              <n-list class="file-show" hoverable>
-                <n-list-item style="padding-top: 5px;padding-bottom: 5px" v-for="(word,index) in fileWords"
-                             :key="word.wordId">
-                  <n-text>{{ word.word }}</n-text>
-                  <template #suffix>
-                    <div style="display: flex;width: 350px;justify-content: right;align-items: center">
-                      {{ word.meaning }}
-                      <n-button style="margin-left: 10px" @click="deleteWordFromFile(word.wordId)">
-                        删除
-                      </n-button>
-                    </div>
-                  </template>
-                </n-list-item>
-              </n-list>
+            <n-card class="file-show" closable :bordered="false" @close="closeFileShowResult">
+              <n-spin :show="loading">
+                <n-list hoverable>
+                  <n-list-item
+                      style="padding-top: 5px;padding-bottom: 5px"
+                      v-for="word in fileWords"
+                      :key="word.wordId"
+                  >
+                    <n-text>{{ word.word }}</n-text>
+                    <template #suffix>
+                      <div style="display: flex;width: 350px;justify-content: right;align-items: center">
+                        {{ word.meaning }}
+                        <n-button style="margin-left: 10px" @click="deleteWordFromFile(word.wordId)">
+                          删除
+                        </n-button>
+                      </div>
+                    </template>
+                  </n-list-item>
+                </n-list>
+              </n-spin>
             </n-card>
           </n-scrollbar>
+
         </div>
       </div>
       <!--      底部输入词单名和确认-->
@@ -117,7 +123,6 @@
 
 <script>
 import {
-  useDialog,
   useMessage,
   NModal,
   NScrollbar,
@@ -127,6 +132,7 @@ import {
   NDivider,
   NList,
   NListItem,
+  NSpin,
 } from "naive-ui";
 import store from "@/store";
 import {createFromFile, createFromOfficial, getOfficialLists, uploadFile} from "@/request/api/wordlist";
@@ -143,37 +149,38 @@ export default {
     NDivider,
     NList,
     NListItem,
+    NSpin,
   },
   emits: ['addWordlist'],
   setup(props, {emit}) {
-    const dialog = useDialog()
     const message = useMessage()
     let showFlag = ref(false)
     let pageIdx = ref(0)
     let lists = reactive([])//所有官方词单
     let clickedListId = ref(undefined)//选择的官方词单id
     let showFileResultFlag = ref(false)//是否完成文件解析展示
+    let loading = ref(false)
     let fileWords = reactive([
-      {
-        wordId: 0,
-        word: 'this',
-        meaning: 'pron. 这',
-      },
-      {
-        wordId: 1,
-        word: 'is',
-        meaning: 'v. 是',
-      },
-      {
-        wordId: 2,
-        word: 'a',
-        meaning: 'art. 一',
-      },
-      {
-        wordId: 3,
-        word: 'word',
-        meaning: 'n. 单词',
-      },
+      // {
+      //   wordId: 0,
+      //   word: 'this',
+      //   meaning: 'pron. 这',
+      // },
+      // {
+      //   wordId: 1,
+      //   word: 'is',
+      //   meaning: 'v. 是',
+      // },
+      // {
+      //   wordId: 2,
+      //   word: 'a',
+      //   meaning: 'art. 一',
+      // },
+      // {
+      //   wordId: 3,
+      //   word: 'word',
+      //   meaning: 'n. 单词',
+      // },
     ])//文件解析生成的单词
     let myWordlistName = ref('')
 
@@ -190,7 +197,7 @@ export default {
       }
     }
 
-    //从后端解析
+    //后端解析文件生成词单列表
     function upload(
         {
           file,
@@ -212,6 +219,10 @@ export default {
       formData.append('file', file.file);
       const progressFunc = ((progress) => {
         onProgress({percent: Math.ceil(progress.loaded / progress.total * 100)});
+        if (progress.loaded === progress.total) {
+          loading.value = true
+          showFileResultFlag.value = true
+        }
       })
       //TODO 向后端请求
       let success = false
@@ -227,14 +238,14 @@ export default {
           errMsg = res.msg
         }
       }).finally(() => {
-        if (success) {
-          showFileResultFlag.value = !showFileResultFlag.value
-        } else {
+        loading.value = false
+        if (!success) {
           message.error(errMsg)
         }
       })
     }
 
+    //从预览词单列表删除单词
     function deleteWordFromFile(wordId) {
       for (let i = 0; i < fileWords.length; i++) {
         if (fileWords[i].wordId === wordId) {
@@ -247,10 +258,12 @@ export default {
       }
     }
 
+    //关闭文件生成的预览词单列表
     function closeFileShowResult() {
       showFileResultFlag.value = !showFileResultFlag.value
     }
 
+    //创建词单
     function create(listName, createMethod) {
       //createMethod=0时为官方词单，createMethod=1时为文件创建词单
       if (listName === '') {
@@ -330,6 +343,7 @@ export default {
       lists,
       clickedListId,
       showFileResultFlag,
+      loading,
       fileWords,
       myWordlistName,
 
