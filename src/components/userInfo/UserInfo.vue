@@ -230,6 +230,7 @@ export default ({
       };
       await submitAvatar(tmp,store.state.user.uid).then((res) => {
         let success = res.state
+        // console.log(res);
         if (success) {
           model.avatarPath = res.url
         } else {
@@ -241,14 +242,13 @@ export default ({
     const msg = useMessage()
 
     async function onSubmit() {
-      const imgFile = new FormData();
-      imgFile.append('avatar', userAvatar.value);
       await submitInfo(store.state.user.uid, model).then((res) => {
         let success = res.state
+        console.log(res);
         if (success) {
           msg.success('修改成功')
         }
-        {
+        else {
           msg.error(res.msg)
         }
       })
