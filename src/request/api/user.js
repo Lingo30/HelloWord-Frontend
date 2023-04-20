@@ -66,11 +66,18 @@ export function submitInfo(uid,userInfo) {
     })
 }
 
-export function submitAvatar(imgFile) {
+export function submitAvatar(imgFile,uid) {
 
     // 上传文件需要使用FormData对象，
     const formData = new FormData();
     formData.append("img", imgFile);
+    const json2 = JSON.stringify(uid);
+        const blob2 = new Blob([json2], {
+          type: 'application/json'
+        });
+        formData.append('user_id',blob2)
+        
+        console.log(blob2)
     return request({
         url: "submit_image/",
         method: "post",

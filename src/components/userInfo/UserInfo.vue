@@ -228,7 +228,7 @@ export default ({
       img.onload = () => {
         // console.log(showImage.value)
       };
-      await submitAvatar(tmp).then((res) => {
+      await submitAvatar(tmp,store.state.user.uid).then((res) => {
         let success = res.state
         if (success) {
           model.avatarPath = res.url
