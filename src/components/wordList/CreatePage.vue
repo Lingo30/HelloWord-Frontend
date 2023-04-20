@@ -104,16 +104,16 @@
               </n-spin>
             </n-card>
           </n-scrollbar>
-
         </div>
       </div>
       <!--      底部输入词单名和确认-->
-      <div class="foot">
+      <div class="foot" v-if="pageIdx!==1||showFileResultFlag">
         <n-input class="input-name" v-model:value="myWordlistName"/>
         <n-button
             class="button"
             @click="create(myWordlistName, pageIdx)"
-            :disabled="!(pageIdx===0&&clickedListId!==undefined||pageIdx===1&&showFileResultFlag)">
+            :disabled="!(pageIdx===0&&clickedListId!==undefined||pageIdx===1&&showFileResultFlag)"
+        >
           生成词单
         </n-button>
       </div>
@@ -187,7 +187,7 @@ export default {
     function switchPage(idx) {
       pageIdx.value = idx
       clickedListId.value = undefined
-      myWordlistName.value=''
+      myWordlistName.value = ''
     }
 
     function clickOfficialCard(id, name) {
