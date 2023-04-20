@@ -89,6 +89,7 @@ export default {
       changePassword(store.state.user.uid, tempOld, tempNew).then((res) => {
         let success = res.state
         if (success) {
+          showPwd.value = false
           msg.success("修改成功")
         } else {
           msg.error(res.msg)
