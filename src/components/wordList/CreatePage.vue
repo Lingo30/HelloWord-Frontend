@@ -80,7 +80,7 @@
           </n-upload-dragger>
         </n-upload>
         <!--        文件导入后的展示-->
-        <div style="display: flex;height: 100%;width: 100%" v-else-if="pageIdx===1&&showFileResultFlag">
+        <div style="display: flex;height: 100%;width: 100%" v-else-if="showFileResultFlag">
           <n-scrollbar>
             <n-card class="file-show" closable :bordered="false" @close="closeFileShowResult">
               <n-spin :show="loading">
@@ -156,7 +156,7 @@ export default {
     const message = useMessage()
     let showFlag = ref(false)
     let pageIdx = ref(0)
-    let lists = reactive([])//所有官方词单
+    let lists = reactive([])//所有官方词单，只在每次打开创建页面时获取
     let clickedListId = ref(undefined)//选择的官方词单id
     let showFileResultFlag = ref(false)//是否完成文件解析展示
     let loading = ref(false)
@@ -186,6 +186,8 @@ export default {
 
     function switchPage(idx) {
       pageIdx.value = idx
+      clickedListId.value = undefined
+      myWordlistName.value=''
     }
 
     function clickOfficialCard(id, name) {
@@ -261,6 +263,7 @@ export default {
     //关闭文件生成的预览词单列表
     function closeFileShowResult() {
       showFileResultFlag.value = !showFileResultFlag.value
+      fileWords.splice(0, fileWords.length)
     }
 
     //创建词单
