@@ -244,7 +244,7 @@ export default ({
     async function onSubmit() {
       await submitInfo(store.state.user.uid, model).then((res) => {
         let success = res.state
-        console.log(res);
+        // console.log(res);
         if (success) {
           msg.success('修改成功')
         }
