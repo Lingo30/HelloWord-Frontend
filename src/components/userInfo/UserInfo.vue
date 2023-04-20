@@ -3,7 +3,7 @@
     <n-space style="margin-left: 200px;margin-bottom: 20px">
       <div class="avatar-wrapper">
         <div>
-          <n-image :src="model.avatarPath" width="100" height="100"></n-image>
+          <n-image :src="model.avatarPath" width="100" height="100" class="avatar"></n-image>
         </div>
         <div class="file-upload">
           <n-button round type="primary" ghost class="upload-button">上传头像</n-button>
@@ -354,6 +354,10 @@ export default ({
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+.avatar {
+  border-radius: 50%;
 }
 
 .DigitalInfo {
