@@ -234,16 +234,16 @@ export default {
 			//this.nextWord()
 		},
 		nextWord() {
-			let len = this.group_words.length
+			let pos = this.learnWords.findIndex((val)=>val.word_id==this.group_words[this.curId].word_id)
+			let len = this.learnWords.length
+			if(pos === -1) {
+				this.learnWords[len] = {word_id: this.group_words[this.curId].word_id, forget_times: 0, simple: false}
+			}
+			len = this.group_words.length
 			if(this.curId === len - 1) {
 				this.saveGroup()
 				router.push('/user/wordReview')
 				return
-			}
-			let pos = this.learnWords.findIndex((val)=>val.word_id==this.group_words[this.curId].word_id)
-			len = this.learnWords.length
-			if(pos === -1) {
-				this.learnWords[len] = {word_id: this.group_words[this.curId].word_id, forget_times: 0, simple: false}
 			}
 			this.shown = false
 			this.forget_times = 0
