@@ -1,13 +1,7 @@
 <template>
 	<div>
-		<!-- 侧边栏 -->
-		<!-- <sidebar v-on:listenToChild="ChildToParent"></sidebar> -->
-		<!-- 页首 -->
-
-		<!-- content -->
 		<div class="class_table">
-      <n-card class="word_card shadow-lg">
-        <!-- <div class="word"> -->
+      <n-card style="overflow-x: hidden;overflow-y: auto;" class="word_card shadow-lg">
         <div class="word_name">
           {{group_words[curId].word}}
         </div>
@@ -32,8 +26,6 @@
             认识
           </n-button>
         </div>
-
-        <!-- </div> -->
       </n-card>
 <!--			<div class="word_box">-->
 <!--				&lt;!&ndash; <div class="word_search">-->
@@ -306,13 +298,13 @@ export default {
 		margin-left: 20%;
 		width: 55%;
 		/* background-color: black; */
-		overflow: hidden;
+		overflow: auto;
 	}
 	.search_button {
 		width: 10%;
 		margin-left: 1%;
 		/* background-color: wheat; */
-		overflow: hidden;
+		overflow: auto;
 	}
 
 
@@ -331,9 +323,10 @@ export default {
 	.word_card {
 		height: 90%;
 		width: 40%;
-    /*left: 15%;*/
-		background-image: url(https://naive-ui.oss-cn-beijing.aliyuncs.com/carousel-img/carousel1.jpeg);
-		/* background-color: rgba(38,164,116, 0.3); */
+    background-image: url("../../assets/img/word_background.png");
+    background-size: 100%, 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
 		display: flex;
 		flex-direction: column;
 		border-radius: 15px;
@@ -358,6 +351,9 @@ export default {
 		margin-left: 15%;
 		margin-right: 15%;
 		height: 10%;
+    align-items: center;
+    justify-content: center;
+    line-height: 100%;
 		background-color: rgba(255, 255, 255, 0.6);
 		text-align: center;
 		font-size: 40px;
@@ -505,7 +501,7 @@ export default {
 	}
 
 	.info_title {
-		overflow: hidden;
+		overflow: auto;
 		font-size: xx-large;
 		font-weight: 800;
 		color: white;
@@ -517,7 +513,7 @@ export default {
 		/* margin-top: 1%; */
 		margin-left: 1%;
 		height: 75%;
-		overflow: hidden;
+		overflow: auto;
 		font-size: large;
 		color: white;
 		display: flex;
@@ -563,8 +559,24 @@ export default {
 	}
 
 	.n-card {
-		overflow: hidden;
+		overflow: auto;
 		/* padding: 0%; */
 	}
 
-  </style>
+
+  /* 滚动条样式 */
+  ::-webkit-scrollbar {
+    width: 6px;
+    transition: width 1s;
+  }
+  ::-webkit-scrollbar-track {
+    background-color: rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+  }
+  ::-webkit-scrollbar-thumb {
+    background-color: #999;
+    border-radius: 10px;
+    box-shadow: inset 0 0 3px rgba(0, 0, 0, 0.2);
+  }
+</style>

@@ -32,7 +32,7 @@
       <li>
         <router-link labelTooltip="产品介绍"  to="/user/help" class="s-sidebar__nav-link">
           <div class="box">
-            <n-icon style="top:50%; transform:translate(0,-50%);" size="4vh" :component="HelpCircle" :depth="router.currentRoute.value.name!=='statistic'?3:1" color="#ffffff"/>
+            <n-icon style="top:50%; transform:translate(0,-50%);" size="4vh" :component="HelpCircle" :depth="router.currentRoute.value.name!=='help'?3:1" color="#ffffff"/>
           </div>
         </router-link>
       </li>
