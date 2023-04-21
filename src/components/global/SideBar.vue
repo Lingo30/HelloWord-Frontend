@@ -44,7 +44,7 @@
       <li>
         <router-link to="/user/help" class="s-sidebar__nav-link">
           <br>
-          <n-icon size="25" :component="BarChart" :depth="router.currentRoute.value.name!=='help'?3:1" color="#ffffff"/>
+          <n-icon size="25" :component="HelpCircleOutline" :depth="router.currentRoute.value.name!=='help'?3:1" color="#ffffff"/>
 <!--          <br>-->
 <!--          <img v-if="router.currentRoute.value.name!=='statistic'" src="../../assets/img/chart.png" width="20"-->
 <!--               height="20">-->
@@ -64,7 +64,7 @@
 
 <script>
 import {useRouter} from "vue-router";
-import {Person, Chatbubble,BarChart,Book,Notifications,School} from "@vicons/ionicons5"
+import {Person, Chatbubble,BarChart,Book,Notifications,School,HelpCircleOutline} from "@vicons/ionicons5"
 import {NIcon} from 'naive-ui'
 
 export default {
@@ -82,6 +82,7 @@ export default {
       Book,
       Notifications,
       School,
+      HelpCircleOutline,
       router,
     }
   }
