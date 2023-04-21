@@ -119,7 +119,6 @@ export default {
   box-shadow: 10px 12px 16px 10px  rgba(0,0,0,0.24), 10px 17px 50px 10px #4E655D;
 }
 .head{
-  margin-top: 3%;
   height: 30%;
   width: 100%;
   position:fixed;
@@ -148,16 +147,15 @@ export default {
 }
 
 .content {
-  height: 40%;
-  margin-top: 20%;
+  height: 50%;
+  margin-top: 15%;
   width: 80%;
   position:fixed;
   left: 50%;
   overflow: auto;
   transform:translate(-50%, 0);
   padding: 3%;
-  /*background-color: #2c3e50;*/
-  /*background-image: url('./kaleidoBlank.png');*/
+  background-color: rgba(255,255,255,0.3);
 }
 /* 滚动条样式 */
 .content::-webkit-scrollbar {
@@ -177,4 +175,5 @@ export default {
 .avatar {
   border-radius: 50%;
 }
+
 </style>
