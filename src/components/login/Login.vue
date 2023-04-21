@@ -66,6 +66,28 @@
                 />
               </div>
               <div style="margin:25px 0px">
+                <n-icon size="12">
+                  <mail-outline></mail-outline>
+                </n-icon>
+                <input
+                    v-model="email"
+                    name="邮箱"
+                    placeholder="邮箱"
+                />
+              </div>
+              <div style="margin:25px 0px 25px 15px">
+<!--                <img src="../../assets/img/email.png" height="12" width="12">-->
+                <input
+                    class="email-verify"
+                    v-model="emailVerificationCodeInput"
+                    name="邮箱验证码"
+                    placeholder="邮箱验证码"
+                />
+                <button @click="sendVerificationCode" :disabled="!canSendEmail" class="sendCodeButton">
+                  {{ canSendEmail ? '发送验证码' : `重新发送(${countdown}s)` }}
+                </button>
+              </div>
+              <div style="margin:25px 0px">
                 <img src="../../assets/img/key.png" height="12" width="12">
                 <input
                     v-model="password"
@@ -119,12 +141,16 @@ import {registerAPI, loginAPI} from "@/request/api/user";
 import store from "@/store";
 import router from "@/router";
 import {USERNAME, PASSWORD} from "@/store/local";
-import {GVerify} from "@/components/login/GVerify"
+import {GVerify} from "@/components/login/GVerify";
+import {MailOutline} from "@vicons/ionicons5";
 
 export default {
   name: 'Login',
   props: {
     msg: String
+  },
+  components: {
+    MailOutline
   },
   setup() {
     let loginPageFlag = ref(true);
@@ -157,9 +183,34 @@ export default {
       localStorage.setItem(PASSWORD, pwd)
     }
 
+    const email = ref('');
+    let emailVerificationCode = '';
+    let canSendEmail = ref(true);
+    let countdown = ref(60);
+    const emailVerificationCodeInput = ref('');
+
+    function sendVerificationCode() {
+      if (!canSendEmail.value) return;
+      canSendEmail.value = false;
+      countdown.value = 60;
+
+      // TODO: 发送验证码请求到后端，并将验证码发送至邮箱
+      emailVerificationCode = '123456';
+
+      const timer = setInterval(() => {
+        countdown.value--;
+        if (countdown.value <= 0) {
+          clearInterval(timer);
+          canSendEmail.value = true;
+        }
+      }, 1000);
+    }
+
     function register(name, pwd, pwdConfirm, verify) {
       if (!registerVerifyCode.validate(verify)) {
         message.error('验证码错误')
+      } else if (emailVerificationCodeInput.value !== emailVerificationCode) {
+        message.error('邮箱验证码错误');
       } else if (pwd !== pwdConfirm) {
         message.error("密码前后不一致");
       } else if (name === '' || pwd === '') {
@@ -244,7 +295,13 @@ export default {
 
       change,
       register,
-      login
+      login,
+
+      email,
+      emailVerificationCodeInput,
+      sendVerificationCode,
+      canSendEmail,
+      countdown,
     }
   }
 }
@@ -401,5 +458,23 @@ input:-webkit-autofill::first-line {
   height: 25px;
   display: inline-flex;
   /*position: relative;*/
+}
+
+.sendCodeButton {
+  border-radius: 5px;
+  border: 0;
+  background-color: #2A928F;
+  color: #FFFFFF;
+  width: 100px;
+  height: 30px;
+  margin-left: 2vh;
+}
+
+::v-deep .sendCodeButton:hover {
+  cursor: pointer;
+}
+
+.email-verify {
+  width: 11vh;
 }
 </style>
