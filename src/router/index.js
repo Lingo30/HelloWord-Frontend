@@ -51,7 +51,7 @@ const routes = [
     //用户登录后的使用界面
     {
         path: '/user',
-        redirect: '/user/statistic',
+        redirect: '/user/wordlist',
         component: MainPage,
         children: [
             //统计界面（主页面）
