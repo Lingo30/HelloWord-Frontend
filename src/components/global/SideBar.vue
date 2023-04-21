@@ -2,7 +2,7 @@
   <nav class="s-sidebar__nav">
     <ul>
       <li>
-        <router-link to="/user/learn" class="s-sidebar__nav-link">
+        <router-link labelTooltip="单词背诵"  to="/user/learn" class="s-sidebar__nav-link">
           <br>
           <n-icon size="25" :component="School" :depth="router.currentRoute.value.name!=='learn'?3:1" color="#ffffff"/>
 <!--          <br>-->
@@ -12,7 +12,7 @@
         </router-link>
       </li>
       <li>
-        <router-link to="/user/review" class="s-sidebar__nav-link">
+        <router-link labelTooltip="单词复习" to="/user/review" class="s-sidebar__nav-link">
           <br>
           <n-icon size="25" :component="Notifications" :depth="router.currentRoute.value.name!=='review'?3:1" color="#ffffff"/>
 <!--          <br>-->
@@ -22,7 +22,7 @@
         </router-link>
       </li>
       <li>
-        <router-link to="/user/wordlist" class="s-sidebar__nav-link">
+        <router-link labelTooltip="单词表" to="/user/wordlist" class="s-sidebar__nav-link">
           <br>
           <n-icon size="25" :component="Book" :depth="router.currentRoute.value.name!=='wordlist'?3:1" color="#ffffff"/>
 <!--          <br>-->
@@ -32,7 +32,7 @@
         </router-link>
       </li>
       <li>
-        <router-link to="/user/chat" class="s-sidebar__nav-link">
+        <router-link labelTooltip="智能对话" to="/user/chat" class="s-sidebar__nav-link">
           <br>
           <n-icon size="25" :component="Chatbubble" :depth="router.currentRoute.value.name!=='chat'?3:1" color="#ffffff"/>
 <!--          <br>-->
@@ -42,7 +42,7 @@
         </router-link>
       </li>
       <li>
-        <router-link to="/user/help" class="s-sidebar__nav-link">
+        <router-link labelTooltip="产品介绍"  to="/user/help" class="s-sidebar__nav-link">
           <br>
           <n-icon size="25" :component="HelpCircle" :depth="router.currentRoute.value.name!=='help'?3:1" color="#ffffff"/>
 <!--          <br>-->
@@ -54,7 +54,7 @@
     </ul>
     <!--    底部用户个人信息页面跳转-->
     <div class="bottom-button">
-      <router-link to="/user/info" class="s-sidebar__nav-link">
+      <router-link labelTooltip="我的信息" to="/user/info" class="s-sidebar__nav-link">
         <br>
         <n-icon size="25" :component="Person" :depth="router.currentRoute.value.name!=='info'?3:1" color="#ffffff"/>
       </router-link>
@@ -93,7 +93,7 @@ export default {
 .s-sidebar__nav {
   position: fixed;
   top: 0;
-  overflow: hidden;
+  /*overflow: hidden;*/
   transition: all .3s ease-in;
   width: 4em;
   height: 100%;
@@ -147,4 +147,17 @@ br {
   width: 4em;
 }
 
+.s-sidebar__nav-link:hover:after {
+  position: absolute;
+  left: 15px;
+  top: 5px;
+  padding: 5px;
+  background-color: rgba(0,0,0,0.2);
+  border-radius: 5px;
+  color: #fff;
+  content: attr(labelTooltip);
+  z-index: 2;
+  display: inline;
+  width: 120px;
+}
 </style>
