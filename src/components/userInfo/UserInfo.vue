@@ -13,7 +13,6 @@
               accept="image/jpeg,image/png"
               @change="getImageFile"
               id="img"
-              style="width: 150px"
               class="file-input"
           />
         </div>
