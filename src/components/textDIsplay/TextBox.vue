@@ -123,9 +123,10 @@ export default {
       analysisSpin.value = true;
       await getSentenceAnalysis(selectedText.value).then((res)=>{
         let success = res.state
-        console.log(res);
+        // console.log(res);
         if (success) {
           analysis.value = res.translation
+          analysis.value += "\n" + res.structure
           // structure
         }
         else {
@@ -201,127 +202,128 @@ export default {
 </script>
 
 <style scoped>
-  #CardBox {
-    height: 95vh;
-    width: 160vh;
-    background-image: url("../../assets/img/logo.png");
-    margin-left: 15vh;
-    margin-top: 2vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: relative;
-    /*background-color: yellow;*/
-  }
-  #AllContainer {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    display: flex;
-    justify-content: flex-end;
-    transform: translate(-50%, -48.5%);
-  }
-  .TextCard {
-    position: relative;
-    top: 50%;
-    left: 50%;
-    display: flex;
-    justify-content: flex-end;
-    transform: translate(-50%, -50%);
-    height: 80vh;
-    width: 150vh;
-    margin: auto;
-  }
-  .Input{
-    font-size: 20px;
-    width: 75vh;
-    margin:auto;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    /*background-color: red;*/
-  }
-  .InputCard {
-    /*height: 600px;*/
-    /*width: 800px;*/
-    height: 78vh;
-    width: 73vh;
-    text-align: left;
-  }
-  .translation {
-    font-size: 20px;
-    margin-left: 15px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
-    padding: 0.5rem;
-    border-radius: 4px;
-    /*height: 600px;*/
-    /*width: 270px;*/
-    height: 78vh;
-    width: 73vh;
-    text-align: left;
-  }
-  .translationText {
-    font-size: 20px;
-    width: 68vh;
-    height: 67vh;
-    overflow-wrap: break-word;
-    word-wrap: break-word;
-    overflow-y: auto;
-    position: relative;
-    /*background-color: red;*/
-    /*transform: translate(-50%, -50%);*/
-    /*margin:auto;*/
-    /*top: 1vh;*/
-    right: 1.5vh;
-  }
+#CardBox {
+  height: 95vh;
+  width: 160vh;
+  background-image: url("../../assets/img/logo.png");
+  margin-left: 15vh;
+  margin-top: 2vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  /*background-color: yellow;*/
+}
+#AllContainer {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: flex;
+  justify-content: flex-end;
+  transform: translate(-50%, -48.5%);
+}
+.TextCard {
+  position: relative;
+  top: 50%;
+  left: 50%;
+  display: flex;
+  justify-content: flex-end;
+  transform: translate(-50%, -50%);
+  height: 80vh;
+  width: 150vh;
+  margin: auto;
+}
+.Input{
+  font-size: 20px;
+  width: 75vh;
+  margin:auto;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  /*background-color: red;*/
+}
+.InputCard {
+  /*height: 600px;*/
+  /*width: 800px;*/
+  height: 78vh;
+  width: 73vh;
+  text-align: left;
+}
+.translation {
+  font-size: 20px;
+  margin-left: 15px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  padding: 0.5rem;
+  border-radius: 4px;
+  /*height: 600px;*/
+  /*width: 270px;*/
+  height: 78vh;
+  width: 73vh;
+  text-align: left;
+}
+.translationText {
+  font-size: 20px;
+  width: 68vh;
+  height: 67vh;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  overflow-y: auto;
+  position: relative;
+  /*background-color: red;*/
+  /*transform: translate(-50%, -50%);*/
+  /*margin:auto;*/
+  /*top: 1vh;*/
+  right: 1.5vh;
+  white-space: pre-wrap;
+}
 
-  /* 滚动条样式 */
-  .translationText::-webkit-scrollbar {
-    width: 6px;
-    transition: width 1s;
-  }
-  .translationText::-webkit-scrollbar-track {
-    background-color: rgba(0, 0, 0, 0.1);
-    border-radius: 10px;
-    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
-  }
-  .translationText::-webkit-scrollbar-thumb {
-    background-color: #999;
-    border-radius: 10px;
-    box-shadow: inset 0 0 3px rgba(0, 0, 0, 0.2);
-  }
+/* 滚动条样式 */
+.translationText::-webkit-scrollbar {
+  width: 6px;
+  transition: width 1s;
+}
+.translationText::-webkit-scrollbar-track {
+  background-color: rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+}
+.translationText::-webkit-scrollbar-thumb {
+  background-color: #999;
+  border-radius: 10px;
+  box-shadow: inset 0 0 3px rgba(0, 0, 0, 0.2);
+}
 
-  #ButtonContainer {
-    position: relative;
-    bottom: 0;
-    margin-top: 1px;
-    width: 63vh;
-    left: 50%;
-    transform: translate(20%, -15%);
-    /*background-color: red;*/
-  }
-  .TodayWords {
-    width: 66.5vh;
-    height: 13vh;
-    margin-top: 15px;
-    align-items: center;
-    /*background-color: red;*/
-  }
-  .tag {
-    font-size: 18px;
-    align-items: center;
-  }
-  .rate-box {
-    font-size: 20px;
-    display: flex;
-    align-items: center;
-  }
+#ButtonContainer {
+  position: relative;
+  bottom: 0;
+  margin-top: 1px;
+  width: 63vh;
+  left: 50%;
+  transform: translate(20%, -15%);
+  /*background-color: red;*/
+}
+.TodayWords {
+  width: 66.5vh;
+  height: 13vh;
+  margin-top: 15px;
+  align-items: center;
+  /*background-color: red;*/
+}
+.tag {
+  font-size: 18px;
+  align-items: center;
+}
+.rate-box {
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+}
 
-  .export-box {
-    width: 149vh;
-  }
+.export-box {
+  width: 149vh;
+}
 
-  .export-btn {
-    margin-left: 62.5vh;
-  }
+.export-btn {
+  margin-left: 62.5vh;
+}
 </style>
