@@ -1,6 +1,12 @@
 <template>
   <n-space class="container">
-    <span style="font-weight: bold;margin-right: 10vh;margin-left: 25vh">今天的小目标</span>
+    <div class="prompt-div">
+      <span style="font-weight: bold;margin-right: 10vh;margin-left: 25vh">今天的小目标</span>
+
+      <router-link :to="{name:'help',query:{idxs:[2,4]}}">
+        <n-icon size="2vh" :component="HelpCircleOutline" color="black" class="prompt-icon"/>
+      </router-link>
+    </div>
     <n-slider @mousedown="pressFlag=true" v-model:value="target" :step="1" :marks="mark" :max="300" keyboard
               style="width: 80vh">
       <template #thumb>
@@ -14,7 +20,7 @@
 
 <script>
 import {onBeforeMount, ref} from "vue";
-import {Accessibility} from "@vicons/ionicons5";
+import {Accessibility, HelpCircleOutline} from "@vicons/ionicons5";
 import {getAim, getLearnedWords, setAim} from "@/request/api/wordlist";
 import store from "@/store";
 
@@ -59,6 +65,7 @@ export default {
       mark,
       pressFlag,
       Accessibility,
+      HelpCircleOutline,
       target
     };
   }
@@ -71,5 +78,19 @@ export default {
   align-items: center;
   width: 150vh;
   /*background-color: red;*/
+}
+
+.prompt-div {
+  width: 100%;
+  position: relative;
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-start;
+}
+
+.prompt-icon {
+  position: absolute;
+  top: -6px;
+  right: 56px;
 }
 </style>

@@ -25,21 +25,36 @@
                     :bordered="false">
             取消
           </n-button>
-          <n-button v-else @click="editWordList" style="width: 100%" circle text-color="white" color="green"
-                    :bordered="false">
-            编辑单词本
-          </n-button>
+          <div v-else class="prompt-button-div">
+            <n-button @click="editWordList" style="width: 100%" circle text-color="white" color="green"
+                      :bordered="false">
+              编辑单词本
+            </n-button>
+            <router-link :to="{name:'help',query:{idxs:[2,1]}}">
+              <n-icon size="2vh" :component="HelpCircleOutline" color="black" class="prompt-icon"/>
+            </router-link>
+          </div>
         </div>
         <div class="right-button">
           <n-button v-if="editFlag" @click="finish" style="width: 100%" circle text-color="white" color="green"
                     :bordered="false">
             完成
           </n-button>
-          <n-button v-else @click="createPageRef.showFlag=true" style="width: 100%" circle text-color="white"
-                    color="green" :bordered="false">
-            新建单词本
-          </n-button>
+          <div v-else class="prompt-button-div">
+            <n-button @click="createPageRef.showFlag=true" style="width: 100%" circle text-color="white"
+                      color="green" :bordered="false">
+              新建单词本
+            </n-button>
+            <router-link :to="{name:'help',query:{idxs:[2,2]}}">
+              <n-icon size="2vh" :component="HelpCircleOutline" color="black" class="prompt-icon"/>
+            </router-link>
+          </div>
         </div>
+      </div>
+      <div v-show="false">
+        <router-link :to="{name:'help',query:{idxs:[2,1]}}">
+          <n-icon size="3vh" :component="HelpCircleOutline" color="black"/>
+        </router-link>
       </div>
     </div>
     <div class="right">
@@ -57,7 +72,7 @@ import store from "@/store";
 import {getUserLists, editWordlists} from "@/request/api/wordlist";
 import CreatePage from "@/components/wordList/CreatePage.vue";
 import TodayAim from "@/components/wordList/TodayAim";
-
+import {HelpCircleOutline} from "@vicons/ionicons5";
 
 export default {
   name: "WordList",
@@ -163,6 +178,8 @@ export default {
     })
 
     return {
+      HelpCircleOutline,
+
       wordCardListRef,
       wordListCardsRef,
       clickedId,
@@ -243,5 +260,19 @@ export default {
   align-items: center;
   background-color: rgba(112, 162, 161, 0.4);
   border-radius: 10px;
+}
+
+.prompt-button-div {
+  width: 100%;
+  position: relative;
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-start;
+}
+
+.prompt-icon {
+  position: absolute;
+  top: -6px;
+  right: -6px;
 }
 </style>
