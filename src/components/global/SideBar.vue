@@ -42,9 +42,9 @@
         </router-link>
       </li>
       <li>
-        <router-link to="/user/statistic" class="s-sidebar__nav-link">
+        <router-link to="/user/help" class="s-sidebar__nav-link">
           <br>
-          <n-icon size="25" :component="BarChart" :depth="router.currentRoute.value.name!=='statistic'?3:1" color="#ffffff"/>
+          <n-icon size="25" :component="BarChart" :depth="router.currentRoute.value.name!=='help'?3:1" color="#ffffff"/>
 <!--          <br>-->
 <!--          <img v-if="router.currentRoute.value.name!=='statistic'" src="../../assets/img/chart.png" width="20"-->
 <!--               height="20">-->

@@ -8,6 +8,7 @@ import Login from "@/components/login/Login.vue";
 import MainPage from "@/components/global/MainPage.vue";
 import WordListPage from "@/components/wordList/WordListPage.vue";
 import ChatPage from "@/components/chatPage/ChatPage.vue";
+import HelpPage from "@/components/help/helpPage.vue";
 
 import WritingPage from "@/components/textDIsplay/WritingPage";
 import StoryPage from "@/components/textDIsplay/StoryPage";
@@ -122,7 +123,12 @@ const routes = [
                 path: 'blank',
                 name: 'blank',
                 component: BlankText
-            }
+            },
+            {
+                path: 'help',
+                name: 'help',
+                component: HelpPage
+            },
         ]
     },
 ]
