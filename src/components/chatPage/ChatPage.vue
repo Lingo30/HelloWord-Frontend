@@ -9,7 +9,7 @@
         <!-- 右侧的注册盒子 -->
         <div class="content-login">
           <div class="chat_top">
-            <img src="../../assets/img/kaleidoBlank.png" height="170" width="150">
+            <img src="../../assets/img/kaleidoBlank.png" height="135" width="130">
           </div>
           <div class="chat_parent" style="overflow:scroll;">
             <div ref="chat_box" class="chat" style="overflow-x:hidden; overflow-y:auto; max-height:500px" >
@@ -141,25 +141,30 @@ export default {
   position: relative;
 }
 .send {
-  margin-left: 20px;
+  margin-left: 5%;
+  height: 100%;
+  width: 20%;
 }
 .message {
-  width: 400px;
+  width: 80%;
+  height: 100%;
+  font-size: 5px;
 }
 .content-login .bottom {
   position: absolute;
-  bottom: 120px;
+  bottom: 10%;
   display: flex;
   justify-content: space-between;
   color: #2A928F;
-  height: 40px;
-  font-size:40px
+  height: 5%;
+  width: 40%;
+  font-size:20px
 }
 .content-login{
   top:26%;
   left:36.5%;
-  width: 600px;
-  height: 600px;
+  width: 50%;
+  height: 90%;
   margin: auto;
   background: rgba(223,219,219,0.2);
   display: flex;
@@ -174,20 +179,20 @@ export default {
 
 .loginbox{
   position:absolute;
-  width:1200px;
-  height:800px;
+  width:70%;
+  height:80%;
   top:50%;
   left:50%;
   display:flex;
   align-items: center;
   transform:translate(-50%,-50%);
   background-color: rgba(255,255,255,0.3);
-  box-shadow: 0 12px 16px 0  rgba(0,0,0,0.24), 0 17px 50px 0 #4E655D;
+  box-shadow: 10px 12px 16px 10px  rgba(0,0,0,0.24), 10px 17px 50px 10px #4E655D;
 }
 
 .loginbox .background{
-  width:400px;
-  height: 600px;
+  width: 35%;
+  height: 90%;
   margin: auto;
   background-image:url('../../assets/img/Kaleido.png');
   background-size:cover;
@@ -201,13 +206,12 @@ input {
   border: 0;
   border-bottom:2px solid #2A928F;
   background-color:transparent;
-  height:20px;
+  height:30px;
   font-family:sans-serif;
-  font-size:15px;
+  font-size:20px;
   color:#445b53;
   font-weight:bold;
 }
-
 input:focus{
   border-bottom:2px solid #445b53;
   background-color:transparent;
