@@ -77,10 +77,11 @@
 </template>
 
 <script>
-import {computed,ref} from "vue";
+import {computed, h, ref} from "vue";
 import { LogInOutline as LogInIcon } from '@vicons/ionicons5'
 import {getSentenceAnalysis} from "@/request/api/review";
-import {useMessage} from "naive-ui";
+import {NAvatar, useMessage,useNotification} from "naive-ui";
+import Kaleido from "@/assets/img/kaleidoBlank.png";
 
 export default {
   name: "TextBox",
@@ -114,6 +115,7 @@ export default {
     const analysisSpin = ref(false);
     const inputSpin = ref(false);
     const inputHeight = computed(() => (props.active ? "60vh" : "50vh"));
+    const notification = useNotification();
 
     async function onSelect(event) {
       selectedText.value = event.target.value.substring(
@@ -126,19 +128,39 @@ export default {
         // console.log(res);
         if (success) {
           const lastTimes = res.last_times
-          if (lastTimes === 0)
-            msg.success('这是最后一句啦，我先歇了=v=')
-          else if (lastTimes <= 5)
-            msg.success('今天还能再帮你分析' + lastTimes + '个句子-v-')
+          notification.create({
+            content: lastTimes === 0?'这是最后一句啦，我先歇了=v=':'今天还能再帮你分析' + lastTimes + '个句子-v-',
+            avatar: () => h(NAvatar,{
+              size: 'small',
+              round: true,
+              src: Kaleido,
+            }),
+            duration: 3e3,
+
+          })
+          // if (lastTimes === 0)
+          //   msg.success('这是最后一句啦，我先歇了=v=')
+          // else if (lastTimes <= 5)
+          //   msg.success('今天还能再帮你分析' + lastTimes + '个句子-v-')
           analysis.value = res.translation
           analysis.value += "\n" + res.structure
           // structure
         }
         else {
-          if (res.last_times === 0)
-            msg.error('今天打烊了，明天再问我好吗QAQ')
-          else
-            msg.error(res.msg)
+          notification.create({
+            content: res.last_times === 0?'今天打烊了，明天再问我好吗QAQ':res.msg,
+            avatar: () => h(NAvatar,{
+              size: 'small',
+              round: true,
+              src: Kaleido,
+            }),
+            duration: 3e3,
+
+          })
+          // if (res.last_times === 0)
+          //   msg.error('今天打烊了，明天再问我好吗QAQ')
+          // else
+          //   msg.error(res.msg)
         }
       })
       analysisSpin.value = false;

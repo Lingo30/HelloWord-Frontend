@@ -14,9 +14,10 @@
 
 <script>
 import TextBox from "./TextBox";
-import {ref,onMounted} from "vue";
+import {ref, onMounted, h} from "vue";
 import {getArticleAnalysis} from "@/request/api/review";
-import {useMessage} from "naive-ui";
+import {NAvatar, useMessage,useNotification} from "naive-ui";
+import Kaleido from "@/assets/img/kaleidoBlank.png";
 export default {
   name: "WritingPage",
   components: {TextBox},
@@ -40,6 +41,8 @@ export default {
     onMounted(() => {
     });
 
+    const notification = useNotification()
+
     async function onRightButtonClick() {
       const inputValue = textBoxRef.value.textValue;
       if (inputValue === '') {
@@ -52,18 +55,38 @@ export default {
         const success = res.state
         if (success) {
           const lastTimes = res.last_times
-          if (lastTimes === 0)
-            msg.success('这是最后一篇啦，我先歇了=v=')
-          else
-            msg.success('今天还能再帮你分析' + lastTimes + '次作文-v-')
+          notification.create({
+            content: lastTimes === 0?'这是最后一篇啦，我先歇了=v=':'今天还能再帮你分析' + lastTimes + '次作文-v-',
+            avatar: () => h(NAvatar,{
+              size: 'small',
+              round: true,
+              src: Kaleido,
+            }),
+            duration: 3e3,
+
+          })
+          // if (lastTimes === 0)
+          //   msg.success('这是最后一篇啦，我先歇了=v=')
+          // else
+          //   msg.success('今天还能再帮你分析' + lastTimes + '次作文-v-')
           textBoxRef.value.analysis = res.comment.analysis
           textBoxRef.value.rateValue = parseFloat(res.comment.rating)/2
         }
         else {
-          if (res.last_times === 0)
-            msg.error('我读不动啦QAQ')
-          else
-            msg.error(res.msg)
+          notification.create({
+            content: res.last_times === 0?'我读不动啦QAQ':res.msg,
+            avatar: () => h(NAvatar,{
+              size: 'small',
+              round: true,
+              src: Kaleido,
+            }),
+            duration: 3e3,
+
+          })
+          // if (res.last_times === 0)
+          //   msg.error('我读不动啦QAQ')
+          // else
+          //   msg.error(res.msg)
         }
       })
       textBoxRef.value.analysisSpin = false;
