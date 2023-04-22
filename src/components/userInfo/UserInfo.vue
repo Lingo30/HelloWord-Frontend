@@ -1,117 +1,124 @@
 <template>
   <div class="InfoContainer">
-    <n-space style="margin-left: 200px;margin-bottom: 20px">
-      <div class="avatar-wrapper">
-        <div>
-          <n-image :src="model.avatarPath" width="100" height="100" class="avatar"></n-image>
+    <div class="head">
+      <n-space style="justify-content: center;
+                      align-items: center;
+                      margin: auto">
+        <div class="avatar-wrapper">
+          <div>
+            <n-image :src="model.avatarPath" width="50" height="50"></n-image>
+          </div>
+          <div class="file-upload">
+            <n-button  round type="primary" ghost class="upload-button">上传头像</n-button>
+            <input
+                ref="inputRef"
+                type="file"
+                accept="image/jpeg,image/png"
+                @change="getImageFile"
+                id="img"
+                style="width: 150px"
+                class="file-input"
+            />
+          </div>
         </div>
-        <div class="file-upload">
-          <n-button round type="primary" ghost class="upload-button">上传头像</n-button>
-          <input
-              ref="inputRef"
-              type="file"
-              accept="image/jpeg,image/png"
-              @change="getImageFile"
-              id="img"
-              class="file-input"
-          />
+        <div class="DigitalInfo">
+          <n-statistic
+              label="累积学过单词"
+              tabular-nums
+              class="statistic"
+              style="margin-left: 5px"
+          >
+            <n-number-animation
+                ref="numberAnimationInstRef"
+                :from="0"
+                :to="model.words"
+                duration="1000"
+            />
+            <template #suffix>
+            </template>
+          </n-statistic>
+          <n-statistic
+              label="打卡天数"
+              tabular-nums
+              class="statistic"
+          >
+            <n-number-animation
+                ref="numberAnimationInstRef"
+                :from="0"
+                :to="model.days"
+                duration="1000"
+            />
+            <template #suffix>
+            </template>
+          </n-statistic>
+          <n-statistic
+              label="已学完单词书"
+              tabular-nums
+              class="statistic"
+          >
+            <n-number-animation
+                ref="numberAnimationInstRef"
+                :from="0"
+                :to="model.wordLists"
+                duration="1000"
+            />
+            <template #suffix>
+            </template>
+          </n-statistic>
         </div>
-      </div>
-      <div class="DigitalInfo">
-        <n-statistic
-            label="累积学过单词"
-            tabular-nums
-            class="statistic"
-            style="margin-left: 5px"
-        >
-          <n-number-animation
-              ref="numberAnimationInstRef"
-              :from="0"
-              :to="model.words"
-              duration="1000"
-          />
-          <template #suffix>
-          </template>
-        </n-statistic>
-        <n-statistic
-            label="打卡天数"
-            tabular-nums
-            class="statistic"
-        >
-          <n-number-animation
-              ref="numberAnimationInstRef"
-              :from="0"
-              :to="model.days"
-              duration="1000"
-          />
-          <template #suffix>
-          </template>
-        </n-statistic>
-        <n-statistic
-            label="已学完单词书"
-            tabular-nums
-            class="statistic"
-        >
-          <n-number-animation
-              ref="numberAnimationInstRef"
-              :from="0"
-              :to="model.wordLists"
-              duration="1000"
-          />
-          <template #suffix>
-          </template>
-        </n-statistic>
-      </div>
-    </n-space>
-    <div style="margin-left: 200px;text-align: left">
-      <n-form
-          ref="formRef"
-          :model="model"
-          :rules="rules"
-          label-placement="left"
-          label-width="auto"
-          require-mark-placement="right-hanging"
-          size="medium"
-          :style="{
+      </n-space>
+    </div>
+    <div class="content">
+      <div style="text-align: left">
+        <n-form
+            ref="formRef"
+            :model="model"
+            :rules="rules"
+            label-placement="left"
+            label-width="auto"
+            require-mark-placement="right-hanging"
+            size="medium"
+            :style="{
       maxWidth: '640px',
     }"
-      >
+        >
 
-        <n-form-item label="邮箱" path="email">
-          <span class="text">{{ model.email }}</span>
-        </n-form-item>
-        <n-form-item label="昵称" path="name">
-          <n-input v-model:value="model.name" placeholder="昵称" class="text"/>
-        </n-form-item>
-        <n-form-item label="我的偏好" path="tags">
-          <dynamic-tags type="success" v-model:value="model.tags" :max="10"></dynamic-tags>
-        </n-form-item>
-        <n-form-item label="热门标签">
-          <div>
-            <n-tag
-                class="tag"
-                v-for="(tag, index) in serverRecommendedTags"
-                :key="index"
-                :checked="tag.selected"
-                type="warning"
-                checkable
-                @update:checked="addServerRecommendedTag(index)"
-            >
-              {{ tag.name }}
-            </n-tag>
-          </div>
-        </n-form-item>
-        <div class="btn-box">
-          <n-button class="logout-btn" round type="error" ghost @click="logout">退出登录</n-button>
-          <div class="right-btns">
-            <n-button round type="primary" ghost @click="modify" style="margin-right: 10px">修改密码</n-button>
-            <n-button round type="primary" @click="onSubmit">保存</n-button>
-          </div>
+          <n-form-item label="邮箱" path="email">
+            <span class="text">{{ model.email }}</span>
+          </n-form-item>
+          <n-form-item label="昵称" path="name">
+            <n-input v-model:value="model.name" placeholder="昵称" class="text"/>
+          </n-form-item>
+          <n-form-item label="我的偏好" path="tags">
+            <dynamic-tags type="success" v-model:value="model.tags" :max="10"></dynamic-tags>
+          </n-form-item>
+          <n-form-item label="热门标签">
+            <div>
+              <n-tag
+                  class="tag"
+                  v-for="(tag, index) in serverRecommendedTags"
+                  :key="index"
+                  :checked="tag.selected"
+                  type="warning"
+                  checkable
+                  @update:checked="addServerRecommendedTag(index)"
+              >
+                {{ tag.name }}
+              </n-tag>
+            </div>
+          </n-form-item>
+          <div class="btn-box">
+            <n-button class="logout-btn" round type="error" ghost @click="logout">退出登录</n-button>
+            <div class="right-btns">
+              <n-button round type="info" ghost @click="modify" style="margin-right: 10px">修改密码</n-button>
+              <n-button round type="info" @click="onSubmit">保存</n-button>
+            </div>
 
-        </div>
-      </n-form>
+          </div>
+        </n-form>
+      </div>
+      <ChangePassword ref="changePwd"></ChangePassword>
     </div>
-    <ChangePassword ref="changePwd"></ChangePassword>
   </div>
 </template>
 
@@ -348,15 +355,40 @@ export default ({
   margin-right: 30px;
   text-align: center;
 }
+.head{
+  top:10%;
+  width: 90%;
+  margin: auto;
+  margin-top: 3%;
+  height: 25%;
+  background: rgba(223,219,219,0.2);
+  display: flex;
+  border-radius: 5px;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 25px 35px rgba(0,0,0,0.8);
+}
 
+.content{
+  width: 90%;
+  overflow: auto;
+  height: 60%;
+  margin: auto;
+  margin-top: 3%;
+  background: rgba(223,219,219,0.2);
+  display: flex;
+  border-radius: 5px;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 25px 35px rgba(0,0,0,0.8);
+  font-size: 20px;
+}
 .avatar-wrapper {
   display: flex;
   flex-direction: column;
+  justify-content: center;
   align-items: center;
-}
-
-.avatar {
-  border-radius: 50%;
+  margin: auto;
 }
 
 .DigitalInfo {
@@ -387,8 +419,17 @@ export default ({
 }
 
 .InfoContainer {
-  margin-top: 6%;
-  margin-left: 16%;
+  position:absolute;
+  width:70%;
+  height:80%;
+  top:50%;
+  left:50%;
+  align-items: center;
+  justify-content: center;
+  transform:translate(-50%,-50%);
+  background-color: rgba(255,255,255,0.3);
+  box-shadow: 10px 12px 16px 10px  rgba(0,0,0,0.24), 10px 17px 50px 10px #4E655D;
+
 }
 
 .text {
