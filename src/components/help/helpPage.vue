@@ -124,10 +124,38 @@
         </n-collapse-item>
         <n-collapse-item title="意见反馈" name="3">
           <div>
-            <n-input style="height: 15vh; width: 80%" placeholder="感谢您的意见，我们将虚心接受！">
-
-            </n-input>
-            <n-button style="height: 5vh; width: 80%; margin-top: 2vh; " type="info">提出意见</n-button>
+            <n-space vertical>
+              <span style="display: flex;justify-content: start;margin-left: 10%; font-size: 18px">
+                反馈类型
+              </span>
+              <n-radio-group v-model:value="feedbackType" style="width: 80%;">
+                <n-space justify="start">
+                  <n-radio label="bug反馈" value="bug"/>
+                  <n-radio label="功能建议" value="func"/>
+                </n-space>
+              </n-radio-group>
+              <span style="display: flex;justify-content: start;margin-left: 10%; font-size: 18px">
+                相关模块
+              </span>
+              <n-checkbox-group v-model:value="modules" style="margin-left: 10%">
+                <n-space justify="start">
+                  <n-checkbox label="单词背诵" value="learn"/>
+                  <n-checkbox label="单词复习" value="review"/>
+                  <n-checkbox label="单词表" value="wordlist"/>
+                  <n-checkbox label="智能对话" value="chat"/>
+                  <n-checkbox label="其他" value="other"/>
+                </n-space>
+              </n-checkbox-group>
+              <n-input style="height: 15vh; width: 80%" placeholder="感谢您的意见，我们将虚心接受！"
+                       v-model:value="feedback"/>
+              <n-button
+                  style="height: 5vh; width: 80%; margin-top: 2vh;"
+                  type="info"
+                  @click="commit(feedbackType,modules,feedback)"
+              >
+                提出意见
+              </n-button>
+            </n-space>
           </div>
         </n-collapse-item>
         <n-collapse-item title="联系我们" name="4">
@@ -227,12 +255,21 @@
 </template>
 
 <script>
+import {ref} from "vue";
+import {useMessage} from 'naive-ui'
+import store from "@/store";
+import {addFeedback} from "@/request/api/help";
+
 export default {
   name: "helpPage",
   props: {
     idxs: Array,//跳转到此页面时企图打开的条目（[1,2]表示打开第一条的第二条，在from路由的query参数给出）
   },
   setup(props) {
+    const message = useMessage()
+    const feedbackType = ref('')
+    const modules = ref([])
+    const feedback = ref('')
 
     //判断有哪个子条目会自动打开
     function autoOpen(idxArr) {
@@ -252,9 +289,38 @@ export default {
       return [props.idxs[idxArr.length]]
     }
 
+    function commit(type, modules, content) {
+      if (type === '') {
+        message.error('请选择反馈类型')
+        return
+      } else if (modules.length === 0) {
+        message.error('请选择相关模块')
+        return
+      } else if (content === '') {
+        message.error('意见不能为空')
+        return
+      }
+      let success = false
+      let errMsg = '网络错误'
+      addFeedback(store.state.user.uid, type, modules, content).then((res) => {
+        success = res.state
+        errMsg = res.msg
+      }).finally(() => {
+        if (success) {
+          message.success('提交成功')
+        } else {
+          message.error(errMsg)
+        }
+      })
+    }
+
     return {
+      feedbackType,
+      modules,
+      feedback,
 
       autoOpen,
+      commit,
     }
   }
 }
