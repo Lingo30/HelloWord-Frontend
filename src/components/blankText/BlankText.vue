@@ -62,11 +62,12 @@
 </template>
 
 <script>
-import {onBeforeMount, reactive, ref} from "vue";
+import {h, onBeforeMount, reactive, ref} from "vue";
 import {getBlankText} from "@/request/api/review";
 import store from "@/store";
 import { LogInOutline as LogInIcon } from '@vicons/ionicons5'
-import {useMessage} from "naive-ui";
+import {NAvatar, useMessage,useNotification} from "naive-ui";
+import Kaleido from "@/assets/img/kaleidoBlank.png";
 
 export default {
   name: "BlankText",
@@ -91,7 +92,7 @@ export default {
     const usedWords = ref(null)
     const showSpin = ref(false);
     const msg = useMessage();
-
+    const notification = useNotification()
     async function load () {
       init.value = true
       let arr = []
@@ -101,10 +102,19 @@ export default {
         if (success) {
           // console.log(res)
           const lastTimes = res.last_times
-          if (lastTimes === 0)
-            msg.success('这是最后一题啦，我先歇了=v=')
-          else
-            msg.success('今天还能再出' + lastTimes + '道题-v-')
+          notification.create({
+            content: lastTimes === 0?'这是最后一题啦，我先歇了=v=':'今天还能再出' + lastTimes + '道题-v-',
+            avatar: () => h(NAvatar,{
+              size: 'small',
+              round: true,
+              src: Kaleido,
+            }),
+            duration: 3e3,
+          })
+          // if (lastTimes === 0)
+          //   msg.success('这是最后一题啦，我先歇了=v=')
+          // else
+          //   msg.success('今天还能再出' + lastTimes + '道题-v-')
           content.value = res.content
           wordList.splice(0);
           wordList.push(...res.wordList);
@@ -113,10 +123,20 @@ export default {
           arr = [...res.originWords];
         }
         else {
-          if (res.last_times === 0)
-            msg.error('明天再给你出题哇，累了捏QAQ')
-          else
-            msg.error(res.msg)
+          notification.create({
+            content: res.last_times === 0?'明天再给你出题哇，累了捏QAQ':res.msg,
+            avatar: () => h(NAvatar,{
+              size: 'small',
+              round: true,
+              src: Kaleido,
+            }),
+            duration: 3e3,
+
+          })
+          // if (res.last_times === 0)
+          //   msg.error('明天再给你出题哇，累了捏QAQ')
+          // else
+          //   msg.error(res.msg)
         }
       })
       // console.log(wordList.length);
