@@ -2,12 +2,12 @@
   <TextBox ref="textBoxRef" :active="inputActive">
     <template v-slot:left>
 
-      <n-button id="left" round strong type="success">导入文本
+      <n-button id="left" round strong type="info">导入文本
         <input class="file-btn" type="file" accept=".txt" @change="handleFileUpload"/>
       </n-button>
     </template>
     <template v-slot:right>
-      <n-button id="right" round strong secondary type="success" @click="onRightButtonClick">开始分析</n-button>
+      <n-button id="right" round strong secondary type="info" @click="onRightButtonClick">开始分析</n-button>
     </template>
   </TextBox>
 </template>
@@ -66,30 +66,31 @@ export default {
 </script>
 
 <style scoped>
-  #left,#right {
-    width: 200px;
-  }
-  /*使input嵌入到n-button中*/
-  #left {
-    margin-right: 8vh;
-    display: inline-flex;
-    position: relative;
-    overflow: hidden;
-    justify-content: center;
-    align-items: center;
-  }
-
-  .file-btn {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
-    outline: none;
-    filter: alpha(opacity=0);
-    -moz-opacity: 0;
-    -khtml-opacity: 0;
-    opacity: 0;
-  }
+#left,#right {
+  width: 40vh;
+}
+/*使input嵌入到n-button中*/
+#left {
+  display: inline-flex;
+  position: relative;
+  overflow: hidden;
+  justify-content: center;
+  align-items: center;
+}
+#right{
+  margin-left: 20vh;
+}
+.file-btn {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  outline: none;
+  filter: alpha(opacity=0);
+  -moz-opacity: 0;
+  -khtml-opacity: 0;
+  opacity: 0;
+}
 </style>
 
