@@ -34,12 +34,12 @@
               <div style="margin:25px 0px; display: flex;justify-content: center">
                 <!--                <img src="../../assets/img/key.png" height="12" width="12">-->
                 <input
-                    style="width: 35%"
+                    style="width: 57%"
                     v-model="verifyInput"
                     name="验证码"
                     placeholder="验证码"
                 />
-                <div id="loginVerify"></div>
+                <div style="margin-left: 30px" id="loginVerify"></div>
               </div>
               <div style="margin: 26px;">
                 <button @click="login(username, password,verifyInput)" class="loginButton">
@@ -55,7 +55,6 @@
         </div>
         <div v-show="!loginPageFlag" class="content-login">
           <div class="content-login-info">
-            <div class="content-title">Register</div>
             <div ref="loginForm">
               <div style="margin:25px 0px">
                 <img src="../../assets/img/user.png" height="12" width="12">
@@ -79,11 +78,12 @@
 <!--                <img src="../../assets/img/email.png" height="12" width="12">-->
                 <input
                     class="email-verify"
+                    style="width: 57%"
                     v-model="emailVerificationCodeInput"
                     name="邮箱验证码"
                     placeholder="邮箱验证码"
                 />
-                <button @click="sendVerificationCode" :disabled="!canSendEmail" class="sendCodeButton">
+                <button style="margin-left: 25px" @click="sendVerificationCode" :disabled="!canSendEmail" class="sendCodeButton">
                   {{ canSendEmail ? '发送验证码' : `重新发送(${countdown}s)` }}
                 </button>
               </div>
@@ -109,12 +109,12 @@
               <div style="margin:25px 0px; display: flex;justify-content: center">
                 <!--                <img src="../../assets/img/key.png" height="12" width="12">-->
                 <input
-                    style="width: 35%"
+                    style="width: 56%"
                     v-model="verifyInput"
                     name="验证码"
                     placeholder="验证码"
                 />
-                <div id="registerVerify"></div>
+                <div style="margin-left: 27px" id="registerVerify"></div>
               </div>
               <div style="margin: 26px;">
                 <button @click="register(username,password, passwordConfirm,verifyInput)" class="loginButton">
@@ -333,7 +333,7 @@ export default {
 .content-title {
   text-align: center;
   font-size: 25px;
-  color: #fff
+  color: darkgray;
 }
 
 .content-login {
@@ -402,6 +402,7 @@ input {
   border-bottom: 2px solid #2A928F;
   background-color: transparent;
   height: 20px;
+  width: 300px;
   font-family: sans-serif;
   font-size: 15px;
   color: #445b53;
