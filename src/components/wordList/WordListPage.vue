@@ -1,64 +1,63 @@
 <template>
   <n-space class="container">
-    <TodayAim></TodayAim>
-    <CreatePage ref="createPageRef" @add-wordlist="addWordlist"/>
-    <div class="left">
-      <div class="card-list">
-        <n-scrollbar>
-          <WordListCard
-              v-for="(id,index) in listIds"
-              :key="id"
-              :list-id="id"
-              :color-idx="index"
-              :editFlag="editFlag"
-              :clicked="clickedId===id"
-              ref="wordListCardsRef"
-              @update-name="updateName"
-              @handle-click="clickWordList"
-              @handle-close="removeWordList"
-          />
-        </n-scrollbar>
-      </div>
-      <div class="edit-new-button">
-        <div class="left-button">
-          <n-button v-if="editFlag" @click="cancel" style="width: 100%" circle text-color="white" color="green"
-                    :bordered="false">
-            取消
-          </n-button>
-          <div v-else class="prompt-button-div">
-            <n-button @click="editWordList" style="width: 100%" circle text-color="white" color="green"
-                      :bordered="false">
-              编辑单词本
+    <TodayAim style="margin-top: 3%"></TodayAim>
+    <div style="margin-top: 2%" class="container_box">
+      <CreatePage ref="createPageRef" @add-wordlist="addWordlist"/>
+      <div class="left">
+        <div class="card-list">
+          <n-scrollbar>
+            <WordListCard
+                v-for="(id,index) in listIds"
+                :key="id"
+                :list-id="id"
+                :color-idx="index"
+                :editFlag="editFlag"
+                :clicked="clickedId===id"
+                ref="wordListCardsRef"
+                @update-name="updateName"
+                @handle-click="clickWordList"
+                @handle-close="removeWordList"
+            />
+          </n-scrollbar>
+        </div>
+        <div class="edit-new-button">
+          <div class="left-button">
+            <n-button v-if="editFlag" @click="cancel" style="width: 100%; height: 4vh" round ghost type="info">
+              取消
             </n-button>
-            <router-link :to="{name:'help',query:{idxs:[2,1]}}">
-              <n-icon size="2vh" :component="HelpCircleOutline" color="black" class="prompt-icon"/>
-            </router-link>
+            <div v-else class="prompt-button-div">
+              <n-button @click="editWordList" style="width: 100%; height: 4vh" round type="info"
+                        :bordered="false">
+                编辑单词本
+              </n-button>
+              <router-link :to="{name:'help',query:{idxs:[2,1]}}">
+                <n-icon size="2vh" :component="HelpCircleOutline" color="black" class="prompt-icon"/>
+              </router-link>
+            </div>
+          </div>
+          <div class="right-button">
+            <n-button v-if="editFlag" @click="finish" style="width: 100%; height: 4vh" round type="info">
+              完成
+            </n-button>
+            <div v-else class="prompt-button-div">
+              <n-button @click="createPageRef.showFlag=true" style="width: 100%; height: 4vh" round ghost type="info">
+                新建单词本
+              </n-button>
+              <router-link :to="{name:'help',query:{idxs:[2,2]}}">
+                <n-icon size="2vh" :component="HelpCircleOutline" color="black" class="prompt-icon"/>
+              </router-link>
+            </div>
           </div>
         </div>
-        <div class="right-button">
-          <n-button v-if="editFlag" @click="finish" style="width: 100%" circle text-color="white" color="green"
-                    :bordered="false">
-            完成
-          </n-button>
-          <div v-else class="prompt-button-div">
-            <n-button @click="createPageRef.showFlag=true" style="width: 100%" circle text-color="white"
-                      color="green" :bordered="false">
-              新建单词本
-            </n-button>
-            <router-link :to="{name:'help',query:{idxs:[2,2]}}">
-              <n-icon size="2vh" :component="HelpCircleOutline" color="black" class="prompt-icon"/>
-            </router-link>
-          </div>
+        <div v-show="false">
+          <router-link :to="{name:'help',query:{idxs:[2,1]}}">
+            <n-icon size="3vh" :component="HelpCircleOutline" color="black"/>
+          </router-link>
         </div>
       </div>
-      <div v-show="false">
-        <router-link :to="{name:'help',query:{idxs:[2,1]}}">
-          <n-icon size="3vh" :component="HelpCircleOutline" color="black"/>
-        </router-link>
+      <div class="right">
+        <WordCardList ref="wordCardListRef"/>
       </div>
-    </div>
-    <div class="right">
-      <WordCardList ref="wordCardListRef"/>
     </div>
   </n-space>
 </template>
@@ -206,33 +205,50 @@ export default {
   /*background-color: rgba(198, 228, 214, 1);*/
 }
 
+.container_box{
+  display: flex;
+  position: absolute;
+  justify-content: center;
+  align-items: center;
+  padding: 1%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+  overflow: auto;
+  background-color: rgba(255,255,255,0.3);
+  height: 80%;
+  width: 70%;
+  box-shadow: 10px 12px 16px 10px  rgba(0,0,0,0.24), 10px 17px 50px 10px #4E655D;
+}
+
 .left {
-  margin-top: 10px;
+  /*margin-top: 10px;!*TODO*!*/
   flex-direction: column;
-  width: 500px;
-  height: 600px;
-  padding: 10px;
+  width: 45%;
+  height: 90%;
   display: flex;
   align-items: center;
-  /*background-color: black;*/
+  background-color: rgba(112, 162, 161, 0.4);
+  border-radius: 10px;
+  /*padding: 30px;  !*background-color: black;*!*/
 }
 
 .card-list {
-  margin-top: 10px;
-  margin-bottom: 10px;
   flex-direction: column;
-  width: 500px;
-  height: 500px;
+  width: 100%;
+  height: 80%;
   padding: 10px;
   display: flex;
+  justify-content: center;
   align-items: center;
   /*background-color: blue;*/
 }
 
 .edit-new-button {
   /*background-color: white;*/
-  padding-top: 10px;
+  padding-top: 5%;
   display: flex;
+  height: 5%;
   width: 100%;
   justify-content: space-between;
   /*align-items: center;*/
@@ -241,22 +257,24 @@ export default {
 .left-button {
   margin: auto;
   width: 45%;
+  height: 100%;
   /*background-color: blue;*/
 }
 
 .right-button {
   margin: auto;
   width: 45%;
+  height: 100%;
 }
 
 .right {
-  margin-top: 10px;
-  margin-left: 20px;
-  width: 500px;
-  height: 550px;
-  padding: 30px;
+  margin-left: 5%;
+  height: 90%;
+  width: 50%;
+  /*padding: 30px;*/
   display: flex;
-  flex-direction: column;
+  /*flex-direction: column;*/
+  justify-content: center;
   align-items: center;
   background-color: rgba(112, 162, 161, 0.4);
   border-radius: 10px;

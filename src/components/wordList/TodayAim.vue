@@ -1,7 +1,7 @@
 <template>
   <n-space class="container">
     <div class="prompt-div">
-      <span style="font-weight: bold;margin-right: 10vh;margin-left: 25vh">今天的小目标</span>
+      <span style="font-weight: bold;width:20vh; margin-right: 10vh;margin-left: 25vh">今天的小目标</span>
 
       <router-link :to="{name:'help',query:{idxs:[2,4]}}">
         <n-icon size="2vh" :component="HelpCircleOutline" color="black" class="prompt-icon"/>

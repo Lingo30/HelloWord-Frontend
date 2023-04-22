@@ -1,5 +1,5 @@
 <template>
-  <div style="display: flex; width: 400px">
+  <div style="display: flex; width: 100%; height: 90%;">
     <div class="left">
       <n-text class="date">
         {{ info.date.day }}

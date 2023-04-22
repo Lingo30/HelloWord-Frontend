@@ -48,7 +48,7 @@
           </div>
         </template>
       </n-pagination>
-      <n-button class="set-learn-button" size="tiny" v-show="showPagination&&!selectedFlag"
+      <n-button class="set-learn-button" size="tiny" v-show="showPagination&&!selectedFlag" type="info"
                 @click="selectWordlist(listId)">
         设为背诵词单
       </n-button>
@@ -149,11 +149,10 @@ export default {
 <style scoped>
 .container {
   background-color: rgba(131, 219, 184, 0.5);
-  padding: 10px;
   border-radius: 15px;
   flex-direction: column;
-  height: 100%;
-  width: 500px;
+  height: 90%;
+  width: 90%;
   overflow: auto;
 }
 
@@ -182,9 +181,9 @@ export default {
 
 .set-learn-button {
   color: white;
-  background-color: green;
   margin: 0;
   padding: 12px;
+  margin-left: 2px;
   border-radius: 100px;
 }
 </style>
