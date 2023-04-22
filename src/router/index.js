@@ -143,7 +143,7 @@ const router = createRouter({
     routes
 })
 
-// 全局守卫
+//全局守卫
 let hasTryLogin = false
 let firtPathName = ''
 router.beforeEach((to, from, next) => {

@@ -40,14 +40,17 @@
         <n-collapse-item title="常见问题解答" name="2">
           <n-collapse :default-expanded-names="autoOpen([2])">
             <n-collapse-item title="如何管理我的词单?" name="1">
-              在单词表页面，点击左下角的"编辑单词本"按钮后，可以更改词单名或删除词单。
-              <br>
-              删除词单：点击页面左侧的词单卡片右上角的x
-              <br>
-              编辑词单名： 点击词单卡片的词单名后输入新的词单名。
-              <br>
-              所有操作完成后，点击右下角的“完成”即可生效。
-              如果在完成前想取消本次更改，点击左下角“取消”可以撤销本次所有更改
+              <div style="text-align: left">
+                在单词表页面，点击左下角的"编辑单词本"按钮后，可以更改词单名或删除词单。
+                <br>
+                删除词单：点击页面左侧的词单卡片右上角的x
+                <br>
+                编辑词单名： 点击词单卡片的词单名后输入新的词单名。
+                <br>
+                所有操作完成后，点击右下角的“完成”即可生效。
+                如果在完成前想取消本次更改，点击左下角“取消”可以撤销本次所有更改
+              </div>
+
             </n-collapse-item>
             <n-collapse-item title="如何创建新的词单?" name="2">
               在单词表页面，点击左下角的"新建单词本"按钮后进入创建词单页面，
@@ -92,7 +95,7 @@
             <n-button style="height: 5vh; width: 80%; margin-top: 2vh; " type="info">提出意见</n-button>
           </div>
         </n-collapse-item>
-        <n-collapse-item title="联系我们" name="3">
+        <n-collapse-item title="联系我们" name="4">
           <n-collapse>
             <n-collapse-item title="PM" name="1">
               <div style="width: 80%; display: flex">

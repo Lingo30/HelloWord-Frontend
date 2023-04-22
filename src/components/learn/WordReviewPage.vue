@@ -1,5 +1,5 @@
 <template>
-    <div>        
+    <div>
         <!-- content -->
         <div class="class_table">
             <div class="main_box">
@@ -32,19 +32,20 @@
                     </div>
                 </div>
             </div>
+          <n-button round type="info" class="next_button" @click="nextGroup">
+            学习下一组单词
+          </n-button>
         </div>
         <!-- Button -->
-        <n-button round type="success" class="next_button" @click="nextGroup">
-            学习下一组单词
-		</n-button>
+
 
 
 
     </div>
 
   </template>
-  
-  
+
+
 <script>
 import router from '@/router';
 import store from "@/store";
@@ -73,18 +74,21 @@ import { create } from 'lodash';
     }
   }
   </script>
-  
+
   <style scoped>
     .class_table {
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        top: 0%;
-        bottom: 0%;
-        left: 2.5%;
-        /* background-color: rgba(38,164,116, 0.3); */
+      position: absolute;
+      width: 70%;
+      height: 80%;
+      top: 50%;
+      left: 50%;
+      align-items: center;
+      justify-content: center;
+      transform: translate(-50%, -50%);
+      background-color: rgba(255, 255, 255, 0.3);
+      box-shadow: 10px 12px 16px 10px rgba(0, 0, 0, 0.24), 10px 17px 50px 10px #4E655D;
+      /* background-color: rgba(38,164,116, 0.3); */
         /* opacity: 30%; */
-        display: inline-flex;
     }
     .main_box{
         position: absolute;
@@ -173,5 +177,5 @@ import { create } from 'lodash';
         height: 5%;
         font-size: large;
     }
-  
+
   </style>
