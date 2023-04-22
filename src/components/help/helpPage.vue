@@ -66,6 +66,22 @@
             <n-collapse-item title="如何设置每日的学习量?" name="4">
               在单词表页面，拖动上方进度条为想要学习的单词数量
             </n-collapse-item>
+            <n-collapse-item title="如何使用故事模式?" name="5">
+              <!--              TODO 使用说明-->
+              通过单词复习页面的轮播图进入。选择今日背诵单词->点击”生成故事“->获取根据选择的单词生成的短文
+              <br>
+              在这一模式中，还可以通过选中句子对句子进行分析
+            </n-collapse-item>
+            <n-collapse-item title="如何使用单词复习模式?" name="6">
+              <!--              TODO 使用说明-->
+              通过单词复习页面的轮播图进入。左侧根据背诵单词自动生成待填空短文->根据右侧提供的单词使用正确形式填入->点击”提交“判断正误
+            </n-collapse-item>
+            <n-collapse-item title="如何使用阅读写作模式?" name="7">
+              <!--              TODO 使用说明-->
+              通过单词复习页面的轮播图进入。在输入框输入文本/点击”导入文本“按钮上传文件->点击”开始分析“生成分析结果与得分
+              <br>
+              在这一模式中，还可以通过选中句子对句子进行分析
+            </n-collapse-item>
           </n-collapse>
         </n-collapse-item>
         <n-collapse-item title="意见反馈" name="3">
