@@ -48,9 +48,23 @@ export default {
       }
       textBoxRef.value.analysisSpin = true;
       await getArticleAnalysis(inputValue).then((res)=>{
-        console.log(res.comment.analysis);
-        textBoxRef.value.analysis = res.comment.analysis
-        textBoxRef.value.rateValue = parseFloat(res.comment.rating)/2
+        // console.log(res.comment.analysis);
+        const success = res.state
+        if (success) {
+          const lastTimes = res.last_times
+          if (lastTimes === 0)
+            msg.success('这是最后一篇啦，我先歇了=v=')
+          else
+            msg.success('今天还能再帮你分析' + lastTimes + '次作文-v-')
+          textBoxRef.value.analysis = res.comment.analysis
+          textBoxRef.value.rateValue = parseFloat(res.comment.rating)/2
+        }
+        else {
+          if (res.last_times === 0)
+            msg.error('我读不动啦QAQ')
+          else
+            msg.error(res.msg)
+        }
       })
       textBoxRef.value.analysisSpin = false;
       // console.log(textBoxRef.value.analysis);

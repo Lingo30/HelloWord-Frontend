@@ -125,12 +125,20 @@ export default {
         let success = res.state
         // console.log(res);
         if (success) {
+          const lastTimes = res.last_times
+          if (lastTimes === 0)
+            msg.success('这是最后一句啦，我先歇了=v=')
+          else if (lastTimes <= 5)
+            msg.success('今天还能再帮你分析' + lastTimes + '个句子-v-')
           analysis.value = res.translation
           analysis.value += "\n" + res.structure
           // structure
         }
         else {
-          msg.error(res.msg)
+          if (res.last_times === 0)
+            msg.error('今天打烊了，明天再问我好吗QAQ')
+          else
+            msg.error(res.msg)
         }
       })
       analysisSpin.value = false;

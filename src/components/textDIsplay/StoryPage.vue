@@ -61,11 +61,18 @@ export default {
         // console.log(res);
         let success = res.state
         if (success) {
+          const lastTimes = res.last_times
+          if (lastTimes === 0)
+            message.success('这是最后一篇啦，我先歇了=v=')
+          else
+            message.success('今天还能再想' + lastTimes + '篇故事-v-')
           story.value = res.story
         }
         else {
-          let msg = res.msg
-          message.error(msg);
+          if (res.last_times === 0)
+            message.error('再想AI的脑袋也顶不住啦QAQ')
+          else
+            message.error(res.msg)
         }
       })
       textBoxRef.value.inputSpin = false
