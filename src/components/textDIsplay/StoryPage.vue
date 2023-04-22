@@ -1,16 +1,16 @@
 <template>
   <TextBox ref="textBoxRef"
-            :active="inputActive"
+           :active="inputActive"
            :words="words"
            :staticText="inputPlaceholder"
            :input-value="story"
            @handleTagChecked="handleSelectedWords"
            @update:selectedWords="handleSelectedWords">
     <template v-slot:left>
-      <n-button id="left" round strong type="success" @click="onLeftButtonClick">故事模式</n-button>
+      <n-button id="left" round strong type="info" @click="onLeftButtonClick">故事模式</n-button>
     </template>
     <template v-slot:right>
-      <n-button id="right" round strong secondary type="success" @click="onRightButtonClick">生成故事</n-button>
+      <n-button id="right" round strong secondary type="info" @click="onRightButtonClick">生成故事</n-button>
     </template>
   </TextBox>
 </template>
@@ -90,10 +90,10 @@ export default {
 </script>
 
 <style scoped>
-  #left,#right {
-    width: 200px;
-  }
-  #left {
-    margin-right: 8vh;
-  }
+#left,#right {
+  width: 40vh;
+}
+#right {
+  margin-left: 20vh;
+}
 </style>

@@ -1,21 +1,21 @@
 <template>
   <n-space vertical id="CardBox">
     <n-space id="AllContainer">
-      <n-space class="export-box">
-        <n-button type="info" ghost @click="handleExportInput" class="export-btn">
+      <n-space   class="export-box">
+        <n-button type="info" ghost @click="handleExportInput" style="width:12vh;" class="export-btn">
           <template #icon>
             <n-icon><log-in-icon /></n-icon>
           </template>
           导出
         </n-button>
-        <n-button type="info" ghost @click="handleExportTranslation" class="export-btn">
+        <n-button type="info" ghost @click="handleExportTranslation" style="width:12vh; margin-left: 63vh;" class="export-btn">
           <template #icon>
             <n-icon><log-in-icon /></n-icon>
           </template>
           导出
         </n-button>
       </n-space>
-      <n-space class="TextCard">
+      <n-space  class="TextCard">
         <n-card hoverable class="InputCard">
           <n-spin :show="inputSpin">
             <template #description>
@@ -36,7 +36,7 @@
               />
             </n-space>
             <n-space v-if="!active" class="TodayWords">
-              <div style="font-weight: bold;font-size: 18px">Today's new words:</div>
+              <div style="font-weight: bold;font-size: 15px">Today's new words:</div>
               <n-space>
                 <n-tag
                     class="tag"
@@ -68,10 +68,10 @@
 
         </n-card>
       </n-space>
-      <n-space id="ButtonContainer">
+      <div id="ButtonContainer">
         <slot id="left" name="left"></slot>
         <slot id="right" name="right"></slot>
-      </n-space>
+      </div>
     </n-space>
   </n-space>
 </template>
@@ -113,7 +113,7 @@ export default {
     let rateValue = ref(0)
     const analysisSpin = ref(false);
     const inputSpin = ref(false);
-    const inputHeight = computed(() => (props.active ? "550px" : "450px"));
+    const inputHeight = computed(() => (props.active ? "60vh" : "50vh"));
 
     async function onSelect(event) {
       selectedText.value = event.target.value.substring(
@@ -203,16 +203,17 @@ export default {
 
 <style scoped>
 #CardBox {
-  height: 95vh;
+  height: 90vh;
   width: 160vh;
-  background-image: url("../../assets/img/logo.png");
-  margin-left: 15vh;
-  margin-top: 2vh;
   display: flex;
   justify-content: center;
   align-items: center;
-  position: relative;
-  /*background-color: yellow;*/
+  position:absolute;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  background-color: rgba(255,255,255,0.3);
+  box-shadow: 10px 12px 16px 10px  rgba(0,0,0,0.24), 10px 17px 50px 10px #4E655D;
 }
 #AllContainer {
   position: absolute;
@@ -229,7 +230,7 @@ export default {
   display: flex;
   justify-content: flex-end;
   transform: translate(-50%, -50%);
-  height: 80vh;
+  height: 76vh;
   width: 150vh;
   margin: auto;
 }
@@ -245,36 +246,35 @@ export default {
 .InputCard {
   /*height: 600px;*/
   /*width: 800px;*/
-  height: 78vh;
+  height: 70vh;
   width: 73vh;
   text-align: left;
 }
 .translation {
   font-size: 20px;
-  margin-left: 15px;
+  margin-left: 2vh;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
   padding: 0.5rem;
   border-radius: 4px;
   /*height: 600px;*/
   /*width: 270px;*/
-  height: 78vh;
+  height: 70vh;
   width: 73vh;
   text-align: left;
 }
 .translationText {
   font-size: 20px;
   width: 68vh;
-  height: 67vh;
+  height: 74vh;
   overflow-wrap: break-word;
   word-wrap: break-word;
   overflow-y: auto;
   position: relative;
   /*background-color: red;*/
-  /*transform: translate(-50%, -50%);*/
-  /*margin:auto;*/
-  /*top: 1vh;*/
-  right: 1.5vh;
-  white-space: pre-wrap;
+  transform: translate(-50%, -50%);
+  margin:auto;
+  top: 48%;
+  left: 50%;
 }
 
 /* 滚动条样式 */
@@ -294,23 +294,24 @@ export default {
 }
 
 #ButtonContainer {
-  position: relative;
+  position: absolute;
   bottom: 0;
-  margin-top: 1px;
-  width: 63vh;
-  left: 50%;
-  transform: translate(20%, -15%);
+  width: 150vh;
+  justify-content: center;
+  align-items: center;
+  margin: auto;
+  display: flex;
   /*background-color: red;*/
 }
 .TodayWords {
   width: 66.5vh;
-  height: 13vh;
-  margin-top: 15px;
+  height: 10vh;
+  margin-top: 2vh;
   align-items: center;
   /*background-color: red;*/
 }
 .tag {
-  font-size: 18px;
+  font-size: 15px;
   align-items: center;
 }
 .rate-box {
@@ -324,6 +325,6 @@ export default {
 }
 
 .export-btn {
-  margin-left: 62.5vh;
+  /*margin-left: 62.5vh;*/
 }
 </style>

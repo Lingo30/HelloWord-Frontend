@@ -38,7 +38,7 @@
 
         </n-spin>
         <n-card :title="showAnswers?'看看哪儿错了？':'你可以试着填入这些词'" hoverable class="used-words-box">
-          <n-scrollbar style="max-height: 68vh;">
+          <n-scrollbar style="max-height: 70vh;">
             <n-list hoverable v-if="showAnswers">
               <n-list-item v-for="(word,index) in realAnswers" :key="index">
                 <n-thing style="font-size: 20px;">{{index+1}}: {{word}}</n-thing>
@@ -51,12 +51,11 @@
             </n-list>
           </n-scrollbar>
         </n-card>
-
       </n-space>
-      <n-space class="btn-box">
-        <n-button round class="left button" type="primary" @click="changeArticle">换一篇文章吧</n-button>
-        <n-button round class="right button" type="primary" ghost @click="submitAnswers">提交</n-button>
-      </n-space>
+      <div class="btn-box">
+        <n-button round class="left button" type="info" @click="changeArticle">换一篇文章吧</n-button>
+        <n-button round class="right button" type="info" ghost @click="submitAnswers">提交</n-button>
+      </div>
     </n-space>
   </n-space>
 
@@ -225,94 +224,94 @@ export default {
 </script>
 
 <style scoped>
-  .blank-input {
-    width: 20px;
-    border: none;
-    border-bottom: 1px solid #000;
-    text-align: center;
-  }
-  .TextContainer {
-    height: 78vh;
-    width: 73vh;
-    text-align: left;
-    /*background-color: red;*/
-  }
+.blank-input {
+  width: 20px;
+  border: none;
+  border-bottom: 1px solid #000;
+  text-align: center;
+}
+.TextContainer {
+  height: 78vh;
+  width: 73vh;
+  text-align: left;
+  /*background-color: red;*/
+}
 
-  .content-box {
-    font-size: 20px;
-    max-width: 100%;
-    height: 48%;
-    position: relative;
-  }
-  .correct {
-    color: green;
-  }
-  .incorrect {
-    color: red;
-  }
+.content-box {
+  font-size: 20px;
+  max-width: 100%;
+  height: 48%;
+  position: relative;
+}
+.correct {
+  color: green;
+}
+.incorrect {
+  color: red;
+}
 
-  .btn-box {
-    position: relative;
-    bottom: 0;
-    margin-top: 1px;
-    width: 63vh;
-    left: 50%;
-    transform: translate(21%, 15%);
-  }
+.btn-box {
+  position: relative;
+  width: 149vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
-  .left {
-    margin-right: 8vh;
-  }
-  .button {
-    width: 200px;
-  }
+.left {
+  margin-right: 8vh;
+}
+.button {
+  width: 200px;
+}
 
-  .used-words-box {
-    font-size: 20px;
-    margin-left: 15px;
-    height: 78vh;
-    width: 73vh;
-    text-align: left;
-  }
+.used-words-box {
+  font-size: 20px;
+  margin-left: 1vh;
+  height: 78vh;
+  width: 73vh;
+  text-align: left;
+}
 
-  .all-container {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    display: flex;
-    justify-content: flex-end;
-    transform: translate(-50%, -48.5%);
-  }
+.all-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: flex;
+  justify-content: flex-end;
+  transform: translate(-50%, -48.5%);
+}
 
-  .card-box {
-    height: 95vh;
-    width: 160vh;
-    background-image: url("../../assets/img/logo.png");
-    margin-left: 15vh;
-    margin-top: 2vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: relative;
-  }
+.card-box {
+  height: 98vh;
+  width: 160vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position:absolute;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  background-color: rgba(255,255,255,0.3);
+  box-shadow: 10px 12px 16px 10px  rgba(0,0,0,0.24), 10px 17px 50px 10px #4E655D;
+}
 
-  .text-card {
-    position: relative;
-    top: 50%;
-    left: 50%;
-    display: flex;
-    justify-content: flex-end;
-    transform: translate(-50%, -50%);
-    height: 80vh;
-    width: 150vh;
-    margin:auto;
-  }
+.text-card {
+  position: relative;
+  top: 50%;
+  left: 50%;
+  display: flex;
+  justify-content: flex-end;
+  transform: translate(-50%, -50%);
+  height: 80vh;
+  width: 150vh;
+}
 
-  .export-box {
-    width: 149vh;
-  }
+.export-box {
+  width: 149vh;
+}
 
-  .export-btn {
-    margin-left: 62.5vh;
-  }
+.export-btn {
+  margin-left: 62.5vh;
+}
 </style>
