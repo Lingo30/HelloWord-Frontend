@@ -40,50 +40,85 @@
         <n-collapse-item title="常见问题解答" name="2">
           <n-collapse :default-expanded-names="autoOpen([2])">
             <n-collapse-item title="如何管理我的词单?" name="1">
-              <div style="text-align: left">
-                在单词表页面，点击左下角的"编辑单词本"按钮后，可以更改词单名或删除词单。
-                <br>
-                删除词单：点击页面左侧的词单卡片右上角的x
-                <br>
-                编辑词单名： 点击词单卡片的词单名后输入新的词单名。
-                <br>
-                所有操作完成后，点击右下角的“完成”即可生效。
-                如果在完成前想取消本次更改，点击左下角“取消”可以撤销本次所有更改
+              <div style="text-align: left; margin-left: 3%">
+                在单词表页面，点击左下角的"编辑单词本"按钮，可以更改词单名或删除词单。
+                <div style="margin-left: 3%; margin-top: 1%">
+                  删除词单：点击页面左侧的词单卡片右上角的x
+                </div>
+                <div style="margin-left: 3%; margin-top: 1%">
+                  编辑词单名： 点击词单卡片的词单名后输入新的词单名。
+                </div>
+                <div style="margin-top: 1%">
+                  所有操作完成后，点击右下角的“完成”即可生效。
+                </div>
+                <div style="margin-top: 1%">
+                  如果在完成前想取消本次更改，点击左下角“取消”可以撤销本次所有更改
+                </div>
               </div>
 
             </n-collapse-item>
             <n-collapse-item title="如何创建新的词单?" name="2">
-              在单词表页面，点击左下角的"新建单词本"按钮后进入创建词单页面，
-              目前支持两种创建模式：
-              <br>
-              1. 通过官方词单创建。单击选择一个官方词单->
-              输入自定义的词单名（默认为官方词单名）->点击右下角”生成词单“
-              <br>
-              2. 通过解析上传的文件创建。点击上传框选择上传文件/将本地文件拖入上传框->
-              自动解析文件生成预览词单->自定义删除不需要的单词->
-              输入词单名->点击右下角”生成词单“
+              <div style="text-align: left; margin-left: 3%">
+                在单词表页面，点击左下角的"新建单词本"按钮后进入创建词单页面，
+                <div style="margin-top: 1%">
+                  目前支持两种创建模式：
+                </div>
+                <div style="margin-left: 3%; margin-top: 1%">
+                  1. 通过官方词单创建。单击选择一个官方词单 -> 输入自定义的词单名（默认为官方词单名）-> 点击右下角”生成词单“
+                </div>
+                <div style="margin-left: 3%; margin-top: 1%">
+                  2. 通过解析上传的文件创建。点击上传框选择上传文件/将本地文件拖入上传框 -> 自动解析文件生成预览词单->自定义删除不需要的单词-> 输入词单名->点击右下角”生成词单“
+                </div>
+              </div>
             </n-collapse-item>
             <n-collapse-item title="如何设置正在学习的词单?" name="3">
-              在单词表页面，点击左侧想要学习的词单卡片->点击右侧词单内容展示框下方”设为背诵词单“按钮
+              <div style="text-align: left; margin-left: 3%">
+                在单词表页面：
+                <div style="margin-left: 3%; margin-top: 1%">
+                  点击左侧想要学习的词单卡片->点击右侧词单内容展示框下方”设为背诵词单“按钮
+                </div>
+              </div>
             </n-collapse-item>
             <n-collapse-item title="如何设置每日的学习量?" name="4">
-              在单词表页面，拖动上方进度条为想要学习的单词数量
+              <div style="text-align: left; margin-left: 3%">
+                在单词表页面：
+                <div style="margin-left: 3%; margin-top: 1%">
+                  拖动上方进度条为想要学习的单词数量
+                </div>
+              </div>
             </n-collapse-item>
             <n-collapse-item title="如何使用故事模式?" name="5">
               <!--              TODO 使用说明-->
-              通过单词复习页面的轮播图进入。选择今日背诵单词->点击”生成故事“->获取根据选择的单词生成的短文
-              <br>
-              在这一模式中，还可以通过选中句子对句子进行分析
+              <div style="text-align: left; margin-left: 3%">
+                通过单词复习页面的轮播图进入：
+                <div style="margin-left: 3%; margin-top: 1%">
+                  选择今日背诵单词->点击”生成故事“->获取根据选择的单词生成的短文
+                </div>
+                <div style="margin-top: 1%">
+                  在这一模式中，还可以通过选中句子对句子进行分析
+                </div>
+              </div>
             </n-collapse-item>
             <n-collapse-item title="如何使用单词复习模式?" name="6">
               <!--              TODO 使用说明-->
-              通过单词复习页面的轮播图进入。左侧根据背诵单词自动生成待填空短文->根据右侧提供的单词使用正确形式填入->点击”提交“判断正误
+              <div style="text-align: left; margin-left: 3%">
+                通过单词复习页面的轮播图进入：
+                <div style="margin-left: 3%; margin-top: 1%">
+                  左侧根据背诵单词自动生成待填空短文->根据右侧提供的单词使用正确形式填入->点击”提交“判断正误
+                </div>
+              </div>
             </n-collapse-item>
             <n-collapse-item title="如何使用阅读写作模式?" name="7">
               <!--              TODO 使用说明-->
-              通过单词复习页面的轮播图进入。在输入框输入文本/点击”导入文本“按钮上传文件->点击”开始分析“生成分析结果与得分
-              <br>
-              在这一模式中，还可以通过选中句子对句子进行分析
+              <div style="text-align: left; margin-left: 3%">
+                通过单词复习页面的轮播图进入：
+                <div style="margin-left: 3%; margin-top: 1%">
+                  在输入框输入文本/点击”导入文本“按钮上传文件->点击”开始分析“生成分析结果与得分
+                </div>
+                <div style="margin-top: 1%">
+                  在这一模式中，还可以通过选中句子对句子进行分析
+                </div>
+              </div>
             </n-collapse-item>
           </n-collapse>
         </n-collapse-item>
