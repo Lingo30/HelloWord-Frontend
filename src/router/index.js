@@ -127,7 +127,12 @@ const routes = [
             {
                 path: 'help',
                 name: 'help',
-                component: HelpPage
+                component: HelpPage,
+                props({query}) {
+                    return {
+                        idxs: query.idxs
+                    }
+                }
             },
         ]
     },
