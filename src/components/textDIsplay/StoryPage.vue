@@ -17,10 +17,12 @@
 
 <script>
 import TextBox from "./TextBox";
-import {onBeforeMount, ref} from "vue";
+import {onBeforeMount, ref,h} from "vue";
 import {getTodayWords, wordsToStory} from "@/request/api/review";
 import store from "@/store";
-import {useMessage} from 'naive-ui'
+import {useMessage,useNotification, NAvatar,NButton} from 'naive-ui'
+import Kaleido from "../../assets/img/kaleidoBlank.png"
+import router from "@/router";
 export default {
   name: "StoryPage",
   components: {TextBox},
@@ -29,13 +31,38 @@ export default {
     const message = useMessage()
     const words = ref([])
     const textBoxRef = ref(null)
+    // 提示跳转到单词学习
+    const notification = useNotification()
 
     const load = () => {
       getTodayWords(store.state.user.uid).then((res)=>{
         // console.log(res);
         let success = res.state
         if (success) {
-          words.value = res.today_words
+          if (res.today_words.length === 0) {
+            const n = notification.create({
+              title: "快先去学点单词",
+              content: "还没有单词能用来编故事，先去学一点教给我吧",
+              avatar: () => h(NAvatar,{
+                size: 'small',
+                round: true,
+                src: Kaleido,
+              }),
+              action: ()=>h(NButton,{
+                text: true,
+                type: "primary",
+                onClick:()=>{
+                  router.push('/user/learn/')
+                  n.destroy();
+                }
+              },{
+                default: () => "这就去"
+              }),
+              duration: 3e3,
+            })
+          }
+          else
+            words.value = res.today_words
         }
         else {
           message.error(res.msg)
@@ -62,17 +89,37 @@ export default {
         let success = res.state
         if (success) {
           const lastTimes = res.last_times
-          if (lastTimes === 0)
-            message.success('这是最后一篇啦，我先歇了=v=')
-          else
-            message.success('今天还能再想' + lastTimes + '篇故事-v-')
+          notification.create({
+            content: lastTimes === 0?'这是最后一篇啦，我先歇了=v=':'今天还能再想' + lastTimes + '篇故事-v-',
+            avatar: () => h(NAvatar,{
+              size: 'small',
+              round: true,
+              src: Kaleido,
+            }),
+            duration: 3e3,
+
+          })
+          // if (lastTimes === 0)
+          //   message.success('这是最后一篇啦，我先歇了=v=')
+          // else
+          //   message.success('今天还能再想' + lastTimes + '篇故事-v-')
           story.value = res.story
         }
         else {
-          if (res.last_times === 0)
-            message.error('再想AI的脑袋也顶不住啦QAQ')
-          else
-            message.error(res.msg)
+          notification.create({
+            content: res.last_times === 0?'再想AI的脑袋也顶不住啦QAQ':res.msg,
+            avatar: () => h(NAvatar,{
+              size: 'small',
+              round: true,
+              src: Kaleido,
+            }),
+            duration: 3e3,
+
+          })
+          // if (res.last_times === 0)
+          //   message.error('再想AI的脑袋也顶不住啦QAQ')
+          // else
+          //   message.error(res.msg)
         }
       })
       textBoxRef.value.inputSpin = false
