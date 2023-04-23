@@ -8,22 +8,28 @@
         </div>
         <!-- 右侧的注册盒子 -->
         <div class="content-login">
-          <div class="chat_top">
-            <img src="../../assets/img/kaleidoBlank.png" height="135" width="130">
-          </div>
-          <div class="chat_parent" style="overflow:scroll;">
-            <div ref="chat_box" class="chat" style="overflow-x:hidden; overflow-y:auto; max-height:500px" >
-              <ChatMessage v-for="(item, index) in messages" v-bind:key="index" :type=item.type :time=item.time :content=item.content></ChatMessage>
+          <n-spin class="content-box" :show="showSpin">
+            <div class="content-box">
+              <div class="chat_top">
+                <img src="../../assets/img/kaleidoBlank.png" height="135" width="130">
+              </div>
+              <div class="chat_parent" style="overflow:scroll; margin-bottom: 18%">
+<!--                <div ref="chat_box" class="chat" style="overflow-x:hidden; overflow-y:auto; max-height:500px" >-->
+                <div class="chat">
+                  <ChatMessage v-for="(item, index) in messages" v-bind:key="index" :type=item.type :time=item.time :content=item.content></ChatMessage>
+                </div>
+              </div>
+              <div class="bottom">
+                <NInput class="message" v-model:value="question" round placeholder="Type a message...">
+                </NInput>
+                <NButton class="send" @click="sendChat" strong secondary type="info">
+                  提问
+                </NButton>
+              </div>
             </div>
-          </div>
-          <div class="bottom">
-            <NInput class="message" v-model:value="question" round placeholder="Type a message...">
-            </NInput>
-            <NButton class="send" @click="sendChat" strong secondary type="info">
-              提问
-            </NButton>
-          </div>
+          </n-spin>
         </div>
+
       </div>
     </div>
   </div>
@@ -31,8 +37,7 @@
 
 
 <script>
-
-import {NInput , NButton, NScrollbar} from 'naive-ui';
+import {NInput , NButton} from 'naive-ui';
 import ChatMessage from "@/components/chatPage/ChatMessage";
 import {getHistoryChatAPI, sendChatAPI} from "@/request/api/chat";
 import {ref} from 'vue'
@@ -42,25 +47,27 @@ export default {
   components:{
     NInput,
     NButton,
-    NScrollbar,
     ChatMessage
   },
   name: 'HelloWorld',
   props: {
     msg: String
   },
-  data() {
+  setup () {
     return {
       question: ref(''),
-      messages: []
+      messages: [],
+      showSpin: ref(false),
     }
   },
+
   created() {
     this.getHistory();
   },
   methods: {
-    sendChat() {
-      sendChatAPI(store.state.user.uid, this.question).then((res) => {
+    async sendChat() {
+      this.showSpin = true;
+      await sendChatAPI(store.state.user.uid, this.question).then((res) => {
         let q = {
           time:res.receive_time,
           type: false,
@@ -74,11 +81,13 @@ export default {
         };
         this.messages.push(p);
         this.question="";
-        this.$refs.chat_box.scrollTop = 10000;
-        this.$refs.chat_box.scrollTop = 10000; /*TODO*/
-      })
+        // this.$refs.chat_box.scrollTop = 10000;
+        // this.$refs.chat_box.scrollTop = 10000; /*TODO*/
+      });
+      this.showSpin = false;
     },
     getHistory() {
+      this.showSpin = true;
       getHistoryChatAPI(10).then((res) => {
         console.log(res);
         res.history.forEach((item) => {
@@ -89,7 +98,8 @@ export default {
           };
           this.messages.push(newList);
         });
-      })
+      });
+      this.showSpin = false;
     }
   }
 }
@@ -150,14 +160,14 @@ export default {
   height: 100%;
   font-size: 5px;
 }
-.content-login .bottom {
+.bottom {
   position: absolute;
   bottom: 10%;
   display: flex;
   justify-content: space-between;
   color: #2A928F;
   height: 5%;
-  width: 40%;
+  width: 80%;
   font-size:20px
 }
 .content-login{
@@ -171,6 +181,14 @@ export default {
   border-radius: 5px;
   justify-content: center;
   box-shadow: 0 25px 35px rgba(0,0,0,0.8);
+}
+
+.content-box{
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  margin: auto;
 }
 
 .content-bottom :hover{
