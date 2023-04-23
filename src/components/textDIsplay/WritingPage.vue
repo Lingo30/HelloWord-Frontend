@@ -50,7 +50,7 @@ export default {
         return
       }
       textBoxRef.value.analysisSpin = true;
-      await getArticleAnalysis(inputValue).then((res)=>{
+      await getArticleAnalysis(store.state.user.uid,inputValue).then((res)=>{
         // console.log(res.comment.analysis);
         const success = res.state
         if (success) {
