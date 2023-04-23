@@ -13,8 +13,9 @@
               <div class="chat_top">
                 <img src="../../assets/img/kaleidoBlank.png" height="135" width="130">
               </div>
-              <div class="chat_parent" style="overflow:scroll;">
-                <div ref="chat_box" class="chat" style="overflow-x:hidden; overflow-y:auto; max-height:500px" >
+              <div class="chat_parent" style="overflow:scroll; margin-bottom: 18%">
+<!--                <div ref="chat_box" class="chat" style="overflow-x:hidden; overflow-y:auto; max-height:500px" >-->
+                <div class="chat">
                   <ChatMessage v-for="(item, index) in messages" v-bind:key="index" :type=item.type :time=item.time :content=item.content></ChatMessage>
                 </div>
               </div>
@@ -64,9 +65,9 @@ export default {
     this.getHistory();
   },
   methods: {
-    sendChat() {
+    async sendChat() {
       this.showSpin = true;
-      sendChatAPI(store.state.user.uid, this.question).then((res) => {
+      await sendChatAPI(store.state.user.uid, this.question).then((res) => {
         let q = {
           time:res.receive_time,
           type: false,
@@ -80,8 +81,8 @@ export default {
         };
         this.messages.push(p);
         this.question="";
-        this.$refs.chat_box.scrollTop = 10000;
-        this.$refs.chat_box.scrollTop = 10000; /*TODO*/
+        // this.$refs.chat_box.scrollTop = 10000;
+        // this.$refs.chat_box.scrollTop = 10000; /*TODO*/
       });
       this.showSpin = false;
     },
@@ -159,14 +160,14 @@ export default {
   height: 100%;
   font-size: 5px;
 }
-.content-login .bottom {
+.bottom {
   position: absolute;
   bottom: 10%;
   display: flex;
   justify-content: space-between;
   color: #2A928F;
   height: 5%;
-  width: 40%;
+  width: 80%;
   font-size:20px
 }
 .content-login{
