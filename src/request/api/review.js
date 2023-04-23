@@ -24,9 +24,10 @@ export function getTodayWords(uid) {
     })
 }
 
-export function getSentenceAnalysis(sentence) {
+export function getSentenceAnalysis(uid,sentence) {
     const data = JSON.stringify({
         sentence: sentence,
+        user_id: uid
     })
     return request({
         url: "sentence_analysis/",
@@ -36,9 +37,10 @@ export function getSentenceAnalysis(sentence) {
     })
 }
 
-export function getArticleAnalysis(article) {
+export function getArticleAnalysis(uid,article) {
     const data = JSON.stringify({
         user_article: article,
+        user_id: uid
     })
     return request({
         url: "writing_analysis/",

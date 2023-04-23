@@ -123,7 +123,7 @@ export default {
           event.target.selectionEnd,
       );
       analysisSpin.value = true;
-      await getSentenceAnalysis(selectedText.value).then((res)=>{
+      await getSentenceAnalysis(store.state.user.uid, selectedText.value).then((res)=>{
         let success = res.state
         // console.log(res);
         if (success) {
