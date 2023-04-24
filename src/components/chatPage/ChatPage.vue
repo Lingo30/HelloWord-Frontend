@@ -20,7 +20,7 @@
                 </div>
               </div>
               <div class="bottom">
-                <NInput class="message" v-model:value="value" ref="question" round placeholder="Type a message...">
+                <NInput class="message" v-model:value="value" round placeholder="Type a message...">
                 </NInput>
                 <NButton class="send" @click="sendChat" strong secondary type="info">
                   提问
@@ -58,19 +58,20 @@ export default {
   setup () {
     const notification = useNotification()
     const showSpin = ref(false)
-    const question = ref(null)
+    const value = ref('')
+    const messages = []
+
     return {
-      messages: [],
-      showSpin: ref(false),
-      value: ref(''),
+      messages,
+      showSpin,
+      value,
       sendChat
     }
+
     async function sendChat() {
       showSpin.value = true
-      console.log(value)
-      await sendChatAPI(store.state.user.uid, value).then((res) => {
-        // if (!res.state) {
-        if (false) {
+      await sendChatAPI(store.state.user.uid, value.value).then((res) => {
+        if (!res.state) {
           const n = notification.create({
             title: "使用次数已达上限",
             content: "一天最多只能对话七次哦，不如今天再去学点单词，明天再来找我聊天叭",
@@ -90,77 +91,32 @@ export default {
             }),
             duration: 3e3,
           })
+          value.value = ''
         } else {
           let q = {
             time: res.receive_time,
             type: false,
-            content: question.value
-            // content: question,
+            content: value.value
           };
-          this.messages.push(q);
+          messages.push(q);
           let p = {
             time: res.post_time,
             type: true,
             content: res.post_message,
           };
-          this.messages.push(p);
-          question.value = "";
-          // this.$refs.chat_box.scrollTop = 10000;
-          // this.$refs.chat_box.scrollTop = 10000; /*TODO*/
+          messages.push(p);
+          value.value = "";
         }
       });
       showSpin.value = false;
     }
   },
 
+
   created() {
     this.getHistory();
   },
   methods: {
-    // async sendChat() {
-    //   this.showSpin = true;
-    //   await sendChatAPI(store.state.user.uid, this.question).then((res) => {
-    //     if (res.state) {
-    //       const n = Notification.create({
-    //         title: "快先去学点单词",
-    //         content: "还没有单词能用来编故事，先去学一点教给我吧",
-    //         avatar: () => h(NAvatar,{
-    //           size: 'small',
-    //           round: true,
-    //           src: Kaleido,
-    //         }),
-    //         action: ()=>h(NButton,{
-    //           text: true,
-    //           type: "primary",
-    //           onClick:()=>{
-    //             router.push('/user/learn/')
-    //             n.destroy();
-    //           }
-    //         },{
-    //           default: () => "这就去"
-    //         }),
-    //         duration: 3e3,
-    //       })
-    //     } else {
-    //       let q = {
-    //         time:res.receive_time,
-    //         type: false,
-    //         content: this.question,
-    //       };
-    //       this.messages.push(q);
-    //       let p = {
-    //         time:res.post_time,
-    //         type: true,
-    //         content: res.post_message,
-    //       };
-    //       this.messages.push(p);
-    //       this.question="";
-    //       // this.$refs.chat_box.scrollTop = 10000;
-    //       // this.$refs.chat_box.scrollTop = 10000; /*TODO*/
-    //     }
-    //   });
-    //   this.showSpin = false;
-    // },
     getHistory() {
       this.showSpin = true;
       getHistoryChatAPI(10).then((res) => {
