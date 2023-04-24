@@ -21,8 +21,13 @@
             {{ '[' + word.symbol + ']' }}
           </n-text>
         </template>
-        <div class="content font-color">
-          {{ word.meaning }}
+        <div class="content font-color ellipsis">
+          <n-popover trigger="hover" style="white-space: pre-wrap">
+            {{ word.meaning }}
+            <template #trigger>
+              {{ word.meaning }}
+            </template>
+          </n-popover>
         </div>
       </n-card>
     </n-scrollbar>
@@ -170,6 +175,15 @@ export default {
 .content {
   text-align: left;
   white-space: pre-wrap
+}
+
+.ellipsis {
+  /*设置省略输出*/
+  text-overflow: ellipsis;
+  display: -webkit-box !important;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+  overflow: hidden;
 }
 
 .foot {
