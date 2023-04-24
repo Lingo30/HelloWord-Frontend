@@ -77,8 +77,18 @@ export default {
     const story = ref("");
     const inputActive = ref(false);
     const inputPlaceholder = ref("");
+
     function onLeftButtonClick() {
-      // console.log("left")
+      notification.create({
+        title: "你发现了小彩蛋鸭",
+        content: "才不会告诉你是我们想不到这个按钮放什么",
+        avatar: () => h(NAvatar,{
+          size: 'small',
+          round: true,
+          src: Kaleido,
+        }),
+        duration: 1e3,
+      })
     }
     async function onRightButtonClick() {
       // console.log(story.value)
