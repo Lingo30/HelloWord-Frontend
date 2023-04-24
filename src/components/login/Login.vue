@@ -209,18 +209,7 @@ export default {
       }, 1000);
     }
 
-    async function checkEmail() {
-      let success;
-      await checkEmailCode(email.value,emailVerificationCodeInput.value).then((res)=>{
-        success = res.state
-        if (!success) {
-          message.error(res.msg);
-        }
-      })
-      return success
-    }
-
-    function register(name, pwd, pwdConfirm, verify) {
+    async function register(name, pwd, pwdConfirm, verify) {
       if (!registerVerifyCode.validate(verify)) {
         message.error('验证码错误')
       } else if (pwd !== pwdConfirm) {
@@ -234,15 +223,26 @@ export default {
           password.value = ''
           passwordConfirm.value = ''
         } else {
-          if (!checkEmail()) {
+          let flag
+          // 发送后端检查
+          await checkEmailCode(email.value,emailVerificationCodeInput.value).then((res)=>{
+            flag = res.state
+            if (!flag) {
+              message.error(res.msg);
+
+            }
+          })
+          // 邮箱验证码错误刷新图片验证码并return
+          if (!flag) {
             registerVerifyCode.refresh()
             return
           }
+          // 继续原本的注册流程
           const encodePwd = md5(pwd);
           let success = false
           let data
           let wrMsg = '网络错误'
-          registerAPI(name, encodePwd).then((res) => {
+          registerAPI(name, encodePwd, email.value).then((res) => {
             success = res.state
             data = res.data
             wrMsg = res.msg
