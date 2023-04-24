@@ -95,7 +95,7 @@ export function getOfficialLists() {
     })
 }
 
-//TODO 用户根据已有的官方词单创建词单
+// 用户根据已有的官方词单创建词单
 export function createFromOfficial(userId, listName, listId) {
     /*
         state:true/false是否成功创建
@@ -156,10 +156,10 @@ export function editWordlists(userId, deleteLists, updateLists) {
     })
 }
 
-//TODO
+// 上传文件并解析
 export function uploadFile(fileData, progressFunc) {
     return request({
-        url: "get_wordList_from_file/",//TODO
+        url: "get_wordList_from_file/",
         headers: {'Content-Type': 'multipart/form-data'},
         method: 'post',
         onUploadProgress: progressFunc,
@@ -167,7 +167,7 @@ export function uploadFile(fileData, progressFunc) {
     })
 }
 
-// TODO 更新用户选择进行学习的词单
+// 更新用户选择进行学习的词单
 export function updateLearnWordlist(userId, listId) {
     const data = JSON.stringify({
         userId: userId,
@@ -175,7 +175,7 @@ export function updateLearnWordlist(userId, listId) {
     })
 
     return request({
-        url: 'update_learn_wordlist/',//TODO
+        url: 'update_learn_wordlist/',
         method: 'post',
         data
     })
