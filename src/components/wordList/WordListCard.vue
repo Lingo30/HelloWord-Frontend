@@ -25,9 +25,14 @@
                 :bordered="false"
                 @blur="updateName(listId,newName)"
                 class="edit-font-color"/>
-            <n-text v-else class="font-color">
+            <n-popover v-else trigger="hover">
+              <template #trigger>
+                <div class="ellipsis font-color">
+                  {{ info.name }}
+                </div>
+              </template>
               {{ info.name }}
-            </n-text>
+            </n-popover>
           </div>
         </template>
         <template #header-extra>
@@ -63,7 +68,7 @@
 </template>
 
 <script>
-import {NCard, NText, NIcon} from 'naive-ui'
+import {NCard, NText, NIcon, NPopover} from 'naive-ui'
 import {AccessibilityOutline} from '@vicons/ionicons5'
 import Checkmark16Filled from "@vicons/fluent/Checkmark16Filled";
 import {onMounted, reactive, ref} from "vue";
@@ -82,7 +87,8 @@ export default {
   components: {
     NCard,
     NText,
-    NIcon
+    NIcon,
+    NPopover,
   },
   setup(props, {emit}) {
     const bgColor = [
@@ -199,6 +205,13 @@ export default {
   background-color: transparent;
   font-size: 1em;
   color: white;
+}
+
+.ellipsis {
+  /*设置省略输出*/
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
 }
 
 .font-color {
