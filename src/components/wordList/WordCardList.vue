@@ -5,7 +5,7 @@
           class="card"
           :bordered="false"
           hoverable
-          v-for="(word,index) in words"
+          v-for="word in words"
           :key="word.wordId"
       >
         <template #header>
@@ -18,13 +18,11 @@
         </template>
         <template #header-extra>
           <n-text class="font-color">
-            {{ word.symbol }}
+            {{ '[' + word.symbol + ']' }}
           </n-text>
         </template>
-        <div class="content">
-          <n-text class="font-color">
-            {{ word.meaning }}
-          </n-text>
+        <div class="content font-color">
+          {{ word.meaning }}
         </div>
       </n-card>
     </n-scrollbar>
@@ -171,6 +169,7 @@ export default {
 
 .content {
   text-align: left;
+  white-space: pre-wrap
 }
 
 .foot {

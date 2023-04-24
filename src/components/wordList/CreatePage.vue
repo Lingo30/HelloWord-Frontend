@@ -92,7 +92,7 @@
                   >
                     <n-text>{{ word.word }}</n-text>
                     <template #suffix>
-                      <div style="display: flex;width: 350px;justify-content: right;align-items: center">
+                      <div class="list-item-suffix">
                         {{ word.meaning }}
                         <n-button style="margin-left: 10px" @click="deleteWordFromFile(word.wordId)">
                           删除
@@ -465,5 +465,13 @@ export default {
   width: 400px;
   height: 300px;
   color: rgba(0, 0, 0, 0.45);
+}
+
+.list-item-suffix {
+  display: flex;
+  width: 350px;
+  justify-content: right;
+  align-items: center;
+  white-space: pre-wrap
 }
 </style>
