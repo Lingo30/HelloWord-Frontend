@@ -82,6 +82,7 @@ import { LogInOutline as LogInIcon } from '@vicons/ionicons5'
 import {getSentenceAnalysis} from "@/request/api/review";
 import {NAvatar, useMessage,useNotification} from "naive-ui";
 import Kaleido from "@/assets/img/kaleidoBlank.png";
+import store from "@/store";
 
 export default {
   name: "TextBox",
