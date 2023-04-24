@@ -12,6 +12,7 @@ export default createStore({
             groupWords: [
                 {
                     word: "",
+                    phonetic_symbol: "",
                     definition_cn: "",
                 }
             ],
