@@ -226,7 +226,7 @@ export default {
           showFileResultFlag.value = true
         }
       })
-      //TODO 向后端请求
+      // 向后端请求
       let success = false
       let errMsg = '网络错误'
       uploadFile(formData, progressFunc).then((res) => {
@@ -293,6 +293,10 @@ export default {
         })
       } else if (createMethod === 1 && showFileResultFlag.value) {
         // 文件创建词单
+        if (fileWords.length === 0) {
+          message.error("不可创建空词单")
+          return
+        }
         let words = []
         fileWords.forEach((word) => words.push(word.wordId))
         createFromFile(store.state.user.uid, listName, words).then((res) => {
