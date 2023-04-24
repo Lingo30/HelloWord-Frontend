@@ -19,16 +19,19 @@
 </template>
 
 <script>
-import {onBeforeMount, ref} from "vue";
+import {onBeforeMount, reactive, ref} from "vue";
 import {Accessibility, HelpCircleOutline} from "@vicons/ionicons5";
 import {getAim, getLearnedWords, setAim} from "@/request/api/wordlist";
+import {useMessage} from 'naive-ui'
 import store from "@/store";
 
 export default {
   name: "TodayAim",
   setup() {
+    const message = useMessage()
     const target = ref(0);
-    const mark = ref({});
+    let oldNum = 0
+    const mark = reactive({});
     const pressFlag = ref(false)//是否在拖动进度条
     // mark.value[0] = '当前进度:' + 0
 
@@ -42,13 +45,26 @@ export default {
     })
 
     async function load() {
+      let success = false
+      let errMsg = '网络错误'
       getLearnedWords(store.state.user.uid).then((res) => {
-        const sum = res.sum
-        mark.value[sum] = '当前进度：' + res.sum
+        if (res.state) {
+          mark[res.sum] = '当前进度：' + res.sum
+        }
+        success = res.state
+        errMsg = res.msg
+      }).finally(() => {
+        if (!success) {
+          message.error(errMsg)
+        }
       })
-      getAim(store.state.user.uid).then((res) => {
-        target.value = res.target
-      })
+
+      target.value = store.state.user.wordNum
+      oldNum = target.value
+      // 直接从本地获取
+      // getAim(store.state.user.uid).then((res) => {
+      //   target.value = res.target
+      // })
     }
 
     onBeforeMount(() => {
@@ -56,9 +72,23 @@ export default {
     })
 
     //更新每日背诵单词数
-    function update() {
-      // console.log(target.value);
-      setAim(store.state.user.uid, target.value);
+    async function update() {
+      let success = false
+      let errMsg = '网络错误'
+      await setAim(store.state.user.uid, target.value).then((res) => {
+        success = res.state
+        if (res.state) {
+          store.state.user.wordNum = target.value
+          oldNum = target.value
+          message.success('修改成功')
+        } else {
+          errMsg = res.msg
+          target.value = oldNum
+        }
+      })
+      if (!success) {
+        message.error(errMsg)
+      }
     }
 
     return {
