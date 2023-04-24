@@ -7,9 +7,9 @@
         </div>
         <div class="word_meaning_box">
           <div class="word_reading" v-if="shown==true">
-            音标: {{group_words[curId].phonetic_symbol}}
+            音标: [{{group_words[curId].phonetic_symbol}}]
           </div>
-          <div class="word_meaning" v-if="shown==true" style="white-space: pre-wrap">
+          <div class="word_meaning" v-if="shown==true">
             {{group_words[curId].definition_cn}}
           </div>
           <router-link to="" class="delword" @click="delWord" v-if="shown==true">不再学习</router-link>
@@ -54,14 +54,15 @@
 							同义词
 						</div>
 						<div class="info_content" v-if="shown==true">
-							<div class="info_word1" v-for="(synonym, index) in relation.synonyms">
+							<n-card :bordered="false" content-style="padding: 1.5%;" class="info_word1" v-for="(synonym, index) in relation.synonyms">
 								<div class="related_word">
-									{{synonym.word}}
+									{{synonym.word}} [{{synonym.word.phonetic_symbol}}]
 								</div>
-								<div class="read" style="white-space: pre-wrap">
+								<div class="related_word_meaning">
 									{{synonym.definition_cn}}
 								</div>
-							</div>
+								
+							</n-card>
 						</div>
 					</div>
 				</n-card>
@@ -71,14 +72,14 @@
 							反义词
 						</div>
 						<div class="info_content" v-if="shown==true">
-							<div class="info_word1" v-for="(antonym, index) in relation.antonyms">
+							<n-card :bordered="false" content-style="padding: 1.5%;" class="info_word2" v-for="(antonym, index) in relation.antonyms">
 								<div class="related_word">
-									{{ antonym.word }}
+									{{ antonym.word }} [{{antonym.word.phonetic_symbol}}]
 								</div>
-								<div class="read" style="white-space: pre-wrap">
+								<div class="related_word_meaning">
 									{{ antonym.definition_cn }}
 								</div>
-							</div>
+							</n-card>
 
 						</div>
 					</div>
@@ -88,7 +89,7 @@
 						<div class="info_title">
 							例句
 						</div>
-						<div class="info_content" v-if="shown==true">
+						<div class="info_content1" v-if="shown==true">
 							{{ relation.example }}
 						</div>
 					</div>
@@ -132,13 +133,15 @@ export default {
                 synonyms: [ {
 						word_id: 3,
 						word: "",
-						definition_cn: ""
+						definition_cn: "",
+						phonetic_symbol: "",
 						},
 					],
 					antonyms: [{
                         word_id: 6,
 						word: "",
-						definition_cn: ""
+						definition_cn: "",
+						phonetic_symbol: "",
 						},
 					],
 					example: "",
@@ -372,15 +375,18 @@ export default {
 		border-radius: 10px;
 	}
 	.word_reading {
-		margin-top: 20%;
+		margin-top: 10%;
 		height: 20%;
 		font-style: italic;
 		/* background-color: #679B9B; */
 	}
 	.word_meaning {
-		margin-top: 10%;
-		height: 20%;
+		margin-top: 5%;
+		height: 40%;
 		font-style: italic;
+		white-space: pre-wrap;
+		font-size: large;
+		/* text-align: left; */
 		/* background-color: #679B9B; */
 	}
 	.delword {
@@ -451,10 +457,10 @@ export default {
 		/*margin-left: 5%;*/
 		/*height: 75%;*/
 		/*opacity: 90%;*/
-    width: 40%;
-    height: 90%;
+    	width: 40%;
+    	height: 90%;
 		background-color: #679B9B;
-    margin-left: 5%;
+    	margin-left: 5%;
 		display: vertical;
 		border-radius: 20px;
 		/* flex-wrap: wrap;
@@ -477,6 +483,7 @@ export default {
 		height: 25%;
 		border-radius: 10px;
 		background-color: rgba(129,227,131, 0.8);
+		border-width: 0px;
 		display: vertical;
 	}
 	.info_card3 {
@@ -492,17 +499,18 @@ export default {
 	.info_box {
 		position: absolute;
 		top: 3%;
-		left: 5%;
-		right: 5%;
+		left: 1%;
+		right: 1%;
 		height: 94%;
 		/* background-color: royalblue; */
+		overflow: hidden;
 		display: vertical;
 		display: flexbox;
 	}
 
 	.info_title {
 		overflow: auto;
-		font-size: xx-large;
+		font-size: x-large;
 		font-weight: 800;
 		color: white;
 		text-align: left;
@@ -512,7 +520,7 @@ export default {
 	.info_content {
 		/* margin-top: 1%; */
 		margin-left: 1%;
-		height: 75%;
+		height: 70%;
 		overflow: auto;
 		font-size: large;
 		color: white;
@@ -523,45 +531,94 @@ export default {
 		, 'Helvetica Neue', sans-serif;
 		font-weight: 500;
 		text-align: left;
+		white-space: pre-wrap;
 		/* background-color: aliceblue; */
+	}
+	.info_content1 {
+		/* margin-top: 1%; */
+		margin-left: 2%;
+		height: 70%;
+		overflow: auto;
+		font-size: large;
+		color: white;
+		display: flex;
+		flex-direction: column;
+		font-family: system-ui, -apple-system, BlinkMacSystemFont
+		, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans'
+		, 'Helvetica Neue', sans-serif;
+		font-weight: 500;
+		text-align: left;
+		white-space: pre-wrap;
+		/* background-color: aliceblue; */
+	}
+	.related_box {
+		position: absolute;
+		width: 100%;
+		left: 0%;
+		top: 0%;
+		height: auto;
+		/* background-color: #4E655D; */
 	}
 
 	.info_word1 {
-		margin-bottom: 2%;
-		height: 25%;
+		padding: 0%;
+		margin-bottom: 1%;
+		height: auto;
 		display: flex;
-		/* background-color: blue; */
+		background-color: rgba(38,164,116, 0.8);
+		border-width: 0px;
+		/* background-color:#4E655D; */
+	}
+
+	.info_word1:hover {
+		padding: 0%;
+		margin-bottom: 1%;
+		height: auto;
+		display: flex;
+		background-color: rgba(255, 255, 255, 0.2);
 	}
 
 	.info_word2 {
-		/* padding-top: 5%; */
-		margin-top: 2%;
-		height: 25%;
+		padding: 0%;
+		margin-bottom: 1%;
+		height: auto;
 		display: flex;
-		/* background-color: blue; */
+		background-color: rgba(129,227,131, 0.8);
+		border-width: 0px;
+		/* background-color:#4E655D; */
 	}
 
-	.info_word3 {
-		/* padding-top: 5%; */
-		margin-top: 2%;
-		height: 25%;
+	.info_word2:hover {
+		padding: 0%;
+		margin-bottom: 1%;
+		height: auto;
 		display: flex;
-		/* background-color: blue; */
+		background-color: rgba(255, 255, 255, 0.2);
 	}
 
 	.related_word {
-		font-size: large;
-		width: 40%;
-	}
-	.read {
+		position: relative;
+		padding: 0px;
+		top: 0%;
+		color: white;
 		font-size: medium;
-		font-style: italic, oblique;
+		width: 100%;
+		/* background-color: #78958b; */
+		/* display: inline; */
 	}
 
-	.n-card {
-		overflow: auto;
-		/* padding: 0%; */
+	.related_word_meaning {
+		position: relative;
+		border: 0px;
+		color: white;
+		/* margin-left: 10%; */
+		/* background-color: #679B9B; */
+		font-size: small;
+		font-style: italic, oblique;
+		text-align: left;
 	}
+
+
 
 
   /* 滚动条样式 */
