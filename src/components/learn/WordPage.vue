@@ -56,7 +56,7 @@
 						<div class="info_content" v-if="shown==true">
 							<n-card :bordered="false" content-style="padding: 1.5%;" class="info_word1" v-for="(synonym, index) in relation.synonyms">
 								<div class="related_word">
-									{{synonym.word}} [{{synonym.word.phonetic_symbol}}]
+									{{synonym.word}} [{{synonym.phonetic_symbol}}]
 								</div>
 								<div class="related_word_meaning">
 									{{synonym.definition_cn}}
@@ -74,7 +74,7 @@
 						<div class="info_content" v-if="shown==true">
 							<n-card :bordered="false" content-style="padding: 1.5%;" class="info_word2" v-for="(antonym, index) in relation.antonyms">
 								<div class="related_word">
-									{{ antonym.word }} [{{antonym.word.phonetic_symbol}}]
+									{{ antonym.word }} [{{antonym.phonetic_symbol}}]
 								</div>
 								<div class="related_word_meaning">
 									{{ antonym.definition_cn }}
@@ -354,9 +354,9 @@ export default {
 		margin-left: 15%;
 		margin-right: 15%;
 		height: 10%;
-    align-items: center;
-    justify-content: center;
-    line-height: 100%;
+    	align-items: center;
+    	justify-content: center;
+    	line-height: 100%;
 		background-color: rgba(255, 255, 255, 0.6);
 		text-align: center;
 		font-size: 40px;

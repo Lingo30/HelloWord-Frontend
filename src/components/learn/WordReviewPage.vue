@@ -4,32 +4,28 @@
         <div class="class_table">
             <div class="main_box">
                 <div class="left_box">
-                    <div class="info_word" v-for='index in 5' :key='index'>
+                    <n-card :bordered="false" content-style="padding: 1%;" 
+                        class="info_word" v-for='index in 5' :key='index'
+                    >
                         <div class="word_Title" v-if="index - 1 < this.words.length">
-                            <div class="content_box">
-                                {{ this.words[index - 1].word }}
-                            </div>
+                            {{ this.words[index - 1].word }} [{{ this.words[index - 1].phonetic_symbol }}]
                         </div>
                         <div class="word_Meaning" v-if="index - 1 < this.words.length">
-                            <div class="content_box">
-                                {{this.words[index - 1].definition_cn}}
-                            </div>
+                            {{this.words[index - 1].definition_cn}}
                         </div>
-                    </div>
+                    </n-card>
                 </div>
                 <div class="right_box">
-                    <div class="info_word" v-for='index in 5' :key='index'>
+                    <n-card :bordered="false" content-style="padding: 1%;"
+                        class="info_word" v-for='index in 5' :key='index'
+                    >
                         <div class="word_Title" v-if="index + 4 < this.words.length">
-                            <div class="content_box">
-                                {{this.words[index + 4].word}}
-                            </div>
+                            {{this.words[index + 4].word}} [{{ this.words[index + 4].phonetic_symbol }}]
                         </div>
                         <div class="word_Meaning" v-if="index + 4 < this.words.length">
-                            <div class="content_box">
-                                {{this.words[index + 4].definition_cn}}
-                            </div>
+                            {{this.words[index + 4].definition_cn}}
                         </div>
-                    </div>
+                    </n-card>
                 </div>
             </div>
           <n-button round type="info" class="next_button" @click="nextGroup">
@@ -58,6 +54,7 @@ import { create } from 'lodash';
             words: [
                 {
                     word: "",
+                    phonetic_symbol: "",
                     definition_cn: "",
                 }
             ]
@@ -104,9 +101,9 @@ import { create } from 'lodash';
     .left_box {
         position: relative;
         top: 5%;
-        left: 10%;
+        left: 7%;
         height: 90%;
-        width: 35%;
+        width: 40%;
         /* background-color: white; */
         display: flex;
 		flex-direction: column;
@@ -115,9 +112,9 @@ import { create } from 'lodash';
     .right_box {
         position: relative;
         top: 5%;
-        margin-left: 18%;
+        margin-left: 13%;
         height: 90%;
-        width: 35%;
+        width: 40%;
         /* background-color: white; */
         display: flex;
 		flex-direction: column;
@@ -125,12 +122,27 @@ import { create } from 'lodash';
 
     .info_word {
 		/* margin-bottom: 2%; */
+        overflow-x: hidden;
+        overflow-y: auto;
 		height: 20%;
-        margin-bottom: 3%;
+        margin-bottom: 1%;
 		display: flex;
-        border-radius: 10px;
+        border-radius: 5px;
 		/* background-color: blue; */
-        background-color: rgba(82, 186, 141, 0.8);;
+        background-color: rgba(82, 186, 141, 0.75);;
+        color: white;
+        font-weight: 300;
+        /* vertical-align: middle; */
+	}
+
+    .info_word:hover {
+		/* margin-bottom: 2%; */
+		height: 20%;
+        margin-bottom: 1%;
+		display: flex;
+        border-radius: 5px;
+		/* background-color: blue; */
+        background-color: rgba(82, 186, 141, 1);;
         color: white;
         font-weight: 300;
         /* vertical-align: middle; */
@@ -142,31 +154,26 @@ import { create } from 'lodash';
 
     .word_Title {
         position: relative;
-        top: 25%;
-        width: 45%;
-        height: 50%;
+        left: 3%;
+        height: auto;
         /* background-color: blanchedalmond; */
-        font-size: x-large;
-        vertical-align: middle;
-        display: table;
-        /* text-align: center; */
+        font-size: large;
+        text-align: left;
     }
 
     .word_Meaning {
         position: relative;
-        top: 25%;
-        /* width: 30%; */
-        height: 50%;
-        margin-left: 5%;
+        overflow: auto;
+        height: auto;
+        margin-left: 3%;
         /* background-color: wheat; */
         font-size: large;
-        vertical-align: middle;
-        display: table;
+        text-align: left;
     }
 
     .content_box {
         display: table-cell;
-        vertical-align: middle;
+        /* vertical-align: middle; */
     }
 
     .next_button {
@@ -177,5 +184,20 @@ import { create } from 'lodash';
         height: 5%;
         font-size: large;
     }
+
+    ::-webkit-scrollbar {
+    width: 6px;
+    transition: width 1s;
+  }
+  ::-webkit-scrollbar-track {
+    background-color: rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+  }
+  ::-webkit-scrollbar-thumb {
+    background-color: #999;
+    border-radius: 10px;
+    box-shadow: inset 0 0 3px rgba(0, 0, 0, 0.2);
+  }
 
   </style>
