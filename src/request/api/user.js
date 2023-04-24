@@ -21,7 +21,7 @@ export function loginAPI(name, pwd) {
     })
 }
 
-export function registerAPI(name, pwd) {
+export function registerAPI(name, pwd, email) {
     /*
     返回数据：
     state: true/false 是否注册成功
@@ -34,6 +34,7 @@ export function registerAPI(name, pwd) {
     const data = JSON.stringify({
         name: name,
         password: pwd,
+        email: email,
     })
     return request({
         url: 'register/',
