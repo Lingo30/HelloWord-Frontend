@@ -137,7 +137,7 @@
 import {onMounted, ref} from "vue";
 import md5 from 'js-md5';
 import {useMessage} from 'naive-ui'
-import {registerAPI, loginAPI} from "@/request/api/user";
+import {registerAPI, loginAPI, sendEmail, checkEmailCode} from "@/request/api/user";
 import store from "@/store";
 import router from "@/router";
 import {USERNAME, PASSWORD} from "@/store/local";
@@ -184,7 +184,6 @@ export default {
     }
 
     const email = ref('');
-    let emailVerificationCode = '';
     let canSendEmail = ref(true);
     let countdown = ref(60);
     const emailVerificationCodeInput = ref('');
@@ -194,9 +193,13 @@ export default {
       canSendEmail.value = false;
       countdown.value = 60;
 
-      // TODO: 发送验证码请求到后端，并将验证码发送至邮箱
-      emailVerificationCode = '123456';
-
+      sendEmail(email.value).then((res)=>{
+        const success = res.state
+        if (success)
+          message.info("记得找找是不是在垃圾邮件里~")
+        else
+          message.error(res.msg)
+      })
       const timer = setInterval(() => {
         countdown.value--;
         if (countdown.value <= 0) {
@@ -206,11 +209,20 @@ export default {
       }, 1000);
     }
 
+    async function checkEmail() {
+      let success;
+      await checkEmailCode(email.value,emailVerificationCodeInput.value).then((res)=>{
+        success = res.state
+        if (!success) {
+          message.error(res.msg);
+        }
+      })
+      return success
+    }
+
     function register(name, pwd, pwdConfirm, verify) {
       if (!registerVerifyCode.validate(verify)) {
         message.error('验证码错误')
-      } else if (emailVerificationCodeInput.value !== emailVerificationCode) {
-        message.error('邮箱验证码错误');
       } else if (pwd !== pwdConfirm) {
         message.error("密码前后不一致");
       } else if (name === '' || pwd === '') {
@@ -222,6 +234,10 @@ export default {
           password.value = ''
           passwordConfirm.value = ''
         } else {
+          if (!checkEmail()) {
+            registerVerifyCode.refresh()
+            return
+          }
           const encodePwd = md5(pwd);
           let success = false
           let data

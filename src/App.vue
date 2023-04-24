@@ -1,5 +1,5 @@
 <template>
-  <n-notification-provider>
+  <n-notification-provider placement="top">
     <n-dialog-provider>
       <n-message-provider>
         <n-config-provider :locale="zhCN" :date-locale="dateZhCN">
