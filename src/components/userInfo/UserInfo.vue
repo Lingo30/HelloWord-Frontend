@@ -6,7 +6,7 @@
                       margin: auto">
         <div class="avatar-wrapper">
           <div>
-            <n-image :src="model.avatarPath" width="50" height="50"></n-image>
+            <n-image style="border-radius: 25px" :src="model.avatarPath" width="50" height="50"></n-image>
           </div>
           <div class="file-upload">
             <n-button  round type="primary" ghost class="upload-button">上传头像</n-button>

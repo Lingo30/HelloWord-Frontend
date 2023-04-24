@@ -37,19 +37,20 @@
           v-model:page="curPage"
           :page-count="pageNum"
           size="small"
+          :page-slot="3"
           @update:page="changePage"
           show-quick-jumper
       >
-        <template #prev>
-          <div :style="{opacity:1===curPage?0.5:1}" style="color: white">
-            上一页
-          </div>
-        </template>
-        <template #next>
-          <div :style="{opacity:pageNum===curPage?0.5:1}" style="color: white">
-            下一页
-          </div>
-        </template>
+<!--        <template #prev>-->
+<!--          <div :style="{opacity:1===curPage?0.5:1}" style="color: white">-->
+<!--            上一页-->
+<!--          </div>-->
+<!--        </template>-->
+<!--        <template #next>-->
+<!--          <div :style="{opacity:pageNum===curPage?0.5:1}" style="color: white">-->
+<!--            下一页-->
+<!--          </div>-->
+<!--        </template>-->
       </n-pagination>
       <n-button class="set-learn-button" size="tiny" v-show="showPagination&&!selectedFlag" type="info"
                 @click="selectWordlist(listId)">
@@ -189,7 +190,8 @@ export default {
 .foot {
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+
+  justify-content: center;
 }
 
 .set-learn-button {

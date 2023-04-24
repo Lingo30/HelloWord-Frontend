@@ -20,7 +20,7 @@
                 </div>
               </div>
               <div class="bottom">
-                <NInput class="message" v-model:value="question" round placeholder="Type a message...">
+                <NInput class="message" v-model:value="value" round placeholder="Type a message...">
                 </NInput>
                 <NButton class="send" @click="sendChat" strong secondary type="info">
                   提问
@@ -37,11 +37,13 @@
 
 
 <script>
-import {NInput , NButton} from 'naive-ui';
+import {NInput, NButton, NAvatar, useNotification} from 'naive-ui';
 import ChatMessage from "@/components/chatPage/ChatMessage";
 import {getHistoryChatAPI, sendChatAPI} from "@/request/api/chat";
-import {ref} from 'vue'
+import {h, ref} from 'vue'
 import store from "@/store";
+import Kaleido from "@/assets/img/kaleidoBlank.png";
+import router from "@/router";
 
 export default {
   components:{
@@ -54,38 +56,67 @@ export default {
     msg: String
   },
   setup () {
+    const notification = useNotification()
+    const showSpin = ref(false)
+    const value = ref('')
+    const messages = []
+
     return {
-      question: ref(''),
-      messages: [],
-      showSpin: ref(false),
+      messages,
+      showSpin,
+      value,
+      sendChat
+    }
+
+    async function sendChat() {
+      showSpin.value = true
+      await sendChatAPI(store.state.user.uid, value.value).then((res) => {
+        if (!res.state) {
+          const n = notification.create({
+            title: "使用次数已达上限",
+            content: "一天最多只能对话七次哦，不如今天再去学点单词，明天再来找我聊天叭",
+            avatar: () => h(NAvatar, {
+              size: 'small',
+              round: true,
+              src: Kaleido,
+            }),
+            action: () => h(NButton, {
+              text: true,
+              type: "primary",
+              onClick: () => {
+                n.destroy();
+              }
+            }, {
+              default: () => "好的"
+            }),
+            duration: 3e3,
+          })
+          value.value = ''
+        } else {
+          let q = {
+            time: res.receive_time,
+            type: false,
+            content: value.value
+          };
+          messages.push(q);
+          let p = {
+            time: res.post_time,
+            type: true,
+            content: res.post_message,
+          };
+          messages.push(p);
+          value.value = "";
+        }
+      });
+      showSpin.value = false;
     }
   },
+
 
   created() {
     this.getHistory();
   },
   methods: {
-    async sendChat() {
-      this.showSpin = true;
-      await sendChatAPI(store.state.user.uid, this.question).then((res) => {
-        let q = {
-          time:res.receive_time,
-          type: false,
-          content: this.question,
-        };
-        this.messages.push(q);
-        let p = {
-          time:res.post_time,
-          type: true,
-          content: res.post_message,
-        };
-        this.messages.push(p);
-        this.question="";
-        // this.$refs.chat_box.scrollTop = 10000;
-        // this.$refs.chat_box.scrollTop = 10000; /*TODO*/
-      });
-      this.showSpin = false;
-    },
     getHistory() {
       this.showSpin = true;
       getHistoryChatAPI(10).then((res) => {
@@ -100,7 +131,8 @@ export default {
         });
       });
       this.showSpin = false;
-    }
+    },
+
   }
 }
 
