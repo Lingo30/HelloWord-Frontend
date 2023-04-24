@@ -13,7 +13,7 @@
       <n-space class="text-card">
         <n-spin :show="showSpin">
           <template #description>
-            我在努力哇
+            请耐心等待，不要急着刷新~
           </template>
           <n-card hoverable class="TextContainer">
             <n-scrollbar style="max-height: 72vh;">

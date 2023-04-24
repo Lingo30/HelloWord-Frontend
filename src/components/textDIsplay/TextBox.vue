@@ -19,7 +19,7 @@
         <n-card hoverable class="InputCard">
           <n-spin :show="inputSpin">
             <template #description>
-              别急，我在努力编QAQ
+              请耐心等待，不要急着刷新~
             </template>
             <n-space>
               <n-input
@@ -56,7 +56,7 @@
         <n-card hoverable class="translation">
           <n-spin :show="analysisSpin">
             <template #description>
-              我康康你写了些什么呀
+              请耐心等待，不要急着刷新~
             </template>
             <div v-if="active" class="rate-box">
               {{"Rate:  "}}
@@ -94,7 +94,7 @@ export default {
     },
     staticText: {
       type: String,
-      default: "在这里写点东西",
+      default: "在这里写想要分析的文章，分析完成后还可以鼠标选中文字、呈现语句分析哦~",
     },
     words: {
       type: Array,
