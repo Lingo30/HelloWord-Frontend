@@ -9,7 +9,7 @@
           <div class="word_reading" v-if="shown==true">
             音标: {{group_words[curId].phonetic_symbol}}
           </div>
-          <div class="word_meaning" v-if="shown==true">
+          <div class="word_meaning" v-if="shown==true" style="white-space: pre-wrap">
             {{group_words[curId].definition_cn}}
           </div>
           <router-link to="" class="delword" @click="delWord" v-if="shown==true">不再学习</router-link>
@@ -58,7 +58,7 @@
 								<div class="related_word">
 									{{synonym.word}}
 								</div>
-								<div class="read">
+								<div class="read" style="white-space: pre-wrap">
 									{{synonym.definition_cn}}
 								</div>
 							</div>
@@ -75,7 +75,7 @@
 								<div class="related_word">
 									{{ antonym.word }}
 								</div>
-								<div class="read">
+								<div class="read" style="white-space: pre-wrap">
 									{{ antonym.definition_cn }}
 								</div>
 							</div>
