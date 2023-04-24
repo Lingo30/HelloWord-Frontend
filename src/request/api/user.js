@@ -108,3 +108,26 @@ export function changePassword(uid,oldPwd,newPwd) {
         data
     })
 }
+
+export function sendEmail(email) {
+    const data = JSON.stringify({
+        email_addr:email
+    })
+    return request({
+        url: 'send_email_code/',
+        method: 'post',
+        data
+    })
+}
+
+export function checkEmailCode(email,code) {
+    const data = JSON.stringify({
+        email_addr:email,
+        code:code
+    })
+    return request({
+        url: 'check_email_code/',
+        method: 'post',
+        data
+    })
+}
