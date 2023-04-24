@@ -27,6 +27,9 @@
                 </NButton>
               </div>
             </div>
+            <template #description>
+              请耐心等待，不要急着刷新~
+            </template>
           </n-spin>
         </div>
 
