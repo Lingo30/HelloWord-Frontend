@@ -35,7 +35,8 @@
                   }"
               />
             </n-space>
-            <n-space v-if="!active" class="TodayWords">
+
+            <div v-if="!active" class="TodayWords">
               <div style="font-weight: bold;font-size: 15px">Today's new words:</div>
               <n-space>
                 <n-tag
@@ -49,7 +50,7 @@
                   {{ wordObj.word }}
                 </n-tag>
               </n-space>
-            </n-space>
+            </div>
           </n-spin>
         </n-card>
         <n-card hoverable class="translation">
@@ -285,7 +286,6 @@ export default {
   font-size: 20px;
   margin-left: 2vh;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
-  padding: 0.5rem;
   border-radius: 4px;
   /*height: 600px;*/
   /*width: 270px;*/
@@ -295,17 +295,14 @@ export default {
 }
 .translationText {
   font-size: 20px;
-  width: 68vh;
-  height: 74vh;
+  width: 65vh;
+  height: 60vh;
   overflow-wrap: break-word;
   word-wrap: break-word;
   overflow-y: auto;
   position: relative;
   /*background-color: red;*/
-  transform: translate(-50%, -50%);
   margin:auto;
-  top: 48%;
-  left: 50%;
 }
 
 /* 滚动条样式 */
@@ -339,6 +336,7 @@ export default {
   height: 10vh;
   margin-top: 2vh;
   align-items: center;
+  overflow: auto;
   /*background-color: red;*/
 }
 .tag {
@@ -357,5 +355,20 @@ export default {
 
 .export-btn {
   /*margin-left: 62.5vh;*/
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  transition: width 1s;
+}
+::-webkit-scrollbar-track {
+  background-color: rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+}
+::-webkit-scrollbar-thumb {
+  background-color: #999;
+  border-radius: 10px;
+  box-shadow: inset 0 0 3px rgba(0, 0, 0, 0.2);
 }
 </style>
