@@ -13,12 +13,13 @@
               <div class="chat_top">
                 <img src="../../assets/img/kaleidoBlank.png" height="135" width="130">
               </div>
-              <div ref="chat_message" class="chat_parent" style="overflow:scroll; margin-bottom: 18%; width: 30vw">
+              <n-scrollbar class="chat" style="height: 60vh ;text-align: left">
+                <div ref="chat_message" class="chat_parent" style="overflow:scroll; width: 30vw">
 <!--                <div ref="chat_box" class="chat" style="overflow-x:hidden; overflow-y:auto; max-height:500px" >-->
-                <n-scrollbar class="chat" style="text-align: left">
+
                   <ChatMessage v-for="(item, index) in messages" v-bind:key="index" :type=item.type :time=item.time :content=item.content></ChatMessage>
-                </n-scrollbar>
-              </div>
+                </div>
+              </n-scrollbar>
               <div  class="bottom">
                 <n-input class="message" v-model:value="value" round placeholder="Type a message..." type="textarea"
                         @keydown.enter.prevent="handleEnter"
