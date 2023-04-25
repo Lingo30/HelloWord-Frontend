@@ -29,7 +29,7 @@
                   v-model:value="textValue"
                   type="textarea"
                   size="small"
-                  maxlength="500"
+                  maxlength="2048"
                   :style="{ height: inputHeight}"
                   :autosize="{
                     maxRows: 20
@@ -169,8 +169,8 @@ export default {
               src: Kaleido,
             }),
             duration: 3e3,
-
           })
+          analysisSpin.value = false;
         }
       })
       analysisSpin.value = false;

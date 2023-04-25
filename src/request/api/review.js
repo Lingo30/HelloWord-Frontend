@@ -33,7 +33,7 @@ export function getSentenceAnalysis(uid,sentence) {
         url: "sentence_analysis/",
         method: 'post',
         data:data,
-        timeout: 20000
+        timeout: 30000
     })
 }
 
@@ -46,7 +46,7 @@ export function getArticleAnalysis(uid,article) {
         url: "writing_analysis/",
         method: 'post',
         data: data,
-        timeout: 20000
+        timeout: 30000
     })
 }
 
@@ -58,6 +58,6 @@ export function getBlankText(uid) {
         url: "get_blank_text/",
         method: 'post',
         data:data,
-        timeout: 20000
+        timeout: 30000
     })
 }

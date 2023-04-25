@@ -39,8 +39,8 @@ export default {
       if (file) {
         const reader = new FileReader();
         reader.onload = (e) => {
-          if (e.target.result.length > 500) {
-            msg.error("文章太长啦，我只能读500字哦")
+          if (e.target.result.length > 2048) {
+            msg.error("文章太长啦，我只能读2048字哦")
             return
           }
           textBoxRef.value.textValue = e.target.result;
@@ -98,6 +98,7 @@ export default {
             }),
             duration: 3e3,
           })
+          textBoxRef.value.analysisSpin = false;
         }
       })
       textBoxRef.value.analysisSpin = false;

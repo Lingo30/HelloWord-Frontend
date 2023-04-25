@@ -98,8 +98,10 @@ export default {
       init.value = true
       let arr = []
       showSpin.value = true;
+      let errorMsg = "超时啦，请稍后再试试"
+      let success = false
       await getBlankText(store.state.user.uid).then((res)=>{
-        const success = res.state
+        success = res.state
         if (success) {
           // console.log(res)
           const lastTimes = res.last_times
@@ -124,20 +126,23 @@ export default {
           arr = [...res.originWords];
         }
         else {
+          errorMsg = res.last_times === 0?'明天再给你出题哇，累了捏QAQ':res.msg
+          // if (res.last_times === 0)
+          //   msg.error('明天再给你出题哇，累了捏QAQ')
+          // else
+          //   msg.error(res.msg)
+        }
+      }).finally(()=>{
+        if (!success) {
           notification.create({
-            content: res.last_times === 0?'明天再给你出题哇，累了捏QAQ':res.msg,
+            content: errorMsg,
             avatar: () => h(NAvatar,{
               size: 'small',
               round: true,
               src: Kaleido,
             }),
             duration: 3e3,
-
           })
-          // if (res.last_times === 0)
-          //   msg.error('明天再给你出题哇，累了捏QAQ')
-          // else
-          //   msg.error(res.msg)
         }
       })
       // console.log(wordList.length);
