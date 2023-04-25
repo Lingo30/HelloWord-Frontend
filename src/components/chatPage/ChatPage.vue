@@ -24,6 +24,7 @@
                 <n-input class="message" v-model:value="value" round placeholder="Type a message..." type="textarea"
                         @keydown.enter.prevent="handleEnter"
                         ref="inputRef"
+                         maxlength="100"
                         :autosize="{
                   maxRows: 2
                 }">

@@ -29,6 +29,7 @@
                   v-model:value="textValue"
                   type="textarea"
                   size="small"
+                  maxlength="500"
                   :style="{ height: inputHeight}"
                   :autosize="{
                     maxRows: 20

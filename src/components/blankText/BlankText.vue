@@ -27,6 +27,7 @@
                     :style="{ width: getWidth(index) + 'px' }"
                     :class="{ correct: !init && answerStatus[getBlankIndex(index)] === true, incorrect: !init && answerStatus[getBlankIndex(index)] === false }"
                     type="text"
+                    maxlength="50"
                     @input="recordAnswer($event.target.value, index)"
                 />
               </template>

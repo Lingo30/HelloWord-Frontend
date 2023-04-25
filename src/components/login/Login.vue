@@ -62,6 +62,7 @@
                     v-model="username"
                     name="用户名"
                     placeholder="用户名"
+                    maxlength="50"
                 />
               </div>
               <div style="margin:25px 0px">
@@ -72,6 +73,7 @@
                     v-model="email"
                     name="邮箱"
                     placeholder="邮箱"
+                    maxlength="50"
                 />
               </div>
               <div style="margin:25px 0px 25px 15px">
@@ -82,6 +84,7 @@
                     v-model="emailVerificationCodeInput"
                     name="邮箱验证码"
                     placeholder="邮箱验证码"
+                    maxlength="20"
                 />
                 <button style="margin-left: 25px" @click="sendVerificationCode" :disabled="!canSendEmail" class="sendCodeButton">
                   {{ canSendEmail ? '发送验证码' : `重新发送(${countdown}s)` }}
@@ -113,6 +116,7 @@
                     v-model="verifyInput"
                     name="验证码"
                     placeholder="验证码"
+                    maxlength="10"
                 />
                 <div style="margin-left: 27px" id="registerVerify"></div>
               </div>
