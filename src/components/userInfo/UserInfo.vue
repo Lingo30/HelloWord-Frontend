@@ -235,6 +235,13 @@ export default ({
         msg.error("仅支持 JPEG 和 PNG 格式的图片");
         return;
       }
+      // 检查文件大小
+      const maxSize = 1048576; // 1MB in bytes
+      if (tmp.size > maxSize) {
+        // 文件大小超过限制，显示错误消息
+        msg.error("图片大小不能超过 1MB。");
+        return;
+      }
       let img = new FileReader();
       img.readAsDataURL(userAvatar.value);
       // console.log("img:",img)

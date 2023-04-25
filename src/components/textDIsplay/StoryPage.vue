@@ -94,9 +94,11 @@ export default {
       // console.log(story.value)
       textBoxRef.value.inputSpin = true
       // console.log(selectedWords.value)
+      let errorMsg = "超时啦，请稍后再试试"
+      let success = false
       await wordsToStory(store.state.user.uid,selectedWords.value).then((res) => {
         // console.log(res);
-        let success = res.state
+        success = res.state
         if (success) {
           const lastTimes = res.last_times
           notification.create({
@@ -116,20 +118,19 @@ export default {
           story.value = res.story
         }
         else {
+          errorMsg = res.last_times === 0?'再想AI的脑袋也顶不住啦QAQ':res.msg
+        }
+      }).finally(()=>{
+        if (!success) {
           notification.create({
-            content: res.last_times === 0?'再想AI的脑袋也顶不住啦QAQ':res.msg,
+            content: errorMsg,
             avatar: () => h(NAvatar,{
               size: 'small',
               round: true,
               src: Kaleido,
             }),
             duration: 3e3,
-
           })
-          // if (res.last_times === 0)
-          //   message.error('再想AI的脑袋也顶不住啦QAQ')
-          // else
-          //   message.error(res.msg)
         }
       })
       textBoxRef.value.inputSpin = false
