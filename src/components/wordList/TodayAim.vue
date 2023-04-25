@@ -1,14 +1,14 @@
 <template>
   <n-space class="container">
     <div class="prompt-div">
-      <span style="font-weight: bold;width:20vh; margin-right: 10vh;margin-left: 25vh">今天的小目标</span>
+      <span style="font-weight: bold;width:10vw; margin-right: 3vw;margin-left: 10vw">今天的小目标</span>
 
       <router-link :to="{name:'help',query:{idxs:[2,4]}}">
         <n-icon size="2vh" :component="HelpCircleOutline" color="black" class="prompt-icon"/>
       </router-link>
     </div>
     <n-slider @mousedown="pressFlag=true" v-model:value="target" :step="1" :marks="mark" :max="300" keyboard
-              style="width: 80vh">
+              style="width: 50vw">
       <template #thumb>
         <n-icon-wrapper :size="24" :border-radius="12">
           <n-icon :size="18" :component="Accessibility"/>
@@ -106,7 +106,7 @@ export default {
 .container {
   display: flex;
   align-items: center;
-  width: 150vh;
+  width: 80vw;
   /*background-color: red;*/
 }
 

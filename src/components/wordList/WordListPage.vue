@@ -1,6 +1,6 @@
 <template>
   <n-space class="container">
-    <TodayAim style="margin-top: 3%"></TodayAim>
+    <TodayAim style="margin-top: 2%"></TodayAim>
     <div style="margin-top: 2%" class="container_box">
       <CreatePage ref="createPageRef" @add-wordlist="addWordlist"/>
       <div class="left">
