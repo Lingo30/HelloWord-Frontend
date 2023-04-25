@@ -153,8 +153,7 @@ export default {
   methods: {
     getHistory() {
       this.showSpin = true;
-      getHistoryChatAPI(10).then((res) => {
-        console.log(res);
+      getHistoryChatAPI(store.state.user.uid).then((res) => {
         res.history.forEach((item) => {
           let newList = {
             time:item.time,
@@ -164,7 +163,6 @@ export default {
           this.messages.push(newList);
         });
       });
-
       this.showSpin = false;
     },
 
