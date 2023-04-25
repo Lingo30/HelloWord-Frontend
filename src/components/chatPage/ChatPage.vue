@@ -28,7 +28,7 @@
                   maxRows: 2
                 }">
                 </n-input>
-                <NButton class="send" @click="sendChat" strong secondary type="info">
+                <NButton class="send" @click="sendChat" strong secondary type="info" style="font-size: 15px">
                   提问
                 </NButton>
               </div>
@@ -233,7 +233,7 @@ export default {
   display: flex;
   justify-content: space-between;
   color: #2A928F;
-  height: 6%;
+  height: 8%;
   width: 80%;
   font-size:20px
 }
