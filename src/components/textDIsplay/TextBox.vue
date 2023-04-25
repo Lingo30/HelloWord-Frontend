@@ -81,7 +81,7 @@
 import {computed, h, ref} from "vue";
 import { LogInOutline as LogInIcon } from '@vicons/ionicons5'
 import {getSentenceAnalysis} from "@/request/api/review";
-import {NAvatar, useMessage,useNotification} from "naive-ui";
+import {NAvatar, useNotification} from "naive-ui";
 import Kaleido from "@/assets/img/kaleidoBlank.png";
 import store from "@/store";
 
@@ -110,7 +110,6 @@ export default {
   },
 
   setup(props,{emit}) {
-    let msg = useMessage()
     let selectedText = ref(null);
     let analysis = ref("");
     let rateValue = ref(0)
@@ -145,7 +144,9 @@ export default {
           // else if (lastTimes <= 5)
           //   msg.success('今天还能再帮你分析' + lastTimes + '个句子-v-')
           analysis.value = res.translation
-          analysis.value += "\n" + res.structure
+          analysis.value += '\n'
+          analysis.value += res.structure
+          // console.log(analysis.value);
           // structure
         }
         else {
@@ -299,6 +300,7 @@ export default {
   word-wrap: break-word;
   overflow-y: auto;
   position: relative;
+  white-space: pre-line;
   /*background-color: red;*/
   margin:auto;
 }
