@@ -265,7 +265,7 @@ export default {
 }
 .TextContainer {
   height: 78vh;
-  width: 73vh;
+  width: 35vw;
   text-align: left;
   /*background-color: red;*/
 }
@@ -285,24 +285,26 @@ export default {
 
 .btn-box {
   position: relative;
-  width: 149vh;
+  width: 71vw;
+  /*background-color: red;*/
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
 .left {
-  margin-right: 8vh;
+  margin-right: 10vw;
 }
 .button {
-  width: 200px;
+  width: 20vw;
 }
 
 .used-words-box {
   font-size: 20px;
-  margin-left: 1vh;
+  margin-left: 1vw;
   height: 78vh;
-  width: 73vh;
+  width: 35vw;
+  /*background-color: red;*/
   text-align: left;
 }
 
@@ -317,7 +319,7 @@ export default {
 
 .card-box {
   height: 98vh;
-  width: 160vh;
+  width: 80vw;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -327,6 +329,7 @@ export default {
   transform:translate(-50%,-50%);
   background-color: rgba(255,255,255,0.3);
   box-shadow: 10px 12px 16px 10px  rgba(0,0,0,0.24), 10px 17px 50px 10px #4E655D;
+  /*background-color: red;*/
 }
 
 .text-card {
@@ -337,14 +340,16 @@ export default {
   justify-content: flex-end;
   transform: translate(-50%, -50%);
   height: 80vh;
-  width: 150vh;
+  width: 75vw;
 }
 
 .export-box {
-  width: 149vh;
+  width: 71vw;
+  /*background-color: red;*/
+
 }
 
 .export-btn {
-  margin-left: 62.5vh;
+  margin-left: 30vw;
 }
 </style>

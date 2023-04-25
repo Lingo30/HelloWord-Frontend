@@ -105,7 +105,7 @@ export default {
 
 <style scoped>
 #left,#right {
-  width: 40vh;
+  width: 20vw;
 }
 /*使input嵌入到n-button中*/
 #left {
@@ -116,7 +116,7 @@ export default {
   align-items: center;
 }
 #right{
-  margin-left: 20vh;
+  margin-left: 10vw;
 }
 .file-btn {
   position: absolute;
