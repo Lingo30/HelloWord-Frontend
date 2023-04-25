@@ -31,10 +31,10 @@
                 />
               </div>
               <!--                验证码-->
-              <div style="margin:25px 0px; display: flex;justify-content: center">
+              <div style="margin:25px 0px; display: flex;justify-content: left">
                 <!--                <img src="../../assets/img/key.png" height="12" width="12">-->
                 <input
-                    style="width: 57%"
+                    style="margin: 0 0 0 0.8vw;width: 40%"
                     v-model="verifyInput"
                     name="验证码"
                     placeholder="验证码"
@@ -106,10 +106,10 @@
                 />
               </div>
               <!--                验证码-->
-              <div style="margin:25px 0px; display: flex;justify-content: center">
+              <div style="margin:25px 0px; display: flex;justify-content: left">
                 <!--                <img src="../../assets/img/key.png" height="12" width="12">-->
                 <input
-                    style="width: 56%"
+                    style="margin: 0 0 0 0.8vw;width: 40%"
                     v-model="verifyInput"
                     name="验证码"
                     placeholder="验证码"
@@ -407,8 +407,10 @@ export default {
   margin-left: 20px;
   background-image: url('../../assets/img/Kaleido.png');
   background-size: cover;
-  display: table-cell;
-  vertical-align: middle;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /*vertical-align: middle;*/
   font-family: sans-serif;
 }
 
@@ -464,14 +466,14 @@ input:-webkit-autofill::first-line {
 }
 
 #loginVerify {
-  /*width: 30px;*/
+  width: 0;
   height: 25px;
   display: inline-flex;
   /*position: relative;*/
 }
 
 #registerVerify {
-  /*width: 30px;*/
+  width: 0;
   height: 25px;
   display: inline-flex;
   /*position: relative;*/

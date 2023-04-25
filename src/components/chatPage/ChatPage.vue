@@ -225,7 +225,7 @@ export default {
 .message {
   width: 80%;
   /*height: 100%;*/
-  font-size: 5px;
+  font-size: 20px;
   text-align: left;
 }
 .bottom {
