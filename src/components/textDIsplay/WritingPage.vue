@@ -30,9 +30,19 @@ export default {
 
     const handleFileUpload = (event) => {
       const file = event.target.files[0];
+      const allowedTypes = ["text/plain"];
+      if (!allowedTypes.includes(file.type)) {
+        // 文件类型不允许，显示错误消息
+        msg.error("仅支持 TXT 格式的文件");
+        return;
+      }
       if (file) {
         const reader = new FileReader();
         reader.onload = (e) => {
+          if (e.target.result.length > 500) {
+            msg.error("文章太长啦，我只能读500字哦")
+            return
+          }
           textBoxRef.value.textValue = e.target.result;
         };
         reader.readAsText(file);

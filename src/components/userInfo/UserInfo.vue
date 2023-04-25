@@ -228,6 +228,13 @@ export default ({
     async function getImageFile(e) {
       userAvatar.value = e.target.files[0];
       tmp = e.target.files[0];
+      // 检查文件类型
+      const allowedTypes = ["image/jpeg", "image/png"];
+      if (!allowedTypes.includes(tmp.type)) {
+        // 文件类型不允许，显示错误消息
+        msg.error("仅支持 JPEG 和 PNG 格式的图片");
+        return;
+      }
       let img = new FileReader();
       img.readAsDataURL(userAvatar.value);
       // console.log("img:",img)
