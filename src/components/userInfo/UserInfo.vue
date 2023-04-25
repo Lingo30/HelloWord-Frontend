@@ -361,12 +361,10 @@ export default ({
   margin: auto;
   margin-top: 3%;
   height: 25%;
-  background: rgba(223,219,219,0.2);
   display: flex;
   border-radius: 5px;
   justify-content: center;
   align-items: center;
-  box-shadow: 0 25px 35px rgba(0,0,0,0.8);
 }
 
 .content{
@@ -375,12 +373,10 @@ export default ({
   height: 60%;
   margin: auto;
   margin-top: 3%;
-  background: rgba(223,219,219,0.2);
   display: flex;
   border-radius: 5px;
   justify-content: center;
   align-items: center;
-  box-shadow: 0 25px 35px rgba(0,0,0,0.8);
   font-size: 20px;
 }
 .avatar-wrapper {
