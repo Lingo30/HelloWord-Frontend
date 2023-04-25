@@ -111,7 +111,7 @@
       </div>
       <!--      底部输入词单名和确认-->
       <div class="foot" v-if="pageIdx!==1||showFileResultFlag">
-        <n-input class="input-name" v-model:value="myWordlistName"/>
+        <n-input maxlength="10" class="input-name" v-model:value="myWordlistName"/>
         <n-button
             class="button"
             @click="create(myWordlistName, pageIdx)"

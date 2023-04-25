@@ -87,7 +87,7 @@
             <span class="text">{{ model.email }}</span>
           </n-form-item>
           <n-form-item label="昵称" path="name">
-            <n-input v-model:value="model.name" placeholder="昵称" class="text"/>
+            <n-input v-model:value="model.name" placeholder="昵称" class="text" maxlength="15"/>
           </n-form-item>
           <n-form-item label="我的偏好" path="tags">
             <dynamic-tags type="success" v-model:value="model.tags" :max="10"></dynamic-tags>
