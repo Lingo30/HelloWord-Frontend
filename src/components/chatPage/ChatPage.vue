@@ -13,11 +13,11 @@
               <div class="chat_top">
                 <img src="../../assets/img/kaleidoBlank.png" height="135" width="130">
               </div>
-              <div class="chat_parent" style="overflow:scroll; margin-bottom: 18%; width: 30vw">
+              <div ref="chat_message" class="chat_parent" style="overflow:scroll; margin-bottom: 18%; width: 30vw">
 <!--                <div ref="chat_box" class="chat" style="overflow-x:hidden; overflow-y:auto; max-height:500px" >-->
-                <div class="chat" style="text-align: left">
+                <n-scrollbar class="chat" style="text-align: left">
                   <ChatMessage v-for="(item, index) in messages" v-bind:key="index" :type=item.type :time=item.time :content=item.content></ChatMessage>
-                </div>
+                </n-scrollbar>
               </div>
               <div  class="bottom">
                 <n-input class="message" v-model:value="value" round placeholder="Type a message..." type="textarea"
@@ -66,7 +66,7 @@ export default {
     const notification = useNotification()
     const showSpin = ref(false)
     const value = ref('')
-    const messages = []
+    const messages = ref([])
     const inputRef = ref(null)
 
     return {
@@ -77,7 +77,6 @@ export default {
       sendChat,
       handleEnter,
     }
-
     async function handleEnter(event) {
       if (event.shiftKey) {
         // 获取当前光标位置
@@ -133,13 +132,13 @@ export default {
             type: false,
             content: value.value
           };
-          messages.push(q);
+          messages.value.push(q);
           let p = {
             time: res.post_time,
             type: true,
             content: res.post_message,
           };
-          messages.push(p);
+          messages.value.push(p);
           value.value = "";
         }
       });
@@ -147,10 +146,10 @@ export default {
     }
   },
 
-
   created() {
     this.getHistory();
   },
+
   methods: {
     getHistory() {
       this.showSpin = true;
@@ -159,12 +158,13 @@ export default {
         res.history.forEach((item) => {
           let newList = {
             time:item.time,
-            type: item.type,
+            type: !item.type,
             content:item.content,
           };
           this.messages.push(newList);
         });
       });
+
       this.showSpin = false;
     },
 
