@@ -155,9 +155,9 @@ export default {
 
 <style scoped>
 #left,#right {
-  width: 40vh;
+  width: 20vw;
 }
 #right {
-  margin-left: 20vh;
+  margin-left: 10vw;
 }
 </style>
