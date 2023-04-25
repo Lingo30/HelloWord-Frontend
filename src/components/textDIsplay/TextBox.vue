@@ -2,13 +2,13 @@
   <n-space vertical id="CardBox">
     <n-space id="AllContainer">
       <n-space   class="export-box">
-        <n-button type="info" ghost @click="handleExportInput" style="width:12vh;" class="export-btn">
+        <n-button type="info" ghost @click="handleExportInput" style="width:6vw; margin-left: 1vw;" class="export-btn">
           <template #icon>
             <n-icon><log-in-icon /></n-icon>
           </template>
           导出
         </n-button>
-        <n-button type="info" ghost @click="handleExportTranslation" style="width:12vh; margin-left: 63vh;" class="export-btn">
+        <n-button type="info" ghost @click="handleExportTranslation" style="width:6vw; margin-left: 30vw;" class="export-btn">
           <template #icon>
             <n-icon><log-in-icon /></n-icon>
           </template>
@@ -236,7 +236,7 @@ export default {
 <style scoped>
 #CardBox {
   height: 90vh;
-  width: 160vh;
+  width: 80vw;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -263,12 +263,12 @@ export default {
   justify-content: flex-end;
   transform: translate(-50%, -50%);
   height: 76vh;
-  width: 150vh;
+  width: 72vw;
   margin: auto;
 }
 .Input{
   font-size: 20px;
-  width: 75vh;
+  width: 30vw;
   margin:auto;
   top: 50%;
   left: 50%;
@@ -279,23 +279,21 @@ export default {
   /*height: 600px;*/
   /*width: 800px;*/
   height: 70vh;
-  width: 73vh;
+  width: 34vw;
   text-align: left;
 }
 .translation {
   font-size: 20px;
-  margin-left: 2vh;
+  margin-left: 2vw;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
   border-radius: 4px;
-  /*height: 600px;*/
-  /*width: 270px;*/
   height: 70vh;
-  width: 73vh;
+  width: 35vw;
   text-align: left;
 }
 .translationText {
   font-size: 20px;
-  width: 65vh;
+  width: 30vw;
   height: 60vh;
   overflow-wrap: break-word;
   word-wrap: break-word;
@@ -324,7 +322,7 @@ export default {
 #ButtonContainer {
   position: absolute;
   bottom: 0;
-  width: 150vh;
+  width: 72vw;
   justify-content: center;
   align-items: center;
   margin: auto;
@@ -332,7 +330,7 @@ export default {
   /*background-color: red;*/
 }
 .TodayWords {
-  width: 66.5vh;
+  width: 30vw;
   height: 10vh;
   margin-top: 2vh;
   align-items: center;
@@ -350,7 +348,8 @@ export default {
 }
 
 .export-box {
-  width: 149vh;
+  width: 72vw;
+  /*background-color: red;*/
 }
 
 .export-btn {
