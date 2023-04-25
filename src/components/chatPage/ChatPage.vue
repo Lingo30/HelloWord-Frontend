@@ -106,27 +106,14 @@ export default {
 
     async function sendChat() {
       showSpin.value = true
+      let errorMsg = "超时啦，请稍后再试试"
+      let success = false
+      let title = null
       await sendChatAPI(store.state.user.uid, value.value).then((res) => {
-        if (!res.state) {
-          const n = notification.create({
-            title: "使用次数已达上限",
-            content: "一天最多只能对话七次哦，不如今天再去学点单词，明天再来找我聊天叭",
-            avatar: () => h(NAvatar, {
-              size: 'small',
-              round: true,
-              src: Kaleido,
-            }),
-            action: () => h(NButton, {
-              text: true,
-              type: "primary",
-              onClick: () => {
-                n.destroy();
-              }
-            }, {
-              default: () => "好的"
-            }),
-            duration: 3e3,
-          })
+        success = res.state
+        if (!success) {
+          errorMsg = "一天最多只能对话七次哦，不如今天再去学点单词，明天再来找我聊天叭"
+          title = "使用次数已达上限"
           value.value = ''
         } else {
           let q = {
@@ -143,7 +130,20 @@ export default {
           messages.value.push(p);
           value.value = "";
         }
-      });
+      }).finally(()=>{
+        if (!success) {
+          notification.create({
+            title: title,
+            content: errorMsg,
+            avatar: () => h(NAvatar, {
+              size: 'small',
+              round: true,
+              src: Kaleido,
+            }),
+            duration: 3e3,
+          })
+        }
+      })
       showSpin.value = false;
     }
   },

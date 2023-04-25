@@ -61,9 +61,11 @@ export default {
         return
       }
       textBoxRef.value.analysisSpin = true;
+      let errorMsg = "超时啦，请稍后再试试"
+      let success = false
       await getArticleAnalysis(store.state.user.uid,inputValue).then((res)=>{
         // console.log(res.comment.analysis);
-        const success = res.state
+        success = res.state
         if (success) {
           const lastTimes = res.last_times
           notification.create({
@@ -74,7 +76,6 @@ export default {
               src: Kaleido,
             }),
             duration: 3e3,
-
           })
           // if (lastTimes === 0)
           //   msg.success('这是最后一篇啦，我先歇了=v=')
@@ -84,20 +85,19 @@ export default {
           textBoxRef.value.rateValue = parseFloat(res.comment.rating)/2
         }
         else {
+          errorMsg = res.last_times === 0?'我读不动啦QAQ':res.msg
+        }
+      }).finally(()=>{
+        if (!success) {
           notification.create({
-            content: res.last_times === 0?'我读不动啦QAQ':res.msg,
+            content: errorMsg,
             avatar: () => h(NAvatar,{
               size: 'small',
               round: true,
               src: Kaleido,
             }),
             duration: 3e3,
-
           })
-          // if (res.last_times === 0)
-          //   msg.error('我读不动啦QAQ')
-          // else
-          //   msg.error(res.msg)
         }
       })
       textBoxRef.value.analysisSpin = false;

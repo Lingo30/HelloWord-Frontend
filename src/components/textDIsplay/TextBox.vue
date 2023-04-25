@@ -125,8 +125,10 @@ export default {
           event.target.selectionEnd,
       );
       analysisSpin.value = true;
+      let errorMsg = "超时啦，请稍后再试试"
+      let success = false
       await getSentenceAnalysis(store.state.user.uid, selectedText.value).then((res)=>{
-        let success = res.state
+        success = res.state
         // console.log(res);
         if (success) {
           const lastTimes = res.last_times
@@ -151,8 +153,16 @@ export default {
           // structure
         }
         else {
+          errorMsg = res.last_times === 0?'今天打烊了，明天再问我好吗QAQ':res.msg
+          // if (res.last_times === 0)
+          //   msg.error('今天打烊了，明天再问我好吗QAQ')
+          // else
+          //   msg.error(res.msg)
+        }
+      }).finally(()=>{
+        if (!success) {
           notification.create({
-            content: res.last_times === 0?'今天打烊了，明天再问我好吗QAQ':res.msg,
+            content: errorMsg,
             avatar: () => h(NAvatar,{
               size: 'small',
               round: true,
@@ -161,10 +171,6 @@ export default {
             duration: 3e3,
 
           })
-          // if (res.last_times === 0)
-          //   msg.error('今天打烊了，明天再问我好吗QAQ')
-          // else
-          //   msg.error(res.msg)
         }
       })
       analysisSpin.value = false;
