@@ -19,13 +19,14 @@
                   <ChatMessage v-for="(item, index) in messages" v-bind:key="index" :type=item.type :time=item.time :content=item.content></ChatMessage>
                 </div>
               </div>
-              <div class="bottom">
-                <NInput class="message" v-model:value="value" round placeholder="Type a message..." type="textarea"
-                        @keyup.enter="sendChat"
+              <div  class="bottom">
+                <n-input class="message" v-model:value="value" round placeholder="Type a message..." type="textarea"
+                        @keydown.enter.prevent="handleEnter"
+                        ref="inputRef"
                         :autosize="{
                   maxRows: 2
                 }">
-                </NInput>
+                </n-input>
                 <NButton class="send" @click="sendChat" strong secondary type="info">
                   提问
                 </NButton>
@@ -47,7 +48,7 @@
 import {NInput, NButton, NAvatar, useNotification} from 'naive-ui';
 import ChatMessage from "@/components/chatPage/ChatMessage";
 import {getHistoryChatAPI, sendChatAPI} from "@/request/api/chat";
-import {h, ref} from 'vue'
+import {h, nextTick, ref} from 'vue'
 import store from "@/store";
 import Kaleido from "@/assets/img/kaleidoBlank.png";
 
@@ -66,12 +67,40 @@ export default {
     const showSpin = ref(false)
     const value = ref('')
     const messages = []
+    const inputRef = ref(null)
 
     return {
+      inputRef,
       messages,
       showSpin,
       value,
-      sendChat
+      sendChat,
+      handleEnter,
+    }
+
+    async function handleEnter(event) {
+      if (event.shiftKey) {
+        // 获取当前光标位置
+        const currentPosition = event.target.selectionStart;
+
+        // 在当前光标位置插入换行符
+        value.value = value.value.slice(0, currentPosition) + '\n' + value.value.slice(currentPosition);
+
+        // 等待 DOM 更新
+        await nextTick();
+
+        // 聚焦到输入框
+        const inputElement = inputRef.value.$el.querySelector("textarea");
+        inputElement.focus();
+
+        // 设置光标位置
+        inputElement.setSelectionRange(currentPosition + 1, currentPosition + 1);
+
+        // 滚动到光标位置
+        inputElement.scrollTop = inputElement.scrollHeight;
+      } else {
+        await sendChat();
+      }
     }
 
     async function sendChat() {
