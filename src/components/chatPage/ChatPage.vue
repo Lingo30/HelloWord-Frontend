@@ -14,7 +14,7 @@
                 <img src="../../assets/img/kaleidoBlank.png" height="135" width="130">
               </div>
               <n-scrollbar class="chat" style="height: 60vh ;text-align: left">
-                <div ref="chat_message" class="chat_parent" style="overflow:scroll; width: 30vw">
+                <div ref="chat_message" class="chat_parent" style="overflow:hidden; width: 30vw">
 <!--                <div ref="chat_box" class="chat" style="overflow-x:hidden; overflow-y:auto; max-height:500px" >-->
 
                   <ChatMessage v-for="(item, index) in messages" v-bind:key="index" :type=item.type :time=item.time :content=item.content></ChatMessage>
