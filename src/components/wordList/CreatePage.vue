@@ -74,9 +74,10 @@
             v-else-if="pageIdx===1&&!showFileResultFlag"
             directory-dnd
             :custom-request="upload"
+            @before-upload="uploadCheck"
         >
           <n-upload-dragger>
-            <p style="width: 180px;margin: 80px auto">将文件拖拽到此处即可完成文件上传。</p>
+            <p style="width: 180px;margin: 80px auto">将文件拖拽到此处即可完成文件上传。支持500KB以内的.txt文件</p>
           </n-upload-dragger>
         </n-upload>
         <!--        文件导入后的展示-->
@@ -200,6 +201,20 @@ export default {
         clickedListId.value = id
         myWordlistName.value = name
       }
+    }
+
+    async function uploadCheck(data) {
+      console.log(data.file.file.type);
+      console.log(data.file.file.size);
+      if (data.file.file.type !== 'text/plain') {
+        message.error('只支持txt上传')
+        return false
+      }
+      if (data.file.file.size > 512000) {
+        message.error('文件过大（超过500KB）')
+        return false
+      }
+      return true
     }
 
     //后端解析文件生成词单列表
@@ -362,6 +377,7 @@ export default {
       switchPage,
       clickOfficialCard,
       upload,
+      uploadCheck,
       deleteWordFromFile,
       closeFileShowResult,
       create,
