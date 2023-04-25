@@ -15,12 +15,16 @@
               </div>
               <div class="chat_parent" style="overflow:scroll; margin-bottom: 18%">
 <!--                <div ref="chat_box" class="chat" style="overflow-x:hidden; overflow-y:auto; max-height:500px" >-->
-                <div class="chat">
+                <div class="chat" style="text-align: left">
                   <ChatMessage v-for="(item, index) in messages" v-bind:key="index" :type=item.type :time=item.time :content=item.content></ChatMessage>
                 </div>
               </div>
               <div class="bottom">
-                <NInput class="message" v-model:value="value" round placeholder="Type a message...">
+                <NInput class="message" v-model:value="value" round placeholder="Type a message..." type="textarea"
+                        @keyup.enter="sendChat"
+                        :autosize="{
+                  maxRows: 2
+                }">
                 </NInput>
                 <NButton class="send" @click="sendChat" strong secondary type="info">
                   提问
@@ -46,7 +50,6 @@ import {getHistoryChatAPI, sendChatAPI} from "@/request/api/chat";
 import {h, ref} from 'vue'
 import store from "@/store";
 import Kaleido from "@/assets/img/kaleidoBlank.png";
-import router from "@/router";
 
 export default {
   components:{
@@ -192,8 +195,9 @@ export default {
 }
 .message {
   width: 80%;
-  height: 100%;
+  /*height: 100%;*/
   font-size: 5px;
+  text-align: left;
 }
 .bottom {
   position: absolute;
@@ -201,7 +205,7 @@ export default {
   display: flex;
   justify-content: space-between;
   color: #2A928F;
-  height: 5%;
+  height: 6%;
   width: 80%;
   font-size:20px
 }
