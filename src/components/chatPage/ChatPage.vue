@@ -13,7 +13,7 @@
               <div class="chat_top">
                 <img src="../../assets/img/kaleidoBlank.png" height="135" width="130">
               </div>
-              <div class="chat_parent" style="overflow:scroll; margin-bottom: 18%">
+              <div class="chat_parent" style="overflow:scroll; margin-bottom: 18%; width: 30vw">
 <!--                <div ref="chat_box" class="chat" style="overflow-x:hidden; overflow-y:auto; max-height:500px" >-->
                 <div class="chat" style="text-align: left">
                   <ChatMessage v-for="(item, index) in messages" v-bind:key="index" :type=item.type :time=item.time :content=item.content></ChatMessage>
