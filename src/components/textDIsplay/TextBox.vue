@@ -379,4 +379,9 @@ export default {
   border-radius: 10px;
   box-shadow: inset 0 0 3px rgba(0, 0, 0, 0.2);
 }
+/*支持火狐*/
+*{
+  scrollbar-color: rgba(0, 0, 0, 0.2) rgba(0, 0, 0, 0.1);
+  scrollbar-width: thin;
+}
 </style>

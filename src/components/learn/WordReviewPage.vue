@@ -4,28 +4,32 @@
         <div class="class_table">
             <div class="main_box">
                 <div class="left_box">
-                    <n-card :bordered="false" content-style="padding: 1%;" 
-                        class="info_word" v-for='index in 5' :key='index'
+                  <n-scrollbar>
+                    <n-card :bordered="false" content-style="padding: 1%;"
+                            class="info_word" v-for='index in 5' :key='index'
                     >
-                        <div class="word_Title" v-if="index - 1 < this.words.length">
-                            {{ this.words[index - 1].word }} [{{ this.words[index - 1].phonetic_symbol }}]
-                        </div>
-                        <div class="word_Meaning" v-if="index - 1 < this.words.length">
-                            {{this.words[index - 1].definition_cn}}
-                        </div>
+                      <div class="word_Title" v-if="index - 1 < this.words.length">
+                        {{ this.words[index - 1].word }} [{{ this.words[index - 1].phonetic_symbol }}]
+                      </div>
+                      <div class="word_Meaning" v-if="index - 1 < this.words.length">
+                        {{this.words[index - 1].definition_cn}}
+                      </div>
                     </n-card>
+                  </n-scrollbar>
                 </div>
                 <div class="right_box">
+                  <n-scrollbar>
                     <n-card :bordered="false" content-style="padding: 1%;"
-                        class="info_word" v-for='index in 5' :key='index'
+                            class="info_word" v-for='index in 5' :key='index'
                     >
-                        <div class="word_Title" v-if="index + 4 < this.words.length">
-                            {{this.words[index + 4].word}} [{{ this.words[index + 4].phonetic_symbol }}]
-                        </div>
-                        <div class="word_Meaning" v-if="index + 4 < this.words.length">
-                            {{this.words[index + 4].definition_cn}}
-                        </div>
+                      <div class="word_Title" v-if="index + 4 < this.words.length">
+                        {{this.words[index + 4].word}} [{{ this.words[index + 4].phonetic_symbol }}]
+                      </div>
+                      <div class="word_Meaning" v-if="index + 4 < this.words.length">
+                        {{this.words[index + 4].definition_cn}}
+                      </div>
                     </n-card>
+                  </n-scrollbar>
                 </div>
             </div>
           <n-button round type="info" class="next_button" @click="nextGroup">
@@ -185,19 +189,19 @@ import { create } from 'lodash';
         font-size: large;
     }
 
-    ::-webkit-scrollbar {
-    width: 6px;
-    transition: width 1s;
-  }
-  ::-webkit-scrollbar-track {
-    background-color: rgba(0, 0, 0, 0.1);
-    border-radius: 10px;
-    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
-  }
-  ::-webkit-scrollbar-thumb {
-    background-color: #999;
-    border-radius: 10px;
-    box-shadow: inset 0 0 3px rgba(0, 0, 0, 0.2);
-  }
+  /*  ::-webkit-scrollbar {*/
+  /*  width: 6px;*/
+  /*  transition: width 1s;*/
+  /*}*/
+  /*::-webkit-scrollbar-track {*/
+  /*  background-color: rgba(0, 0, 0, 0.1);*/
+  /*  border-radius: 10px;*/
+  /*  box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);*/
+  /*}*/
+  /*::-webkit-scrollbar-thumb {*/
+  /*  background-color: #999;*/
+  /*  border-radius: 10px;*/
+  /*  box-shadow: inset 0 0 3px rgba(0, 0, 0, 0.2);*/
+  /*}*/
 
   </style>

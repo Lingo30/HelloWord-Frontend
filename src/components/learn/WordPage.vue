@@ -7,10 +7,12 @@
         </div>
         <div class="word_meaning_box">
           <div class="word_reading" v-if="shown==true">
-            音标: [{{group_words[curId].phonetic_symbol}}]
+            音标: [{{ group_words[curId].phonetic_symbol }}]
           </div>
           <div class="word_meaning" v-if="shown==true">
-            {{group_words[curId].definition_cn}}
+            <n-scrollbar>
+              {{ group_words[curId].definition_cn }}
+            </n-scrollbar>
           </div>
           <router-link to="" class="delword" @click="delWord" v-if="shown==true">不再学习</router-link>
         </div>
@@ -54,15 +56,16 @@
 							同义词
 						</div>
 						<div class="info_content" v-if="shown==true">
-							<n-card :bordered="false" content-style="padding: 1.5%;" class="info_word1" v-for="(synonym, index) in relation.synonyms">
-								<div class="related_word">
-									{{synonym.word}} [{{synonym.phonetic_symbol}}]
-								</div>
-								<div class="related_word_meaning">
-									{{synonym.definition_cn}}
-								</div>
-								
-							</n-card>
+              <n-scrollbar>
+                <n-card :bordered="false" content-style="padding: 1.5%;" class="info_word1" v-for="(synonym, index) in relation.synonyms">
+                  <div class="related_word">
+                    {{synonym.word}} [{{synonym.phonetic_symbol}}]
+                  </div>
+                  <div class="related_word_meaning">
+                    {{synonym.definition_cn}}
+                  </div>
+                </n-card>
+              </n-scrollbar>
 						</div>
 					</div>
 				</n-card>
@@ -72,15 +75,16 @@
 							反义词
 						</div>
 						<div class="info_content" v-if="shown==true">
-							<n-card :bordered="false" content-style="padding: 1.5%;" class="info_word2" v-for="(antonym, index) in relation.antonyms">
-								<div class="related_word">
-									{{ antonym.word }} [{{antonym.phonetic_symbol}}]
-								</div>
-								<div class="related_word_meaning">
-									{{ antonym.definition_cn }}
-								</div>
-							</n-card>
-
+              <n-scrollbar>
+                <n-card :bordered="false" content-style="padding: 1.5%;" class="info_word2" v-for="(antonym, index) in relation.antonyms">
+                  <div class="related_word">
+                    {{ antonym.word }} [{{antonym.phonetic_symbol}}]
+                  </div>
+                  <div class="related_word_meaning">
+                    {{ antonym.definition_cn }}
+                  </div>
+                </n-card>
+              </n-scrollbar>
 						</div>
 					</div>
 				</n-card>
@@ -90,7 +94,9 @@
 							例句
 						</div>
 						<div class="info_content1" v-if="shown==true">
-							{{ relation.example }}
+              <n-scrollbar>
+                {{ relation.example }}
+              </n-scrollbar>
 						</div>
 					</div>
 				</n-card>
@@ -350,7 +356,7 @@ export default {
 	}
 	.word_name {
 		/* background-color: white; */
-		margin-top: 15%;
+		margin-top: 10%;
 		margin-left: 15%;
 		margin-right: 15%;
 		height: 10%;
@@ -363,7 +369,7 @@ export default {
 		border-radius: 10px;
 	}
 	.word_meaning_box {
-		margin-top: 15%;
+		margin-top: 9%;
 		margin-left: 8%;
 		margin-right: 8%;
 		height: 50%;
@@ -401,7 +407,7 @@ export default {
 		/* background-color: #679B9B; */
 	}
 	.word_button_box {
-		margin-top: 7%;
+		margin-top: 5%;
 		margin-left: 2%;
 		height: 10%;
 		width: 90%;
@@ -619,21 +625,19 @@ export default {
 	}
 
 
-
-
-  /* 滚动条样式 */
-  ::-webkit-scrollbar {
-    width: 6px;
-    transition: width 1s;
-  }
-  ::-webkit-scrollbar-track {
-    background-color: rgba(0, 0, 0, 0.1);
-    border-radius: 10px;
-    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
-  }
-  ::-webkit-scrollbar-thumb {
-    background-color: #999;
-    border-radius: 10px;
-    box-shadow: inset 0 0 3px rgba(0, 0, 0, 0.2);
-  }
+/* 滚动条样式 */
+/*::-webkit-scrollbar {*/
+/*  width: 6px;*/
+/*  transition: width 1s;*/
+/*}*/
+/*::-webkit-scrollbar-track {*/
+/*  background-color: rgba(0, 0, 0, 0.1);*/
+/*  border-radius: 10px;*/
+/*  box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);*/
+/*}*/
+/*::-webkit-scrollbar-thumb {*/
+/*  background-color: #999;*/
+/*  border-radius: 10px;*/
+/*  box-shadow: inset 0 0 3px rgba(0, 0, 0, 0.2);*/
+/*}*/
 </style>
