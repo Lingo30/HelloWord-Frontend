@@ -142,6 +142,7 @@ export default {
             }),
             duration: 3e3,
           })
+          showSpin.value = false;
         }
       })
       showSpin.value = false;
@@ -230,13 +231,13 @@ export default {
 }
 .bottom {
   position: absolute;
-  bottom: 10%;
+  bottom: 5%;
   display: flex;
   justify-content: space-between;
   color: #2A928F;
   height: 8%;
   width: 80%;
-  font-size:20px
+  font-size:20px;
 }
 .content-login{
   top:26%;

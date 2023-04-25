@@ -131,6 +131,7 @@ export default {
             }),
             duration: 3e3,
           })
+          textBoxRef.value.inputSpin = false
         }
       })
       textBoxRef.value.inputSpin = false
