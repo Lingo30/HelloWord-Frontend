@@ -15,13 +15,18 @@
               </div>
               <div class="chat_parent" style="overflow:scroll; margin-bottom: 18%">
 <!--                <div ref="chat_box" class="chat" style="overflow-x:hidden; overflow-y:auto; max-height:500px" >-->
-                <div class="chat">
+                <div class="chat" style="text-align: left">
                   <ChatMessage v-for="(item, index) in messages" v-bind:key="index" :type=item.type :time=item.time :content=item.content></ChatMessage>
                 </div>
               </div>
-              <div class="bottom">
-                <NInput class="message" v-model:value="value" round placeholder="Type a message...">
-                </NInput>
+              <div  class="bottom">
+                <n-input class="message" v-model:value="value" round placeholder="Type a message..." type="textarea"
+                        @keydown.enter.prevent="handleEnter"
+                        ref="inputRef"
+                        :autosize="{
+                  maxRows: 2
+                }">
+                </n-input>
                 <NButton class="send" @click="sendChat" strong secondary type="info">
                   提问
                 </NButton>
@@ -43,10 +48,9 @@
 import {NInput, NButton, NAvatar, useNotification} from 'naive-ui';
 import ChatMessage from "@/components/chatPage/ChatMessage";
 import {getHistoryChatAPI, sendChatAPI} from "@/request/api/chat";
-import {h, ref} from 'vue'
+import {h, nextTick, ref} from 'vue'
 import store from "@/store";
 import Kaleido from "@/assets/img/kaleidoBlank.png";
-import router from "@/router";
 
 export default {
   components:{
@@ -63,12 +67,40 @@ export default {
     const showSpin = ref(false)
     const value = ref('')
     const messages = []
+    const inputRef = ref(null)
 
     return {
+      inputRef,
       messages,
       showSpin,
       value,
-      sendChat
+      sendChat,
+      handleEnter,
+    }
+
+    async function handleEnter(event) {
+      if (event.shiftKey) {
+        // 获取当前光标位置
+        const currentPosition = event.target.selectionStart;
+
+        // 在当前光标位置插入换行符
+        value.value = value.value.slice(0, currentPosition) + '\n' + value.value.slice(currentPosition);
+
+        // 等待 DOM 更新
+        await nextTick();
+
+        // 聚焦到输入框
+        const inputElement = inputRef.value.$el.querySelector("textarea");
+        inputElement.focus();
+
+        // 设置光标位置
+        inputElement.setSelectionRange(currentPosition + 1, currentPosition + 1);
+
+        // 滚动到光标位置
+        inputElement.scrollTop = inputElement.scrollHeight;
+      } else {
+        await sendChat();
+      }
     }
 
     async function sendChat() {
@@ -192,8 +224,9 @@ export default {
 }
 .message {
   width: 80%;
-  height: 100%;
+  /*height: 100%;*/
   font-size: 5px;
+  text-align: left;
 }
 .bottom {
   position: absolute;
@@ -201,7 +234,7 @@ export default {
   display: flex;
   justify-content: space-between;
   color: #2A928F;
-  height: 5%;
+  height: 6%;
   width: 80%;
   font-size:20px
 }

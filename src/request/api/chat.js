@@ -10,7 +10,7 @@ export function sendChatAPI(uid, question) {
         url: "user_send/",
         method: 'post',
         data:data,
-        timeout: 20000
+        timeout: 30000
     })
 }
 
