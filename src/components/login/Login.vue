@@ -203,6 +203,8 @@ export default {
           message.info("记得找找是不是在垃圾邮件里~")
         else
           message.error(res.msg)
+      }).catch(err=>{
+        message.error('网络错误')
       })
       const timer = setInterval(() => {
         countdown.value--;
@@ -235,7 +237,7 @@ export default {
               message.error(res.msg);
 
             }
-          })
+          }).catch()
           // 邮箱验证码错误刷新图片验证码并return
           if (!flag) {
             registerVerifyCode.refresh()
@@ -250,7 +252,7 @@ export default {
             success = res.state
             data = res.data
             wrMsg = res.msg
-          }).finally(() => {
+          }).catch().finally(() => {
             if (success) {
               saveUserInfo(data, name, pwd);
               message.success("注册成功");
@@ -288,7 +290,7 @@ export default {
         success = res.state
         data = res.data
         wrMsg = res.msg
-      }).finally(() => {
+      }).catch().finally(() => {
         if (success) {
           saveUserInfo(data, name, pwd);
           message.success("登录成功");
