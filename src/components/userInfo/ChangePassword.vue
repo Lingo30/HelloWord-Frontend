@@ -94,7 +94,7 @@ export default {
         } else {
           msg.error(res.msg)
         }
-      })
+      }).catch()
     }
     return {
       pwdForm,

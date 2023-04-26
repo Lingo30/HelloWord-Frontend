@@ -67,7 +67,7 @@ export default {
         else {
           message.error(res.msg)
         }
-      })
+      }).catch()
     }
     onBeforeMount(()=>{
       load()
@@ -120,7 +120,7 @@ export default {
         else {
           errorMsg = res.last_times === 0?'再想AI的脑袋也顶不住啦QAQ':res.msg
         }
-      }).finally(()=>{
+      }).catch().finally(()=>{
         if (!success) {
           notification.create({
             content: errorMsg,
