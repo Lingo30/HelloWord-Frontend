@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <n-scrollbar>
+    <n-scrollbar style="max-height: 60vh;margin-top:1vh;margin-bottom:1vh">
       <n-card
           class="card"
           :bordered="false"
@@ -188,7 +188,7 @@ export default {
 .foot {
   display: flex;
   flex-direction: row;
-
+  margin-bottom: 1vh;
   justify-content: center;
 }
 
