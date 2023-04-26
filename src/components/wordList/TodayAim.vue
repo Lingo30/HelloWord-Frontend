@@ -46,14 +46,14 @@ export default {
 
     async function load() {
       let success = false
-      let errMsg = '网络错误'
+      let errMsg = ''
       getLearnedWords(store.state.user.uid).then((res) => {
         if (res.state) {
           mark[res.sum] = '当前进度：' + res.sum
         }
         success = res.state
         errMsg = res.msg
-      }).finally(() => {
+      }).catch(err => errMsg = '网络错误').finally(() => {
         if (!success) {
           message.error(errMsg)
         }
@@ -74,7 +74,7 @@ export default {
     //更新每日背诵单词数
     async function update() {
       let success = false
-      let errMsg = '网络错误'
+      let errMsg = ''
       await setAim(store.state.user.uid, target.value).then((res) => {
         success = res.state
         if (res.state) {
@@ -85,7 +85,7 @@ export default {
           errMsg = res.msg
           target.value = oldNum
         }
-      })
+      }).catch(err => errMsg = '网络错误')
       if (!success) {
         message.error(errMsg)
       }

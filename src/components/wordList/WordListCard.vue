@@ -144,6 +144,7 @@ export default {
         if (props.clicked) {
           handleClick()
         }
+      }).catch(err => {
       });
     })
 

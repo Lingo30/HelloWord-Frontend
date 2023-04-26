@@ -41,16 +41,16 @@
           @update:page="changePage"
           show-quick-jumper
       >
-<!--        <template #prev>-->
-<!--          <div :style="{opacity:1===curPage?0.5:1}" style="color: white">-->
-<!--            上一页-->
-<!--          </div>-->
-<!--        </template>-->
-<!--        <template #next>-->
-<!--          <div :style="{opacity:pageNum===curPage?0.5:1}" style="color: white">-->
-<!--            下一页-->
-<!--          </div>-->
-<!--        </template>-->
+        <!--        <template #prev>-->
+        <!--          <div :style="{opacity:1===curPage?0.5:1}" style="color: white">-->
+        <!--            上一页-->
+        <!--          </div>-->
+        <!--        </template>-->
+        <!--        <template #next>-->
+        <!--          <div :style="{opacity:pageNum===curPage?0.5:1}" style="color: white">-->
+        <!--            下一页-->
+        <!--          </div>-->
+        <!--        </template>-->
       </n-pagination>
       <n-button class="set-learn-button" size="tiny" v-show="showPagination&&!selectedFlag" type="info"
                 @click="selectWordlist(listId)">
@@ -100,7 +100,7 @@ export default {
       getWordsInfo(store.state.user.uid, listId, pageSize, curPage.value - 1).then((res) => {
         words.splice(0, words.length);
         res.words.forEach((word) => words.push(word))
-      })
+      }).catch(err => message.error('网络错误'))
     }
 
     //分页展示
@@ -108,19 +108,17 @@ export default {
       getWordsInfo(store.state.user.uid, listId.value, pageSize, page - 1).then((res) => {
         words.splice(0, words.length);
         res.words.forEach((word) => words.push(word))
-      })
+      }).catch(err => message.error('网络错误'))
     }
 
     function selectWordlist(listId) {
-      //TODO 服务器更新正在背诵的词单
+      // 服务器更新正在背诵的词单
       let success = false
-      let errMsg = '网络错误'
+      let errMsg = ''
       updateLearnWordlist(store.state.user.uid, listId).then((res) => {
         success = res.state
-        if (!success) {
-          errMsg = res.msg
-        }
-      }).finally(() => {
+        errMsg = res.msg
+      }).catch(err => errMsg = '网络错误').finally(() => {
         //本地更新
         if (success) {
           //更新成功
