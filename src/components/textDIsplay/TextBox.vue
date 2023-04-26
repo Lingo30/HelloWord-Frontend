@@ -168,6 +168,16 @@ export default {
               round: true,
               src: Kaleido,
             }),
+            // action: () => h(NButton,{
+            //   text: true,
+            //   type: "primary",
+            //   onClick:()=>{
+            //     router.push('/user/vip/')
+            //     n.destroy();
+            //   }
+            // },{
+            //   default: () => "不好，我去开会员，你回来干活"
+            // }),
             duration: 3e3,
           })
           analysisSpin.value = false;
