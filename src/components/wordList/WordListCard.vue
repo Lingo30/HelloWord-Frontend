@@ -22,6 +22,7 @@
             <n-input
                 v-if="editFlag"
                 v-model:value="newName"
+                maxlength="50"
                 :bordered="false"
                 @blur="updateName(listId,newName)"
                 class="edit-font-color"/>
