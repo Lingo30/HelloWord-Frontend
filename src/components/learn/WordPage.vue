@@ -199,13 +199,13 @@ export default {
 						router.push('/user/finish')
 					}
 				}
-			})
+			}).catch(err=>{});
 		},
 		saveGroup() {
 			group_word_learn_save(store.state.user.uid, this.learnWords, this.list_id).then((res) => {
 				// pass
 
-			})
+			}).catch(err=>{});
 		},
 		delWord() {
 			//alert("Delete cur word!")
@@ -259,7 +259,7 @@ export default {
         		res.synonyms.forEach((ele) => this.relation.synonyms.push(ele))
 				this.relation.antonyms.splice(0, this.relation.antonyms.length)
         		res.antonyms.forEach((ele) => this.relation.antonyms.push(ele))
-      		})
+      		}).catch(err=>{});
 		},
 		showWord() {
 			this.shown = true
