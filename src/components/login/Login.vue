@@ -109,7 +109,7 @@
                 />
               </div>
               <!--                验证码-->
-              <div style="margin:25px 0px; display: flex;justify-content: left">
+              <div style="margin:25px 0px;padding-left: 1vh; display: flex;justify-content: left">
                 <!--                <img src="../../assets/img/key.png" height="12" width="12">-->
                 <input
                     style="margin: 0 0 0 0.8vw;width: 40%"
@@ -120,7 +120,7 @@
                 />
                 <div style="margin-left: 27px" id="registerVerify"></div>
               </div>
-              <div style="margin: 26px;">
+              <div style="margin:6px">
                 <button @click="register(username,password, passwordConfirm,verifyInput)" class="loginButton">
                   注册
                 </button>

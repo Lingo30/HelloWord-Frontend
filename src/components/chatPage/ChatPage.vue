@@ -13,7 +13,7 @@
               <div class="chat_top">
                 <img src="../../assets/img/kaleidoBlank.png" height="135" width="130">
               </div>
-              <n-scrollbar class="chat" style="height: 60vh ;text-align: left">
+              <n-scrollbar class="chat" style="height: 57vh ;text-align: left;margin-top: 3vh">
                 <div ref="chat_message" class="chat_parent" style="overflow:hidden; width: 30vw">
 <!--                <div ref="chat_box" class="chat" style="overflow-x:hidden; overflow-y:auto; max-height:500px" >-->
 
