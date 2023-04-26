@@ -47,8 +47,8 @@ import { create } from 'lodash';
   <style scoped>
     .class_table {
         position: absolute;
-        width: 100%;
-        height: 100%;
+        width: 95%;
+        height: 95%;
         top: 0%;
         bottom: 0%;
         left: 2.5%;
