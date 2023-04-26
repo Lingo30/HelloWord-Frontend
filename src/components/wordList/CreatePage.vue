@@ -1,128 +1,136 @@
 <template>
-  <n-modal
-      style="background-color: white"
-      v-model:show="showFlag"
-      @after-enter="init"
-      @after-leave="exit"
-  >
-    <div class="container">
+
+    <n-modal
+        style="background-color: white"
+        v-model:show="showFlag"
+        @after-enter="init"
+        @after-leave="exit"
+    >
+      <n-spin class="content-box" :show="showSpin">
+      <template #description>
+        请耐心等待，不要急着刷新~
+      </template>
+      <div class="container">
       <span style="font-size: 2em; margin-left: 5px; margin-bottom: 5px; height: 10%">
         词单导入
       </span>
 
-      <div class="choose-button-group">
-        <n-button
-            class="choose-button"
-            :class="pageIdx===0?'choose-button-clicked':''"
-            @click="switchPage(0)"
-        >
-          官方
-        </n-button>
-        <n-button
-            class="choose-button"
-            :class="pageIdx===1?'choose-button-clicked':''"
-            @click="switchPage(1)"
-        >
-          文件
-        </n-button>
-      </div>
+        <div class="choose-button-group">
+          <n-button
+              class="choose-button"
+              :class="pageIdx===0?'choose-button-clicked':''"
+              @click="switchPage(0)"
+          >
+            官方
+          </n-button>
+          <n-button
+              class="choose-button"
+              :class="pageIdx===1?'choose-button-clicked':''"
+              @click="switchPage(1)"
+          >
+            文件
+          </n-button>
+        </div>
 
-      <n-divider style="margin: 0;padding: 0"/>
+        <n-divider style="margin: 0;padding: 0"/>
 
-      <div class="content">
-        <!--        官方的词单卡片-->
-        <n-scrollbar v-if="pageIdx===0">
-          <div class="card-list" v-show="pageIdx===0">
-            <div
-                class="card"
-                v-for="list in lists"
-                :key="list.listId"
-            >
-              <n-tooltip trigger="hover">
-                <template #trigger>
-                  <n-card
-                      size="medium"
-                      :style="clickedListId===list.listId?{ backgroundColor: '#42b983'}:{}"
-                      @click="clickOfficialCard(list.listId,list.name)"
-                  >
-                    {{ ' ' }}
-                    <template #header>
-                      <div class="head">
-                        {{ list.name }}
-                      </div>
-                    </template>
-                    <template #header-extra>
-                      {{ list.num + ' Items' }}
-                    </template>
-                    <template #footer>
-                      <div class="card-foot">
-                        <!--                  <n-icon class="icon" size="20" :component="AccessibilityOutline"/>-->
-                        {{ list.creator }}
-                      </div>
-                    </template>
-                  </n-card>
-                </template>
-                {{ list.name }}
-              </n-tooltip>
+        <div class="content">
+          <!--        官方的词单卡片-->
+          <n-scrollbar v-if="pageIdx===0">
+            <div class="card-list" v-show="pageIdx===0">
+              <div
+                  class="card"
+                  v-for="list in lists"
+                  :key="list.listId"
+              >
+                <n-tooltip trigger="hover">
+                  <template #trigger>
+                    <n-card
+                        size="medium"
+                        :style="clickedListId===list.listId?{ backgroundColor: '#42b983'}:{}"
+                        @click="clickOfficialCard(list.listId,list.name)"
+                    >
+                      {{ ' ' }}
+                      <template #header>
+                        <div class="head">
+                          {{ list.name }}
+                        </div>
+                      </template>
+                      <template #header-extra>
+                        {{ list.num + ' Items' }}
+                      </template>
+                      <template #footer>
+                        <div class="card-foot">
+                          <!--                  <n-icon class="icon" size="20" :component="AccessibilityOutline"/>-->
+                          {{ list.creator }}
+                        </div>
+                      </template>
+                    </n-card>
+                  </template>
+                  {{ list.name }}
+                </n-tooltip>
+              </div>
             </div>
-          </div>
-        </n-scrollbar>
-        <!--        文件导入-->
-        <n-upload
-            ref="uploadRef"
-            class="drop-area"
-            v-else-if="pageIdx===1&&!showFileResultFlag"
-            directory-dnd
-            :custom-request="upload"
-            @before-upload="uploadCheck"
-        >
-          <n-upload-dragger>
-            <p style="width: 180px;margin: 80px auto">将文件拖拽到此处即可完成文件上传。支持500KB以内的.txt文件</p>
-          </n-upload-dragger>
-        </n-upload>
-        <!--        文件导入后的展示-->
-        <div style="display: flex;height: 100%;width: 100%" v-else-if="showFileResultFlag">
-          <n-scrollbar>
-            <n-card class="file-show" closable :bordered="false" @close="closeFileShowResult">
-              <n-spin :show="loading">
-                <n-list hoverable>
-                  <n-list-item
-                      style="padding-top: 5px;padding-bottom: 5px"
-                      v-for="word in fileWords"
-                      :key="word.wordId"
-                  >
-                    <n-text>{{ word.word }}</n-text>
-                    <template #suffix>
-                      <div class="list-item-suffix">
-                        {{ word.meaning }}
-                        <n-button style="margin-left: 10px" @click="deleteWordFromFile(word.wordId)">
-                          删除
-                        </n-button>
-                      </div>
-                    </template>
-                  </n-list-item>
-                </n-list>
-                <template #description>
-                  请耐心等待，不要急着刷新~
-                </template>
-              </n-spin>
-            </n-card>
           </n-scrollbar>
+          <!--        文件导入-->
+          <n-upload
+              ref="uploadRef"
+              class="drop-area"
+              v-else-if="pageIdx===1&&!showFileResultFlag"
+              directory-dnd
+              :custom-request="upload"
+              @before-upload="uploadCheck"
+          >
+            <n-upload-dragger>
+              <p style="width: 180px;margin: 80px auto">将文件拖拽到此处即可完成文件上传。支持500KB以内的.txt文件</p>
+            </n-upload-dragger>
+          </n-upload>
+          <!--        文件导入后的展示-->
+          <div style="display: flex;height: 100%;width: 100%" v-else-if="showFileResultFlag">
+            <n-scrollbar>
+              <n-card class="file-show" closable :bordered="false" @close="closeFileShowResult">
+                <n-spin :show="loading">
+                  <n-list hoverable>
+                    <n-list-item
+                        style="padding-top: 5px;padding-bottom: 5px"
+                        v-for="word in fileWords"
+                        :key="word.wordId"
+                    >
+                      <n-text>{{ word.word }}</n-text>
+                      <template #suffix>
+                        <div class="list-item-suffix">
+                          {{ word.meaning }}
+                          <n-button style="margin-left: 10px" @click="deleteWordFromFile(word.wordId)">
+                            删除
+                          </n-button>
+                        </div>
+                      </template>
+                    </n-list-item>
+                  </n-list>
+                  <template #description>
+                    请耐心等待，不要急着刷新~
+                  </template>
+                </n-spin>
+              </n-card>
+            </n-scrollbar>
+          </div>
+        </div>
+        <!--      底部输入词单名和确认-->
+        <div class="foot" v-if="pageIdx!==1||showFileResultFlag">
+          <n-input maxlength="50" class="input-name" v-model:value="myWordlistName"/>
+          <n-button
+              class="button"
+              @click="create(myWordlistName, pageIdx)"
+              :disabled="!(pageIdx===0&&clickedListId!==undefined||pageIdx===1&&showFileResultFlag)"
+          >
+            生成词单
+          </n-button>
         </div>
       </div>
-      <!--      底部输入词单名和确认-->
-      <div class="foot" v-if="pageIdx!==1||showFileResultFlag">
-        <n-input maxlength="50" class="input-name" v-model:value="myWordlistName"/>
-        <n-button
-            class="button"
-            @click="create(myWordlistName, pageIdx)"
-            :disabled="!(pageIdx===0&&clickedListId!==undefined||pageIdx===1&&showFileResultFlag)"
-        >
-          生成词单
-        </n-button>
-      </div>
-    </div>
-  </n-modal>
+      </n-spin>
+    </n-modal>
+
+
 </template>
 
 <script>
@@ -158,6 +166,8 @@ export default {
   emits: ['addWordlist'],
   setup(props, {emit}) {
     const message = useMessage()
+    const showSpin = ref(false)
+
     let showFlag = ref(false)
     let pageIdx = ref(0)
     let lists = reactive([])//所有官方词单，只在每次打开创建页面时获取
@@ -295,6 +305,7 @@ export default {
       let listId = undefined
       if (createMethod === 0) {
         //官方词单
+        showSpin.value = true
         createFromOfficial(store.state.user.uid, listName, clickedListId.value).then((res) => {
           success = res.state
           errMsg = res.msg
@@ -306,6 +317,7 @@ export default {
             message.success("添加成功")
           } else {
             message.error(errMsg)
+            showSpin.value = false
           }
         })
       } else if (createMethod === 1 && showFileResultFlag.value) {
@@ -369,6 +381,7 @@ export default {
       showFileResultFlag,
       loading,
       fileWords,
+      showSpin,
       myWordlistName,
 
       init,
