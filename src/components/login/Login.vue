@@ -77,7 +77,7 @@
                 />
               </div>
               <div style="margin:25px 0px 25px 15px">
-<!--                <img src="../../assets/img/email.png" height="12" width="12">-->
+                <!--                <img src="../../assets/img/email.png" height="12" width="12">-->
                 <input
                     class="email-verify"
                     style="width: 57%"
@@ -197,7 +197,7 @@ export default {
       canSendEmail.value = false;
       countdown.value = 60;
 
-      sendEmail(email.value).then((res)=>{
+      sendEmail(email.value).then((res) => {
         const success = res.state
         if (success)
           message.info("记得找找是不是在垃圾邮件里~")
@@ -229,30 +229,15 @@ export default {
           password.value = ''
           passwordConfirm.value = ''
         } else {
-          let flag
-          // 发送后端检查
-          await checkEmailCode(email.value,emailVerificationCodeInput.value).then((res)=>{
-            flag = res.state
-            if (!flag) {
-              message.error(res.msg);
-
-            }
-          }).catch()
-          // 邮箱验证码错误刷新图片验证码并return
-          if (!flag) {
-            registerVerifyCode.refresh()
-            return
-          }
-          // 继续原本的注册流程
           const encodePwd = md5(pwd);
           let success = false
           let data
           let wrMsg = '网络错误'
-          registerAPI(name, encodePwd, email.value).then((res) => {
+          registerAPI(name, encodePwd, email.value, emailVerificationCodeInput.value).then((res) => {
             success = res.state
             data = res.data
             wrMsg = res.msg
-          }).catch().finally(() => {
+          }).catch(err=>{}).finally(() => {
             if (success) {
               saveUserInfo(data, name, pwd);
               message.success("注册成功");
@@ -290,7 +275,7 @@ export default {
         success = res.state
         data = res.data
         wrMsg = res.msg
-      }).catch().finally(() => {
+      }).catch(err=>{}).finally(() => {
         if (success) {
           saveUserInfo(data, name, pwd);
           message.success("登录成功");

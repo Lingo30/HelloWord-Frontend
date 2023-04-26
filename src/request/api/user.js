@@ -21,7 +21,7 @@ export function loginAPI(name, pwd) {
     })
 }
 
-export function registerAPI(name, pwd, email) {
+export function registerAPI(name, pwd, email, code) {
     /*
     返回数据：
     state: true/false 是否注册成功
@@ -35,6 +35,7 @@ export function registerAPI(name, pwd, email) {
         name: name,
         password: pwd,
         email: email,
+        code: code,
     })
     return request({
         url: 'register/',
@@ -54,7 +55,7 @@ export function getInfo(uid) {
     })
 }
 
-export function submitInfo(uid,userInfo) {
+export function submitInfo(uid, userInfo) {
     // 上传文件需要使用FormData对象，
     const data = JSON.stringify({
         user_id: uid,
@@ -67,24 +68,24 @@ export function submitInfo(uid,userInfo) {
     })
 }
 
-export function submitAvatar(imgFile,uid) {
+export function submitAvatar(imgFile, uid) {
 
     // 上传文件需要使用FormData对象，
     const formData = new FormData();
     formData.append("img", imgFile);
     const json2 = JSON.stringify(uid);
-        const blob2 = new Blob([json2], {
-          type: 'application/json'
-        });
-        formData.append('user_id',blob2)
-        
-        console.log(blob2)
+    const blob2 = new Blob([json2], {
+        type: 'application/json'
+    });
+    formData.append('user_id', blob2)
+
+    console.log(blob2)
     return request({
         url: "submit_image/",
         method: "post",
         // 更改headers以上传文件
         headers: {'Content-Type': 'multipart/form-data'},
-        data:formData
+        data: formData
     });
 }
 
@@ -97,7 +98,7 @@ export function getRecommendTags() {
     })
 }
 
-export function changePassword(uid,oldPwd,newPwd) {
+export function changePassword(uid, oldPwd, newPwd) {
     const data = JSON.stringify({
         user_id: uid,
         new_pwd: newPwd,
@@ -112,7 +113,7 @@ export function changePassword(uid,oldPwd,newPwd) {
 
 export function sendEmail(email) {
     const data = JSON.stringify({
-        email_addr:email
+        email_addr: email
     })
     return request({
         url: 'send_email_code/',
@@ -121,10 +122,10 @@ export function sendEmail(email) {
     })
 }
 
-export function checkEmailCode(email,code) {
+export function checkEmailCode(email, code) {
     const data = JSON.stringify({
-        email_addr:email,
-        code:code
+        email_addr: email,
+        code: code
     })
     return request({
         url: 'check_email_code/',
