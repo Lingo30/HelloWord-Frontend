@@ -153,6 +153,8 @@ export default ({
         } else {
           msg.error(res.msg)
         }
+      }).catch((err)=>{
+        msg.error('网络错误')
       })
       getRecommendTags().then((res) => {
         res.tags.forEach(tag => {
