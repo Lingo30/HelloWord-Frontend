@@ -158,7 +158,7 @@ export default ({
         res.tags.forEach(tag => {
           serverRecommendedTags.value.push({name: tag, selected: false})
         })
-      })
+      }).catch()
     }
 
     onBeforeMount(() => {
@@ -256,7 +256,7 @@ export default ({
         } else {
           msg.error(res.msg)
         }
-      })
+      }).catch()
     }
 
     const msg = useMessage()
@@ -271,7 +271,7 @@ export default ({
         else {
           msg.error(res.msg)
         }
-      })
+      }).catch()
     }
 
     const changePwd = ref(null)

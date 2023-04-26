@@ -87,7 +87,7 @@ export default {
         else {
           errorMsg = res.last_times === 0?'我读不动啦QAQ':res.msg
         }
-      }).finally(()=>{
+      }).catch().finally(()=>{
         if (!success) {
           notification.create({
             content: errorMsg,

@@ -159,7 +159,7 @@ export default {
           // else
           //   msg.error(res.msg)
         }
-      }).finally(()=>{
+      }).catch().finally(()=>{
         if (!success) {
           notification.create({
             content: errorMsg,
