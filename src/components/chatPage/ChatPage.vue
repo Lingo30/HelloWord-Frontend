@@ -130,7 +130,7 @@ export default {
           messages.value.push(p);
           value.value = "";
         }
-      }).catch().finally(()=>{
+      }).catch(err=>{}).finally(()=>{
         if (!success) {
           notification.create({
             title: title,
@@ -165,7 +165,7 @@ export default {
           };
           this.messages.push(newList);
         });
-      }).catch();
+      }).catch(err=>{});
       this.showSpin = false;
     },
 
