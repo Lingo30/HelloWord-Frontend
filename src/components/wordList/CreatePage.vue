@@ -295,7 +295,6 @@ export default {
 
     //创建词单
     function create(listName, createMethod) {
-      console.log('aaa')
       //createMethod=0时为官方词单，createMethod=1时为文件创建词单
       if (listName === '') {
         message.error('请输入词单名')
@@ -316,7 +315,6 @@ export default {
             emit('addWordlist', listId)
             showFlag.value = false
             message.success("添加成功")
-            console.log('bbby')
           } else {
             message.error(errMsg)
             showSpin.value = false
@@ -342,7 +340,6 @@ export default {
           } else {
             message.error(errMsg)
           }
-          showSpin.value = false
         })
       } else {
         message.error("未知错误：CreatePage 292")
