@@ -141,16 +141,18 @@ export default {
     // 完成词单编辑
     function finish() {
       let success = false
+      let errMsg = ''
       editWordlists(store.state.user.uid, removeList, updateList).then((res) => {
         success = res.state
-      }).finally(() => {
+        errMsg = res.msg
+      }).catch(err => errMsg = '网络错误').finally(() => {
         if (success) {
           wordListCardsRef.value.forEach((cardRef) => cardRef.finishUpdate())
           message.success("修改成功")
         } else {
           listIds.splice(0, listIds.length)
           tmpListIds.forEach(id => listIds.push(id))
-          message.error("修改失败")
+          message.error("修改失败，" + errMsg)
         }
       })
       editFlag.value = !editFlag.value
@@ -173,7 +175,7 @@ export default {
             clickedId.value = store.state.user.selectWordlist
           }
         }
-      })
+      }).catch(err => message.error('网络错误'))
     })
 
     return {
@@ -205,7 +207,7 @@ export default {
   /*background-color: rgba(198, 228, 214, 1);*/
 }
 
-.container_box{
+.container_box {
   display: flex;
   position: absolute;
   justify-content: center;
@@ -213,12 +215,12 @@ export default {
   padding: 1%;
   top: 50%;
   left: 50%;
-  transform: translate(-50%,-50%);
+  transform: translate(-50%, -50%);
   overflow: auto;
-  background-color: rgba(255,255,255,0.3);
+  background-color: rgba(255, 255, 255, 0.3);
   height: 80%;
   width: 70%;
-  box-shadow: 10px 12px 16px 10px  rgba(0,0,0,0.24), 10px 17px 50px 10px #4E655D;
+  box-shadow: 10px 12px 16px 10px rgba(0, 0, 0, 0.24), 10px 17px 50px 10px #4E655D;
 }
 
 .left {

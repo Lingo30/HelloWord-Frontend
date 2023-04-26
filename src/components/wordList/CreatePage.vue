@@ -246,18 +246,17 @@ export default {
       })
       // 向后端请求
       let success = false
-      let errMsg = '网络错误'
+      let errMsg = ''
       uploadFile(formData, progressFunc).then((res) => {
         success = res.state
+        errMsg = res.msg
         if (success) {
           fileWords.splice(0, fileWords.length)
           res.wordlist.forEach((word) => {
             fileWords.push(word)
           })
-        } else {
-          errMsg = res.msg
         }
-      }).finally(() => {
+      }).catch(err => errMsg = "网络错误").finally(() => {
         loading.value = false
         if (!success) {
           message.error(errMsg)
@@ -292,7 +291,7 @@ export default {
         return
       }
       let success = false
-      let errMsg = '网络错误'
+      let errMsg = ''
       let listId = undefined
       if (createMethod === 0) {
         //官方词单
@@ -300,7 +299,7 @@ export default {
           success = res.state
           errMsg = res.msg
           listId = res.listId
-        }).finally(() => {
+        }).catch(err => errMsg = '网络错误').finally(() => {
           if (success) {
             emit('addWordlist', listId)
             showFlag.value = false
@@ -321,7 +320,7 @@ export default {
           success = res.state
           errMsg = res.msg
           listId = res.listId
-        }).finally(() => {
+        }).catch(err => errMsg = '网络错误').finally(() => {
           if (success) {
             emit('addWordlist', listId)
             showFlag.value = false
@@ -344,13 +343,13 @@ export default {
       myWordlistName.value = ''
       // 默认在第一个页面，获取所有官方词单
       let success = false
-      let errMsg = '网络错误'
+      let errMsg = ''
       getOfficialLists().then((res) => {
         success = res.state
         if (res.state) {
           res.lists.forEach((wordlist) => lists.push(wordlist))
         }
-      }).finally(() => {
+      }).catch(err => errMsg = '网络错误').finally(() => {
         if (!success) {
           message.error(errMsg)
         }
