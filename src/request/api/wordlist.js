@@ -109,7 +109,7 @@ export function createFromOfficial(userId, listName, listId) {
         url: "add_wordlist_from_official/",
         method: 'post',
         data,
-        timeout: 30000
+        timeout: 50000
     })
 }
 
