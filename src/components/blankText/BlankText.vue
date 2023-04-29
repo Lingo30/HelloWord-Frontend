@@ -4,7 +4,9 @@
       <n-space class="export-box">
         <n-button type="info" ghost @click="handleExportInput" class="export-btn">
           <template #icon>
-            <n-icon><log-in-icon /></n-icon>
+            <n-icon>
+              <log-in-icon/>
+            </n-icon>
           </template>
           导出
         </n-button>
@@ -42,12 +44,12 @@
           <n-scrollbar style="max-height: 70vh;">
             <n-list hoverable v-if="showAnswers">
               <n-list-item v-for="(word,index) in realAnswers" :key="index">
-                <n-thing style="font-size: 20px;">{{index+1}}: {{word}}</n-thing>
+                <n-thing style="font-size: 20px;">{{ index + 1 }}: {{ word }}</n-thing>
               </n-list-item>
             </n-list>
             <n-list hoverable v-else>
               <n-list-item v-for="(word,index) in usedWords" :key="index">
-                <n-thing style="font-size: 20px;">{{word}}</n-thing>
+                <n-thing style="font-size: 20px;">{{ word }}</n-thing>
               </n-list-item>
             </n-list>
           </n-scrollbar>
@@ -66,13 +68,35 @@
 import {h, onBeforeMount, reactive, ref} from "vue";
 import {getBlankText} from "@/request/api/review";
 import store from "@/store";
-import { LogInOutline as LogInIcon } from '@vicons/ionicons5'
-import {NAvatar, useMessage,useNotification} from "naive-ui";
+import {LogInOutline as LogInIcon} from '@vicons/ionicons5'
+import {
+  NSpace,
+  NButton,
+  NIcon,
+  NSpin,
+  NCard,
+  NScrollbar,
+  NList,
+  NListItem,
+  NThing,
+  NAvatar,
+  useMessage,
+  useNotification
+} from "naive-ui";
 import Kaleido from "@/assets/img/kaleidoBlank.png";
 
 export default {
   name: "BlankText",
   components: {
+    NSpace,
+    NButton,
+    NIcon,
+    NSpin,
+    NCard,
+    NScrollbar,
+    NList,
+    NListItem,
+    NThing,
     LogInIcon
   },
   setup() {
@@ -94,20 +118,21 @@ export default {
     const showSpin = ref(false);
     const msg = useMessage();
     const notification = useNotification()
-    async function load () {
+
+    async function load() {
       init.value = true
       let arr = []
       showSpin.value = true;
       let errorMsg = "超时啦，请稍后再试试"
       let success = false
-      await getBlankText(store.state.user.uid).then((res)=>{
+      await getBlankText(store.state.user.uid).then((res) => {
         success = res.state
         if (success) {
           // console.log(res)
           const lastTimes = res.last_times
           notification.create({
-            content: lastTimes === 0?'这是最后一题啦，我先歇了=v=':'今天还能再出' + lastTimes + '道题-v-',
-            avatar: () => h(NAvatar,{
+            content: lastTimes === 0 ? '这是最后一题啦，我先歇了=v=' : '今天还能再出' + lastTimes + '道题-v-',
+            avatar: () => h(NAvatar, {
               size: 'small',
               round: true,
               src: Kaleido,
@@ -124,19 +149,18 @@ export default {
           realAnswers.splice(0);
           realAnswers.push(...res.answer);
           arr = [...res.originWords];
-        }
-        else {
-          errorMsg = res.last_times === 0?'明天再给你出题哇，累了捏QAQ':res.msg
+        } else {
+          errorMsg = res.last_times === 0 ? '明天再给你出题哇，累了捏QAQ' : res.msg
           // if (res.last_times === 0)
           //   msg.error('明天再给你出题哇，累了捏QAQ')
           // else
           //   msg.error(res.msg)
         }
-      }).catch().finally(()=>{
+      }).catch().finally(() => {
         if (!success) {
           notification.create({
             content: errorMsg,
-            avatar: () => h(NAvatar,{
+            avatar: () => h(NAvatar, {
               size: 'small',
               round: true,
               src: Kaleido,
@@ -156,7 +180,8 @@ export default {
       usedWords.value = new Set(arr)
       showSpin.value = false;
     }
-    onBeforeMount(()=>{
+
+    onBeforeMount(() => {
       load()
     })
 
@@ -226,7 +251,7 @@ export default {
       // 然后通过创建一个隐藏的<a>标签来触发下载。
       const fileName = "blank.txt";
       const contentType = "text/plain;charset=utf-8";
-      const blob = new Blob([content.value], { type: contentType });
+      const blob = new Blob([content.value], {type: contentType});
       const url = URL.createObjectURL(blob);
 
       const hiddenLink = document.createElement("a");
@@ -269,6 +294,7 @@ export default {
   border-bottom: 1px solid #000;
   text-align: center;
 }
+
 .TextContainer {
   height: 78vh;
   width: 35vw;
@@ -282,9 +308,11 @@ export default {
   height: 48%;
   position: relative;
 }
+
 .correct {
   color: green;
 }
+
 .incorrect {
   color: red;
 }
@@ -301,6 +329,7 @@ export default {
 .left {
   margin-right: 10vw;
 }
+
 .button {
   width: 20vw;
 }
@@ -329,12 +358,12 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  position:absolute;
-  top:50%;
-  left:50%;
-  transform:translate(-50%,-50%);
-  background-color: rgba(255,255,255,0.3);
-  box-shadow: 10px 12px 16px 10px  rgba(0,0,0,0.24), 10px 17px 50px 10px #4E655D;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(255, 255, 255, 0.3);
+  box-shadow: 10px 12px 16px 10px rgba(0, 0, 0, 0.24), 10px 17px 50px 10px #4E655D;
   /*background-color: red;*/
 }
 

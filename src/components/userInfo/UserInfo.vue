@@ -126,7 +126,18 @@
 
 import {ref, reactive, onMounted, onUnmounted, onBeforeMount} from "vue";
 import {ArchiveOutline as ArchiveIcon} from "@vicons/ionicons5";
-import {useMessage} from "naive-ui"
+import {
+  NSpace,
+  NImage,
+  NButton,
+  NStatistic,
+  NNumberAnimation,
+  NForm,
+  NFormItem,
+  NInput,
+  NTag,
+  useMessage
+} from "naive-ui"
 import store from "@/store";
 import router from "@/router";
 import {getInfo, getRecommendTags, submitAvatar, submitInfo} from "@/request/api/user";
@@ -137,7 +148,19 @@ import cookie from "@/store/cookie";
 
 export default ({
   name: "UserInfo",
-  components: {DynamicTags, ChangePassword},
+  components: {
+    NSpace,
+    NImage,
+    NButton,
+    NStatistic,
+    NNumberAnimation,
+    NForm,
+    NFormItem,
+    NInput,
+    NTag,
+    DynamicTags,
+    ChangePassword
+  },
 
   setup() {
     async function load() {

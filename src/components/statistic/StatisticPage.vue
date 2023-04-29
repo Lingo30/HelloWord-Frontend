@@ -66,9 +66,16 @@
 import {onMounted, ref} from "vue";
 import {addDays, isYesterday} from "date-fns/esm";
 import * as echarts from 'echarts';
+import {NRow, NCol, NStatistic, NCalendar} from "naive-ui";
 
 export default {
   name: "StatisticPage",
+  components: {
+    NRow,
+    NCol,
+    NStatistic,
+    NCalendar
+  },
   setup() {
     const chartRef = ref();
     const chartData = {

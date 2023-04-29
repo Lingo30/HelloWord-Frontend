@@ -82,7 +82,7 @@
 import {computed, h, ref} from "vue";
 import { LogInOutline as LogInIcon } from '@vicons/ionicons5'
 import {getSentenceAnalysis} from "@/request/api/review";
-import {NAvatar, useNotification} from "naive-ui";
+import {NSpace, NButton, NIcon, NSpin, NInput, NTag, NCard, NRate, NAvatar, useNotification} from "naive-ui";
 import Kaleido from "@/assets/img/kaleidoBlank.png";
 import store from "@/store";
 
@@ -107,6 +107,14 @@ export default {
     },
   },
   components: {
+    NSpace,
+    NButton,
+    NIcon,
+    NSpin,
+    NInput,
+    NTag,
+    NCard,
+    NRate,
     LogInIcon
   },
 

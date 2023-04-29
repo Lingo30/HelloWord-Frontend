@@ -140,7 +140,7 @@
 <script>
 import {onMounted, ref} from "vue";
 import md5 from 'js-md5';
-import {useMessage} from 'naive-ui'
+import {NIcon, useMessage} from 'naive-ui'
 import {registerAPI, loginAPI, sendEmail} from "@/request/api/user";
 import store from "@/store";
 import router from "@/router";
@@ -154,6 +154,7 @@ export default {
     msg: String
   },
   components: {
+    NIcon,
     MailOutline
   },
   setup() {

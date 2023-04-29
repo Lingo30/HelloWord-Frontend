@@ -16,13 +16,15 @@
 import TextBox from "./TextBox";
 import {ref, onMounted, h} from "vue";
 import {getArticleAnalysis} from "@/request/api/review";
-import {NAvatar, useMessage,useNotification} from "naive-ui";
+import {NButton, NAvatar, useMessage,useNotification} from "naive-ui";
 import Kaleido from "@/assets/img/kaleidoBlank.png";
 import store from "@/store";
 export default {
   name: "WritingPage",
-  components: {TextBox},
-
+  components: {
+    NButton,
+    TextBox
+  },
   setup() {
     const inputActive = ref(true);
     const textBoxRef = ref(null);

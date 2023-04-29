@@ -11,11 +11,12 @@
 </template>
 
 <script>
-import {NDialogProvider, NMessageProvider, NConfigProvider, dateZhCN, zhCN} from 'naive-ui'
+import {NNotificationProvider, NDialogProvider, NMessageProvider, NConfigProvider, dateZhCN, zhCN} from 'naive-ui'
 
 export default {
   name: 'App',
   components: {
+    NNotificationProvider,
     NConfigProvider,
     NMessageProvider,
     NDialogProvider

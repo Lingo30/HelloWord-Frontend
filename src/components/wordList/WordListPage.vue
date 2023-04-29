@@ -63,7 +63,7 @@
 </template>
 
 <script>
-import {NScrollbar, useMessage} from "naive-ui"
+import {NScrollbar, NSpace, NButton, NIcon, useMessage} from "naive-ui"
 import WordListCard from "@/components/wordList/WordListCard.vue";
 import WordCardList from "@/components/wordList/WordCardList.vue";
 import {onMounted, reactive, ref} from "vue";
@@ -76,9 +76,12 @@ import {HelpCircleOutline} from "@vicons/ionicons5";
 export default {
   name: "WordList",
   components: {
+    NScrollbar,
+    NSpace,
+    NButton,
+    NIcon,
     TodayAim,
     CreatePage,
-    NScrollbar,
     WordCardList,
     WordListCard
   },

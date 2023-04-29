@@ -10,13 +10,17 @@
 
 <script>
 import {ref} from "vue";
+import {NDynamicTags} from "naive-ui";
 
 export default {
   name: "DynamicTags",
+  components: {
+    NDynamicTags,
+  },
   props: {
     modelValue: Array,
   },
-  setup(props, { emit }) {
+  setup(props, {emit}) {
     const dynamicTagsRef = ref(null);
     // 限制最大字符数为10
     const maxLength = 10;

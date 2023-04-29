@@ -52,32 +52,37 @@
 <script>
 import router from '@/router';
 import store from "@/store";
-import { create } from 'lodash';
+import {NScrollbar, NCard, NButton} from "naive-ui";
 
-  export default {
-    name: "WordReviewPage",
-    data() {
-        return {
-            words: [
-                {
-                    word: "",
-                    phonetic_symbol: "",
-                    definition_cn: "",
-                }
-            ]
-        }
-    },
-    methods: {
-        nextGroup() {
-            router.push('/user/learn')
-        },
-    },
-    created() {
-        this.words.splice(0, this.words.length)
-        store.state.user.groupWords.forEach((ele) => this.words.push(ele))
-    }
+export default {
+  name: "WordReviewPage",
+  components:{
+    NScrollbar,
+    NCard,
+    NButton,
+  },
+  data() {
+      return {
+          words: [
+              {
+                  word: "",
+                  phonetic_symbol: "",
+                  definition_cn: "",
+              }
+          ]
+      }
+  },
+  methods: {
+      nextGroup() {
+          router.push('/user/learn')
+      },
+  },
+  created() {
+      this.words.splice(0, this.words.length)
+      store.state.user.groupWords.forEach((ele) => this.words.push(ele))
   }
-  </script>
+}
+</script>
 
   <style scoped>
     .class_table {

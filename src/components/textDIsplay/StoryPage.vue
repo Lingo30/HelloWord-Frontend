@@ -25,8 +25,10 @@ import Kaleido from "../../assets/img/kaleidoBlank.png"
 import router from "@/router";
 export default {
   name: "StoryPage",
-  components: {TextBox},
-
+  components: {
+    NButton,
+    TextBox
+  },
   setup() {
     const message = useMessage()
     const words = ref([])
