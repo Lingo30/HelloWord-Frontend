@@ -1,0 +1,20 @@
+@font-face{
+    font-family:'YouSheBiaoTiHei';
+    src: url('./优设标题黑.ttf');
+    font-weight:normal;
+    font-style:normal;
+}
+@font-face{
+    font-family:'YouSheBiaoTiYuan';
+    src: url('./优设标题圆.otf');
+    font-weight:normal;
+    font-style:normal;
+}
+@font-face{
+    font-family:'GSC-Extended-Heavy';
+    src: url('./GlowSansSC-Extended-Heavy.otf');
+    font-weight:normal;
+    font-style:normal;
+}
+
+

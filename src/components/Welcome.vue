@@ -47,7 +47,7 @@
         <div class="welcome_main_wrap flex">
           <!-- 图片 -->
           <div class="welcome_img w-1/2 mr-20 animated fadeInLeft">
-            <img src="../assets/img/kaleidoBlank.png" alt="" />
+            <img style="margin-left: 8%;" src="../assets/img/3.png" alt="" />
           </div>
           <!-- 简介 -->
           <div class="welcome_content w-1/2 rounded-2xl card_content_wrap">
@@ -118,15 +118,15 @@
         <div class="wrap flex">
           <!-- 图片 -->
           <div class="welcome_img w-1/2 mr-20">
-            <img src="../assets/img/newList.jpg" alt="" />
+            <img style="margin-left: 5%;" src="../assets/img/write.jpg" alt="" />
           </div>
           <!-- 简介 -->
           <div class="welcome_content w-1/2 rounded-2xl card_content_wrap">
             <div class="bg-blue-50 p-10 rounded-2xl shadow-2xl card_content">
-              <div class="card_title">课程评价 教学相长</div>
+              <div class="card_title">阅读写作 不再烦恼</div>
               <div class="mt-10 rounded-3xl func_content">
-                <div>教学评价、不断打磨</div>
-                <div>致力于开设最优质课程</div>
+                <div>阅读理解、写作分析</div>
+                <div>为您的英语学习保驾护航</div>
               </div>
             </div>
           </div>
@@ -138,16 +138,16 @@
           <!-- 简介 -->
           <div class="welcome_content w-1/2 rounded-2xl card_content_wrap">
             <div class="bg-blue-50 p-10 rounded-2xl shadow-2xl card_content">
-              <div class="card_title">经验分享 不再迷茫</div>
+              <div class="card_title">口语交流 畅所欲言</div>
               <div class="mt-10 rounded-3xl func_content">
-                <div>分享总结、学习经验</div>
-                <div>一览课程学习重点难点</div>
+                <div>智慧助手、趣味交流</div>
+                <div>带您沉浸式体验英语学习</div>
               </div>
             </div>
           </div>
           <!-- 图片 -->
           <div class="welcome_img w-1/2 ml-20">
-            <img src="../assets/img/newList.jpg" alt="" />
+            <img src="../assets/img/story.jpg" alt="" />
           </div>
         </div>
       </div>
@@ -157,10 +157,10 @@
           <div class="card_content_wrap bg-gray-100 end_content_bg">
             <div class="">
               <div class="card_content_wrap flex-col">
-                <div class="end_text1 mt-4">免费使用</div>
+                <div class="end_text1 mt-4">欢迎加入</div>
                 <div class="end_text">Hello Word</div>
                 <div class="end_second_text my-3">
-                  注册仅需一步，与同学们一起愉快地学习英语
+                  注册仅需一步，快来开启你的英语学习之旅吧
                 </div>
                 <div class="bg_btn_warp flex">
                   <div
@@ -217,7 +217,7 @@ export default {
 .textTitle {
   font-size: 60px;
   line-height: 35px;
-  font-family: YouSheBiaoTiYuan;
+  font-family: YouSheBiaoTiHei;
 }
 .welcome_top {
   position: fixed;
@@ -241,12 +241,12 @@ background: linear-gradient(90deg, rgba(255,255,255,1) 0%, rgba(255,255,255,1) 5
 .content_title {
   font-size: 80px;
   line-height: 80px;
-  font-family: YouSheBiaoTiYuan;
+  font-family: YouSheBiaoTiHei;
 }
 .card_title {
   font-size: 60px;
   line-height: 65px;
-  font-family: YouSheBiaoTiYuan;
+  font-family: YouSheBiaoTiHei;
 }
 .content_secondtitle {
   font-size: 26px;
@@ -332,7 +332,7 @@ background: linear-gradient(90deg, rgba(255,255,255,1) 0%, rgba(255,255,255,1) 5
 .end_text {
   font-size: 64px;
   line-height: 80px;
-  font-family: YouSheBiaoTiYuan;
+  font-family: YouSheBiaoTiHei;
 }
 .end_second_text {
   font-size: 30px;
