@@ -19,11 +19,11 @@
                   border-2 border-blue-500
                   mx-2
                 "
-                @click="goStudent_Login"
+                @click="goLogin"
               >
-                <div>登录</div>
+                <div>登录/注册</div>
               </div>
-              <div
+              <!-- <div
                 class="
                   welcome_btn
                   btn_login
@@ -36,7 +36,7 @@
                 @click="goRegister"
               >
                 <div>注册</div>
-              </div>
+              </div> -->
             </div>
           </div>
         </div>
@@ -47,7 +47,7 @@
         <div class="welcome_main_wrap flex">
           <!-- 图片 -->
           <div class="welcome_img w-1/2 mr-20 animated fadeInLeft">
-            <img style="margin-left: 8%;" src="../assets/img/3.png" alt="" />
+            <img style="margin-left: 8%; margin-top: 5%;" src="../assets/img/3.png" alt="" />
           </div>
           <!-- 简介 -->
           <div class="welcome_content w-1/2 rounded-2xl card_content_wrap">
@@ -84,7 +84,7 @@
                       rounded-2xl
                       shadow-xl
                     "
-                    @click="goRegister"
+                    @click="goLogin"
                   >
                     <div>开始体验</div>
                   </div>
@@ -175,9 +175,9 @@
                       rounded-2xl
                       shadow-xl
                     "
-                    @click="goRegister"
+                    @click="goLogin"
                   >
-                    <div>立即注册</div>
+                    <div>立即开始</div>
                   </div>
                 </div>
               </div>
@@ -195,10 +195,17 @@
 </template>
 
 <script>
+import router from '@/router';
+
 export default {
     name: "Welcome",
     methods: {
-
+      goLogin() {
+        router.push('/login')
+      },
+      goRegister() {
+        router.push('/register')
+      },
     },
     created() {
 
