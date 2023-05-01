@@ -109,7 +109,7 @@
           </div>
           <!-- 图片 -->
           <div class="welcome_img w-1/2 ml-20">
-            <img src="../assets/img/review.jpeg" alt="" />
+            <img src="../assets/img/单词1.png" alt="" />
           </div>
         </div>
       </div>
@@ -118,7 +118,7 @@
         <div class="wrap flex">
           <!-- 图片 -->
           <div class="welcome_img w-1/2 mr-20">
-            <img style="margin-left: 5%;" src="../assets/img/write.jpg" alt="" />
+            <img style="margin-left: 5%;" src="../assets/img/写作1.jpg" alt="" />
           </div>
           <!-- 简介 -->
           <div class="welcome_content w-1/2 rounded-2xl card_content_wrap">
@@ -147,7 +147,7 @@
           </div>
           <!-- 图片 -->
           <div class="welcome_img w-1/2 ml-20">
-            <img src="../assets/img/story.jpg" alt="" />
+            <img src="../assets/img/聊天1.png" alt="" />
           </div>
         </div>
       </div>
@@ -185,7 +185,7 @@
           </div>
           <div class="card_content_wrap">
             <div class="end_img">
-              <img src="../assets/img/newList.jpg" alt="" />
+              <img src="../assets/img/3.png" alt="" />
             </div>
           </div>
         </div>
