@@ -201,10 +201,7 @@ export default {
     name: "Welcome",
     methods: {
       goLogin() {
-        router.push('/login')
-      },
-      goRegister() {
-        router.push('/register')
+        router.push({name:'login'})
       },
     },
     created() {
