@@ -40,15 +40,16 @@ const routes = [
     }
     */
     {
-        path: '/Welcome',
-        name: 'Welcome',
+        path: '/',
+        name: 'base',
+        redirect: '/welcome'
+    },
+    {
+        path: '/welcome',
+        name: 'welcome',
         component: Welcome
     },
     //登录界面
-    {
-        path: '/',
-        redirect: '/login'
-    },
     {
         path: '/login',
         name: 'login',
@@ -150,50 +151,60 @@ const router = createRouter({
 })
 
 //全局守卫
-// let hasTryLogin = false
-// let firtPathName = ''
-// router.beforeEach((to, from, next) => {
-//     if (store.state.user.login) {
-//         if (to.name === 'login') {
-//             router.push('/user')
-//         } else {
-//             next()
-//         }
-//     } else {
-//         if (hasTryLogin) {
-//             hasTryLogin = false
-//             next()
-//         } else {
-//             firtPathName = to.name
-//             const username = localStorage.getItem(USERNAME)
-//             const password = localStorage.getItem(PASSWORD)
-//             if (username !== null && password !== null) {
-//                 let toLogin = true
-//                 loginAPI(username, md5(password)).then((res) => {
-//                     let success = res.state
-//                     if (success) {
-//                         //TODO 存储本地变量
-//                         store.state.user.login = true
-//                         store.state.user.uid = res.data.uid
-//                         store.state.user.wordNum = res.data.wordNum
-//                         store.state.user.selectWordlist = res.data.selectWordlist
-//                         //设置路由
-//                         toLogin = false
-//                     }
-//                 }).finally(() => {
-//                     if (toLogin) {
-//                         hasTryLogin = true
-//                         router.push({name: 'login'})
-//                     } else {
-//                         router.push({name: firtPathName})
-//                     }
-//                 })
-//             } else {
-//                 hasTryLogin = true
-//                 router.push({name: 'login'})
-//             }
-//         }
-//     }
-// })
+// 用户已登录或本地存储了正确的用户名密码时，自动登录并跳转到词单界面。
+// 用户未登录时，跳转到欢迎页并通过按钮跳到登录页
+let hasTryLogin = false
+let firtPathName = ''
+router.beforeEach((to, from, next) => {
+    if (store.state.user.login) {
+        if (to.name === 'login' || to.name === 'welcome') {
+            router.push('/user')
+        } else {
+            next()
+        }
+    } else {
+        if (hasTryLogin) {
+            hasTryLogin = false
+            next()
+        } else {
+            firtPathName = to.name
+            const username = localStorage.getItem(USERNAME)
+            const password = localStorage.getItem(PASSWORD)
+            if (username !== null && password !== null) {
+                let toLogin = true
+                loginAPI(username, md5(password)).then((res) => {
+                    let success = res.state
+                    if (success) {
+                        //TODO 存储本地变量
+                        store.state.user.login = true
+                        store.state.user.uid = res.data.uid
+                        store.state.user.wordNum = res.data.wordNum
+                        store.state.user.selectWordlist = res.data.selectWordlist
+                        //设置路由
+                        toLogin = false
+                    }
+                }).finally(() => {
+                    if (toLogin) {
+                        hasTryLogin = true
+                        if (firtPathName === 'login') {
+                            router.push({name: 'login'})
+                        } else {
+                            router.push({name: 'welcome'})
+                        }
+                    } else {
+                        router.push({name: firtPathName})
+                    }
+                })
+            } else {
+                hasTryLogin = true
+                if (firtPathName === 'login') {
+                    router.push({name: 'login'})
+                } else {
+                    router.push({name: 'welcome'})
+                }
+            }
+        }
+    }
+})
 
 export default router
