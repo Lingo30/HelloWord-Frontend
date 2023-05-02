@@ -4,32 +4,35 @@
         <div class="class_table">
             <div class="main_box">
                 <div class="left_box">
-                  <n-scrollbar>
                     <n-card :bordered="false" content-style="padding: 1%;"
                             class="info_word" v-for='index in 5' :key='index'
                     >
+                    <n-scrollbar trigger="hover">
                       <div class="word_Title" v-if="index - 1 < this.words.length">
-                        {{ this.words[index - 1].word }} [{{ this.words[index - 1].phonetic_symbol }}]
+                        {{ this.words[index - 1].word }} {{ this.words[index - 1].phonetic_symbol }}
                       </div>
+                      <!-- <n-scrollbar trigger="hover"> -->
                       <div class="word_Meaning" v-if="index - 1 < this.words.length">
-                        {{this.words[index - 1].definition_cn}}
+                        <!-- <n-scrollbar trigger="hover"> -->
+                          {{this.words[index - 1].definition_cn}}
+                        <!-- </n-scrollbar> -->
                       </div>
+                    </n-scrollbar>
                     </n-card>
-                  </n-scrollbar>
                 </div>
                 <div class="right_box">
-                  <n-scrollbar>
                     <n-card :bordered="false" content-style="padding: 1%;"
                             class="info_word" v-for='index in 5' :key='index'
                     >
+                    <n-scrollbar trigger="hover">
                       <div class="word_Title" v-if="index + 4 < this.words.length">
-                        {{this.words[index + 4].word}} [{{ this.words[index + 4].phonetic_symbol }}]
+                        {{this.words[index + 4].word}} {{ this.words[index + 4].phonetic_symbol }}
                       </div>
                       <div class="word_Meaning" v-if="index + 4 < this.words.length">
                         {{this.words[index + 4].definition_cn}}
                       </div>
+                    </n-scrollbar>
                     </n-card>
-                  </n-scrollbar>
                 </div>
             </div>
           <n-button round type="info" class="next_button" @click="nextGroup">
@@ -188,6 +191,7 @@ import { create } from 'lodash';
         height: 5%;
         font-size: large;
     }
+
 
   /*  ::-webkit-scrollbar {*/
   /*  width: 6px;*/
