@@ -127,7 +127,9 @@ export default {
       analysisSpin.value = true;
       let errorMsg = "超时啦，请稍后再试试"
       let success = false
+      // console.log("start Analysis");
       await getSentenceAnalysis(store.state.user.uid, selectedText.value).then((res)=>{
+        // console.log("Analysisinggggg");
         success = res.state
         // console.log(res);
         if (success) {
@@ -179,10 +181,13 @@ export default {
             //   default: () => "不好，我去开会员，你回来干活"
             // }),
             duration: 3e3,
+            closable:false,
           })
           analysisSpin.value = false;
+          // console.log("end Analysis");
         }
       })
+      // console.log("end Analysis");
       analysisSpin.value = false;
       // console.log(selectedText);
     }
