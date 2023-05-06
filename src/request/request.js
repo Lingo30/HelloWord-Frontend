@@ -2,10 +2,11 @@
 import axios from 'axios'
 import router from "@/router";
 import store from "@/store";
+import {BACKEND_BASE_URL} from "../../secret_config";
 
 const request = axios.create({
     withCredentials: true,
-    baseURL: '/api/',
+    baseURL: BACKEND_BASE_URL,
     timeout: 5000
 })
 
