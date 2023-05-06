@@ -97,18 +97,34 @@ export default {
       this.listId = listId
       pageNum.value = Math.ceil(totalNum / pageSize)
       curPage.value = 1
+      let errMsg = ''
+      let success = false
       getWordsInfo(store.state.user.uid, listId, pageSize, curPage.value - 1).then((res) => {
+        success = res.state
+        errMsg = res.msg
         words.splice(0, words.length);
         res.words.forEach((word) => words.push(word))
-      }).catch(err => message.error('网络错误'))
+      }).catch(err => errMsg = '网络错误').finally(() => {
+        if (!success) {
+          message.error(errMsg)
+        }
+      })
     }
 
     //分页展示
     function changePage(page) {
+      let errMsg = ''
+      let success = false
       getWordsInfo(store.state.user.uid, listId.value, pageSize, page - 1).then((res) => {
+        success = res.state
+        errMsg = res.msg
         words.splice(0, words.length);
         res.words.forEach((word) => words.push(word))
-      }).catch(err => message.error('网络错误'))
+      }).catch(err => errMsg = '网络错误').finally(() => {
+        if (!success) {
+          message.error(errMsg)
+        }
+      })
     }
 
     function selectWordlist(listId) {

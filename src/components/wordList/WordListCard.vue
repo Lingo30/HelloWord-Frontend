@@ -69,7 +69,7 @@
 </template>
 
 <script>
-import {NCard, NText, NIcon, NPopover} from 'naive-ui'
+import {NCard, NText, NIcon, NPopover, useMessage} from 'naive-ui'
 import {AccessibilityOutline} from '@vicons/ionicons5'
 import Checkmark16Filled from "@vicons/fluent/Checkmark16Filled";
 import {onMounted, reactive, ref} from "vue";
@@ -92,6 +92,7 @@ export default {
     NPopover,
   },
   setup(props, {emit}) {
+    const message = useMessage()
     const bgColor = [
       'rgba(105, 142, 250, 1)',
       'rgba(24, 204, 186, 1)',
@@ -134,7 +135,11 @@ export default {
 
     onMounted(() => {
       // 根据 listId获取用户词单的基本信息
+      let errMsg = ''
+      let success = false
       getUserWordlistInfo(props.listId).then((res) => {
+        success = res.state
+        errMsg = res.msg
         info.name = res.name
         info.num = res.num
         info.learned = res.learned
@@ -144,8 +149,11 @@ export default {
         if (props.clicked) {
           handleClick()
         }
-      }).catch(err => {
-      });
+      }).catch(err => errMsg = '网络错误').finally(() => {
+        if (!success) {
+          message.error(errMsg)
+        }
+      })
     })
 
     return {
