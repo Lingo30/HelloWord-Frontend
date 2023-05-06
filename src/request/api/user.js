@@ -1,5 +1,16 @@
 import request from "@/request/request";
 
+export function cookieLogin(uid) {
+    const data = JSON.stringify({
+        userId: uid,
+    })
+    return request({
+        url: 'cookie_login/',
+        method: 'post',
+        data: data
+    })
+}
+
 export function loginAPI(name, pwd) {
     /*
     返回数据：
