@@ -47,12 +47,13 @@
 
 
 <script>
-import {NInput, NButton, NAvatar, useNotification} from 'naive-ui';
+import {NInput, NButton, NAvatar, useNotification, useMessage} from 'naive-ui';
 import ChatMessage from "@/components/chatPage/ChatMessage";
 import {getHistoryChatAPI, sendChatAPI} from "@/request/api/chat";
 import {h, nextTick, ref} from 'vue'
 import store from "@/store";
 import Kaleido from "@/assets/img/kaleidoBlank.png";
+import {AUTHENTICATE_ERR} from "@/store/local";
 
 export default {
   components:{
@@ -65,6 +66,7 @@ export default {
     msg: String
   },
   setup () {
+    const message = useMessage()
     const notification = useNotification()
     const showSpin = ref(false)
     const value = ref('')
@@ -72,6 +74,7 @@ export default {
     const inputRef = ref(null)
 
     return {
+      message,
       inputRef,
       messages,
       showSpin,
@@ -112,9 +115,15 @@ export default {
       await sendChatAPI(store.state.user.uid, value.value).then((res) => {
         success = res.state
         if (!success) {
-          errorMsg = "一天最多只能对话七次哦，不如今天再去学点单词，明天再来找我聊天叭"
-          title = "使用次数已达上限"
-          value.value = ''
+          if (res.msg.match(new RegExp(AUTHENTICATE_ERR))) {
+            errorMsg = res.msg
+            title = "登录已失效"
+            value.value = ''
+          } else {
+            errorMsg = "一天最多只能对话七次哦，不如今天再去学点单词，明天再来找我聊天叭"
+            title = "使用次数已达上限"
+            value.value = ''
+          }
         } else {
           let q = {
             time: res.receive_time,
@@ -156,7 +165,11 @@ export default {
   methods: {
     getHistory() {
       this.showSpin = true;
+      let success = false
+      let errMsg = ''
       getHistoryChatAPI(store.state.user.uid).then((res) => {
+        success = res.state
+        errMsg = res.msg
         res.history.forEach((item) => {
           let newList = {
             time:item.time,
@@ -165,7 +178,11 @@ export default {
           };
           this.messages.push(newList);
         });
-      }).catch(err=>{});
+      }).catch(err => errMsg = '网络错误').finally(() => {
+        if (!success) {
+          this.message.error(errMsg)
+        }
+      });
       this.showSpin = false;
     },
 

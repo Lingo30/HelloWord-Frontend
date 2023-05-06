@@ -54,9 +54,9 @@ export default {
         success = res.state
         errMsg = res.msg
       }).catch(err => errMsg = '网络错误').finally(() => {
-        if (!success) {
-          message.error(errMsg)
-        }
+        // if (!success) {
+        //   message.error(errMsg)
+        // }
       })
 
       target.value = store.state.user.wordNum

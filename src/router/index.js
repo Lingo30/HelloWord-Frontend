@@ -179,7 +179,7 @@ router.beforeEach((to, from, next) => {
                 }).catch(err => err).finally(() => {
                     if (toLogin) {
                         hasTryLogin = true
-                        if (firstPathName === 'login') {
+                        if (firstPathName === 'login' || firstPathName === 'welcome') {
                             next()
                         } else {
                             router.push({name: 'welcome'})
@@ -190,7 +190,7 @@ router.beforeEach((to, from, next) => {
                 })
             } else {
                 hasTryLogin = true
-                if (firstPathName === 'login') {
+                if (firstPathName === 'login' || firstPathName === 'welcome') {
                     next()
                 } else {
                     router.push({name: 'welcome'})

@@ -122,6 +122,7 @@ export default {
 	name: "WordPage",
 	data() {
 		return {
+      message: useMessage(),
 			group_words: reactive([ {
 					// id: 1,
                     word_id: 1,
@@ -177,8 +178,12 @@ export default {
 		// 	})
 		// },
 		getGroupWord() {
+      let success = false
+      let errMsg = ''
 			get_group_words_in_list(store.state.user.uid).then((res) => {
 				// alert(res.hasBook)
+        success = res.state
+        errMsg = res.msg
 				if(res.hasBook==false) {
 					// alert(111)
 					router.push('/user/wordlist')
@@ -199,13 +204,24 @@ export default {
 						router.push('/user/finish')
 					}
 				}
-			}).catch(err=>{});
+			}).catch(err => errMsg = '网络错误').finally(() => {
+        if(!success) {
+          this.message.error(errMsg)
+        }
+      })
 		},
 		saveGroup() {
+      let success = false
+      let errMsg = ''
 			group_word_learn_save(store.state.user.uid, this.learnWords, this.list_id).then((res) => {
 				// pass
-
-			}).catch(err=>{});
+        success = res.state
+        errMsg = res.msg
+			}).catch(err => errMsg = '网络错误').finally(() => {
+        if(!success) {
+          this.message.error(errMsg)
+        }
+      })
 		},
 		delWord() {
 			//alert("Delete cur word!")
@@ -253,13 +269,21 @@ export default {
 		},
 		getRelated() {
 			//TODO 通过uid获取所有词单id
+      let success = false
+      let errMsg = ''
 			get_word_releation(this.group_words[this.curId].word_id).then((res) => {
+        success = res.state
+        errMsg = res.msg
 				this.relation.example = res.example
 				this.relation.synonyms.splice(0, this.relation.synonyms.length)
         		res.synonyms.forEach((ele) => this.relation.synonyms.push(ele))
 				this.relation.antonyms.splice(0, this.relation.antonyms.length)
         		res.antonyms.forEach((ele) => this.relation.antonyms.push(ele))
-      		}).catch(err=>{});
+      		}).catch(err => errMsg = '网络错误').finally(() => {
+        if (!success) {
+          this.message.error(errMsg)
+        }
+      });
 		},
 		showWord() {
 			this.shown = true

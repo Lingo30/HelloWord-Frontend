@@ -29,7 +29,7 @@ request.interceptors.response.use(
     response => {
         if (typeof response.data.msg === 'string' && response.data.msg.match(new RegExp(AUTHENTICATE_ERR)) != null) {
             store.state.user.login = false
-            router.push({name: 'login'})
+            setTimeout(() => router.push({name: 'login'}), 1000)
         }
         let res = response.data;
         // 如果是返回的文件
