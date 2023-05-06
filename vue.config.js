@@ -8,7 +8,7 @@ module.exports = defineConfig({
         port: 8080,
         proxy: {
             '/api': {
-                target: 'http://127.0.0.1:8000',//代理的目标地址
+                target: process.env.NODE_ENV === 'development' ? 'https://sayhelloword.com/dev-api' : 'https://sayhelloword.com/prod-api',//代理的目标地址
                 changeOrigin: true,
                 pathRewrite: {
                     '^/api': ''

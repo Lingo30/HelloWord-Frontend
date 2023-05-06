@@ -9,7 +9,7 @@
             <n-image style="border-radius: 25px" :src="model.avatarPath" width="50" height="50"></n-image>
           </div>
           <div class="file-upload">
-            <n-button  round type="primary" ghost class="upload-button">上传头像</n-button>
+            <n-button round type="primary" ghost class="upload-button">上传头像</n-button>
             <input
                 ref="inputRef"
                 type="file"
@@ -132,11 +132,12 @@ import router from "@/router";
 import {getInfo, getRecommendTags, submitAvatar, submitInfo} from "@/request/api/user";
 import DynamicTags from "@/components/userInfo/DynamicTags";
 import ChangePassword from "@/components/userInfo/ChangePassword";
-import {PASSWORD, USERNAME} from "@/store/local";
+import {TOKEN, USERID} from "@/store/local";
+import cookie from "@/store/cookie";
 
 export default ({
   name: "UserInfo",
-  components: {DynamicTags,ChangePassword},
+  components: {DynamicTags, ChangePassword},
 
   setup() {
     async function load() {
@@ -153,7 +154,7 @@ export default ({
         } else {
           msg.error(res.msg)
         }
-      }).catch((err)=>{
+      }).catch((err) => {
         msg.error('网络错误')
       })
       getRecommendTags().then((res) => {
@@ -250,7 +251,7 @@ export default ({
       img.onload = () => {
         // console.log(showImage.value)
       };
-      await submitAvatar(tmp,store.state.user.uid).then((res) => {
+      await submitAvatar(tmp, store.state.user.uid).then((res) => {
         let success = res.state
         // console.log(res);
         if (success) {
@@ -269,8 +270,7 @@ export default ({
         // console.log(res);
         if (success) {
           msg.success('修改成功')
-        }
-        else {
+        } else {
           msg.error(res.msg)
         }
       }).catch()
@@ -282,13 +282,14 @@ export default ({
       // console.log(changePwd.value.showPwd);
       changePwd.value.showPwd = true
     }
+
     /* ********************** 上传相关逻辑 ******************/
 
     function logout() {
       store.state.user.login = false;
-      localStorage.removeItem(USERNAME);
-      localStorage.removeItem(PASSWORD);
-      router.push('/login/');
+      localStorage.removeItem(USERID);
+      cookie.clearCookie(TOKEN)
+      router.push({name: 'login'});
     }
 
     checkSelectedTags()
@@ -371,8 +372,9 @@ export default ({
   margin-right: 30px;
   text-align: center;
 }
-.head{
-  top:10%;
+
+.head {
+  top: 10%;
   width: 90%;
   margin: auto;
   margin-top: 3%;
@@ -383,7 +385,7 @@ export default ({
   align-items: center;
 }
 
-.content{
+.content {
   width: 90%;
   overflow: auto;
   height: 60%;
@@ -395,6 +397,7 @@ export default ({
   align-items: center;
   font-size: 20px;
 }
+
 .avatar-wrapper {
   display: flex;
   flex-direction: column;
@@ -431,16 +434,16 @@ export default ({
 }
 
 .InfoContainer {
-  position:absolute;
-  width:70%;
-  height:80%;
-  top:50%;
-  left:50%;
+  position: absolute;
+  width: 70%;
+  height: 80%;
+  top: 50%;
+  left: 50%;
   align-items: center;
   justify-content: center;
-  transform:translate(-50%,-50%);
-  background-color: rgba(255,255,255,0.3);
-  box-shadow: 10px 12px 16px 10px  rgba(0,0,0,0.24), 10px 17px 50px 10px #4E655D;
+  transform: translate(-50%, -50%);
+  background-color: rgba(255, 255, 255, 0.3);
+  box-shadow: 10px 12px 16px 10px rgba(0, 0, 0, 0.24), 10px 17px 50px 10px #4E655D;
 
 }
 

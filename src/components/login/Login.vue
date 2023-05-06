@@ -141,10 +141,10 @@
 import {onMounted, ref} from "vue";
 import md5 from 'js-md5';
 import {useMessage} from 'naive-ui'
-import {registerAPI, loginAPI, sendEmail, checkEmailCode} from "@/request/api/user";
+import {registerAPI, loginAPI, sendEmail} from "@/request/api/user";
 import store from "@/store";
 import router from "@/router";
-import {USERNAME, PASSWORD} from "@/store/local";
+import {USERID} from "@/store/local";
 import {GVerify} from "@/components/login/GVerify";
 import {MailOutline} from "@vicons/ionicons5";
 
@@ -176,15 +176,14 @@ export default {
       verifyInput.value = ""
     }
 
-    function saveUserInfo(data, name, pwd) {
+    function saveUserInfo(data) {
       //TODO 存储本地变量
       store.state.user.login = true
       store.state.user.uid = data.uid
       store.state.user.wordNum = data.wordNum
       store.state.user.selectWordlist = data.selectWordlist
-      // 把用户名和密码自动保存到本地
-      localStorage.setItem(USERNAME, name)
-      localStorage.setItem(PASSWORD, pwd)
+      // 把用户id保存到本地
+      localStorage.setItem(USERID, data.uid)
     }
 
     const email = ref('');
@@ -239,7 +238,7 @@ export default {
             wrMsg = res.msg
           }).catch(err=>{}).finally(() => {
             if (success) {
-              saveUserInfo(data, name, pwd);
+              saveUserInfo(data);
               message.success("注册成功");
               //设置路由
               router.push('/user')
@@ -277,7 +276,7 @@ export default {
         wrMsg = res.msg
       }).catch(err=>{}).finally(() => {
         if (success) {
-          saveUserInfo(data, name, pwd);
+          saveUserInfo(data);
           message.success("登录成功");
           //设置路由
           router.push('/user')

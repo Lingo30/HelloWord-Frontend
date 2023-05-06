@@ -16,9 +16,8 @@ import StoryPage from "@/components/textDIsplay/StoryPage";
 import BlankText from "@/components/blankText/BlankText";
 import UserInfo from "@/components/userInfo/UserInfo";
 import store from '@/store/index'
-import {PASSWORD, USERNAME} from "@/store/local";
-import {loginAPI} from "@/request/api/user";
-import md5 from 'js-md5';
+import {USERID} from "@/store/local";
+import {cookieLogin} from "@/request/api/user";
 
 const routes = [
     //格式要求示例
@@ -72,23 +71,17 @@ const routes = [
                 path: 'learn',
                 name: 'learn',
                 component: WordPage,
-                // component: WordPage
-                //TODO WordPage存在bug component: WordPage
             },
             //单词复习页面
             {
                 path: 'wordReview',
                 name: 'wordReview',
                 component: WordReviewPage,
-                // component: WordReviewPage
-                //TODO WordPage存在bug component: WordPage
             },
             {
                 path: 'finish',
                 name: 'finish',
                 component: FinishPage,
-                // component: WordReviewPage
-                //TODO WordPage存在bug component: WordPage
             },
             //拓展界面
             {
@@ -151,10 +144,11 @@ const router = createRouter({
 })
 
 //全局守卫
+// TODO 是否更改当前逻辑：当登录后只是页面切换时，不进行页面跳转，只有进行和后端的交互时才跳转
 // 用户已登录或本地存储了正确的用户名密码时，自动登录并跳转到词单界面。
 // 用户未登录时，跳转到欢迎页并通过按钮跳到登录页
 let hasTryLogin = false
-let firtPathName = ''
+let firstPathName = ''
 router.beforeEach((to, from, next) => {
     if (store.state.user.login) {
         if (to.name === 'login' || to.name === 'welcome') {
@@ -167,38 +161,38 @@ router.beforeEach((to, from, next) => {
             hasTryLogin = false
             next()
         } else {
-            firtPathName = to.name
-            const username = localStorage.getItem(USERNAME)
-            const password = localStorage.getItem(PASSWORD)
-            if (username !== null && password !== null) {
+            firstPathName = to.name
+            const uid = localStorage.getItem(USERID)
+            if (uid !== null) {
                 let toLogin = true
-                loginAPI(username, md5(password)).then((res) => {
+                cookieLogin(uid).then((res) => {
+                    console.log(res);
                     let success = res.state
                     if (success) {
                         //TODO 存储本地变量
                         store.state.user.login = true
-                        store.state.user.uid = res.data.uid
+                        store.state.user.uid = uid
                         store.state.user.wordNum = res.data.wordNum
                         store.state.user.selectWordlist = res.data.selectWordlist
                         //设置路由
                         toLogin = false
                     }
-                }).finally(() => {
+                }).catch(err => err).finally(() => {
                     if (toLogin) {
                         hasTryLogin = true
-                        if (firtPathName === 'login') {
-                            router.push({name: 'login'})
+                        if (firstPathName === 'login') {
+                            next()
                         } else {
                             router.push({name: 'welcome'})
                         }
                     } else {
-                        router.push({name: firtPathName})
+                        router.push({name: firstPathName})
                     }
                 })
             } else {
                 hasTryLogin = true
-                if (firtPathName === 'login') {
-                    router.push({name: 'login'})
+                if (firstPathName === 'login') {
+                    next()
                 } else {
                     router.push({name: 'welcome'})
                 }

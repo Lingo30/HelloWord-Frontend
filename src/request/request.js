@@ -1,9 +1,11 @@
 //request基本配置
 import axios from 'axios'
-import {BACKEND_BASE_URL} from "../../secret_config";
+import router from "@/router";
+import store from "@/store";
 
 const request = axios.create({
-    baseURL: BACKEND_BASE_URL,
+    withCredentials: true,
+    baseURL: '/api/',
     timeout: 5000
 })
 
@@ -23,6 +25,10 @@ request.interceptors.request.use(
 // response 拦截器
 request.interceptors.response.use(
     response => {
+        // if (response.data.state === false && response.data.msg === ''/*TODO 认证失败时的返回*/) {
+        //     store.state.user.login = false
+        //     router.push({name: 'login'})
+        // }
         let res = response.data;
         // 如果是返回的文件
         if (response.config.responseType === 'blob') {
