@@ -214,8 +214,6 @@ export default {
     }
 
     async function uploadCheck(data) {
-      console.log(data.file.file.type);
-      console.log(data.file.file.size);
       if (data.file.file.type !== 'text/plain') {
         message.error('只支持txt上传')
         return false
@@ -358,6 +356,7 @@ export default {
       let errMsg = ''
       getOfficialLists().then((res) => {
         success = res.state
+        errMsg=res.msg
         if (res.state) {
           res.lists.forEach((wordlist) => lists.push(wordlist))
         }

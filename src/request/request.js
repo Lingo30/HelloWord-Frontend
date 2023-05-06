@@ -3,6 +3,7 @@ import axios from 'axios'
 import router from "@/router";
 import store from "@/store";
 import {BACKEND_BASE_URL} from "../../secret_config";
+import {AUTHENTICATE_ERR} from "@/store/local";
 
 const request = axios.create({
     withCredentials: true,
@@ -26,10 +27,10 @@ request.interceptors.request.use(
 // response 拦截器
 request.interceptors.response.use(
     response => {
-        // if (response.data.state === false && response.data.msg === ''/*TODO 认证失败时的返回*/) {
-        //     store.state.user.login = false
-        //     router.push({name: 'login'})
-        // }
+        if (typeof response.data.msg === 'string' && response.data.msg.match(new RegExp(AUTHENTICATE_ERR)) != null) {
+            store.state.user.login = false
+            setTimeout(() => router.push({name: 'login'}), 1000)
+        }
         let res = response.data;
         // 如果是返回的文件
         if (response.config.responseType === 'blob') {

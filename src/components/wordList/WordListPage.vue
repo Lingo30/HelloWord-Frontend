@@ -166,7 +166,11 @@ export default {
     onMounted(() => {
       // clickedId.value = store.state.user.selectWordlist
       // 通过uid获取所有词单id
+      let success = false
+      let errMsg = ''
       getUserLists(store.state.user.uid).then((res) => {
+        success = res.state
+        errMsg = res.msg
         listIds.splice(0, listIds.length)
         if (res.state) {
           res.ids.forEach((id) => listIds.push(Number(id)));
@@ -175,7 +179,11 @@ export default {
             clickedId.value = store.state.user.selectWordlist
           }
         }
-      }).catch(err => message.error('网络错误'))
+      }).catch(err => errMsg = '网络错误').finally(() => {
+        if (!success) {
+          message.error(errMsg)
+        }
+      })
     })
 
     return {
