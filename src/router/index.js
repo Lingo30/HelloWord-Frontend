@@ -166,7 +166,6 @@ router.beforeEach((to, from, next) => {
             if (uid !== null) {
                 let toLogin = true
                 cookieLogin(uid).then((res) => {
-                    console.log(res);
                     let success = res.state
                     if (success) {
                         //TODO 存储本地变量
