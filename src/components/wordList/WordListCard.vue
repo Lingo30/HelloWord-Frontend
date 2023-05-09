@@ -69,7 +69,7 @@
 </template>
 
 <script>
-import {NCard, NText, NIcon, NPopover, useMessage} from 'naive-ui'
+import {NCard, NText, NIcon, NPopover, NInput, NProgress, NIconWrapper, useMessage} from 'naive-ui'
 import {AccessibilityOutline} from '@vicons/ionicons5'
 import Checkmark16Filled from "@vicons/fluent/Checkmark16Filled";
 import {onMounted, reactive, ref} from "vue";
@@ -90,6 +90,9 @@ export default {
     NText,
     NIcon,
     NPopover,
+    NInput,
+    NProgress,
+    NIconWrapper,
   },
   setup(props, {emit}) {
     const message = useMessage()

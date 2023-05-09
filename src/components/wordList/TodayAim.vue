@@ -22,11 +22,17 @@
 import {onBeforeMount, reactive, ref} from "vue";
 import {Accessibility, HelpCircleOutline} from "@vicons/ionicons5";
 import {getAim, getLearnedWords, setAim} from "@/request/api/wordlist";
-import {useMessage} from 'naive-ui'
+import {NSpace, NIcon, NSlider, NIconWrapper, useMessage} from 'naive-ui'
 import store from "@/store";
 
 export default {
   name: "TodayAim",
+  components: {
+    NSpace,
+    NIcon,
+    NSlider,
+    NIconWrapper,
+  },
   setup() {
     const message = useMessage()
     const target = ref(0);

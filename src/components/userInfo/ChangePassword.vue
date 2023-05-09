@@ -54,10 +54,17 @@ import md5 from "js-md5";
 import {changePassword} from "@/request/api/user";
 import store from "@/store";
 import {reactive, ref} from "vue";
-import {useMessage} from "naive-ui";
+import {NModal, NForm, NFormItem, NInput, NButton, useMessage} from "naive-ui";
 
 export default {
   name: "ChangePassword",
+  components: {
+    NModal,
+    NForm,
+    NFormItem,
+    NInput,
+    NButton,
+  },
   setup() {
     const msg = useMessage()
 
@@ -96,6 +103,7 @@ export default {
         }
       }).catch()
     }
+
     return {
       pwdForm,
       showPwd,

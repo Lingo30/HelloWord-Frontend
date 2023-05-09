@@ -110,16 +110,20 @@
 
 
 <script>
-import {useMessage} from 'naive-ui'
+import {NCard, NScrollbar, NButton, useMessage} from 'naive-ui'
 // import {searchWordAPI, getWordAPI} from "@/request/api/user";
 import {get_group_words_in_list, searchWordAPI, deleteWordAPI, group_word_learn_save, get_word_releation} from "@/request/api/learn";
 import store from "@/store";
 import {reactive, ref } from 'vue';
-import { th } from 'date-fns/locale';
 import router from '@/router';
 
 export default {
 	name: "WordPage",
+  components:{
+    NCard,
+    NScrollbar,
+    NButton,
+  },
 	data() {
 		return {
       message: useMessage(),
@@ -276,10 +280,10 @@ export default {
         errMsg = res.msg
 				this.relation.example = res.example
 				this.relation.synonyms.splice(0, this.relation.synonyms.length)
-        		res.synonyms.forEach((ele) => this.relation.synonyms.push(ele))
+        res.synonyms.forEach((ele) => this.relation.synonyms.push(ele))
 				this.relation.antonyms.splice(0, this.relation.antonyms.length)
-        		res.antonyms.forEach((ele) => this.relation.antonyms.push(ele))
-      		}).catch(err => errMsg = '网络错误').finally(() => {
+        res.antonyms.forEach((ele) => this.relation.antonyms.push(ele))
+      }).catch(err => errMsg = '网络错误').finally(() => {
         if (!success) {
           this.message.error(errMsg)
         }
@@ -384,9 +388,9 @@ export default {
 		margin-left: 15%;
 		margin-right: 15%;
 		height: 10%;
-    	align-items: center;
-    	justify-content: center;
-    	line-height: 100%;
+    align-items: center;
+    justify-content: center;
+    line-height: 100%;
 		background-color: rgba(255, 255, 255, 0.6);
 		text-align: center;
 		font-size: 40px;
@@ -487,10 +491,10 @@ export default {
 		/*margin-left: 5%;*/
 		/*height: 75%;*/
 		/*opacity: 90%;*/
-    	width: 40%;
-    	height: 90%;
+    width: 40%;
+    height: 90%;
 		background-color: #679B9B;
-    	margin-left: 5%;
+    margin-left: 5%;
 		display: vertical;
 		border-radius: 20px;
 		/* flex-wrap: wrap;

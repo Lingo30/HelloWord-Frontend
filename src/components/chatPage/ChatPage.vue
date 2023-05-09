@@ -47,7 +47,7 @@
 
 
 <script>
-import {NInput, NButton, NAvatar, useNotification, useMessage} from 'naive-ui';
+import {NSpin, NScrollbar, NInput, NButton, NAvatar, useNotification, useMessage} from 'naive-ui';
 import ChatMessage from "@/components/chatPage/ChatMessage";
 import {getHistoryChatAPI, sendChatAPI} from "@/request/api/chat";
 import {h, nextTick, ref} from 'vue'
@@ -56,7 +56,9 @@ import Kaleido from "@/assets/img/kaleidoBlank.png";
 import {AUTHENTICATE_ERR} from "@/store/local";
 
 export default {
-  components:{
+  components: {
+    NSpin,
+    NScrollbar,
     NInput,
     NButton,
     ChatMessage
@@ -65,7 +67,7 @@ export default {
   props: {
     msg: String
   },
-  setup () {
+  setup() {
     const message = useMessage()
     const notification = useNotification()
     const showSpin = ref(false)
@@ -82,6 +84,7 @@ export default {
       sendChat,
       handleEnter,
     }
+
     async function handleEnter(event) {
       if (event.shiftKey) {
         // 获取当前光标位置
@@ -172,9 +175,9 @@ export default {
         errMsg = res.msg
         res.history.forEach((item) => {
           let newList = {
-            time:item.time,
+            time: item.time,
             type: !item.type,
-            content:item.content,
+            content: item.content,
           };
           this.messages.push(newList);
         });

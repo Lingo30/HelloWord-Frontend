@@ -67,7 +67,8 @@
                   1. 通过官方词单创建。单击选择一个官方词单 -> 输入自定义的词单名（默认为官方词单名）-> 点击右下角”生成词单“
                 </div>
                 <div style="margin-left: 3%; margin-top: 1%">
-                  2. 通过解析上传的文件创建。点击上传框选择上传文件/将本地文件拖入上传框 -> 自动解析文件生成预览词单->自定义删除不需要的单词-> 输入词单名->点击右下角”生成词单“
+                  2. 通过解析上传的文件创建。点击上传框选择上传文件/将本地文件拖入上传框 -> 自动解析文件生成预览词单->自定义删除不需要的单词->
+                  输入词单名->点击右下角”生成词单“
                 </div>
               </div>
             </n-collapse-item>
@@ -256,12 +257,34 @@
 
 <script>
 import {ref} from "vue";
-import {useMessage} from 'naive-ui'
+import {
+  NCollapse,
+  NCollapseItem,
+  NSpace,
+  NRadioGroup,
+  NRadio,
+  NCheckboxGroup,
+  NCheckbox,
+  NInput,
+  NButton,
+  useMessage
+} from 'naive-ui'
 import store from "@/store";
 import {addFeedback} from "@/request/api/help";
 
 export default {
   name: "helpPage",
+  components: {
+    NCollapse,
+    NCollapseItem,
+    NSpace,
+    NRadioGroup,
+    NRadio,
+    NCheckboxGroup,
+    NCheckbox,
+    NInput,
+    NButton,
+  },
   props: {
     idxs: Array,//跳转到此页面时企图打开的条目（[1,2]表示打开第一条的第二条，在from路由的query参数给出）
   },

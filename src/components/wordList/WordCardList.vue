@@ -61,7 +61,7 @@
 </template>
 
 <script>
-import {NCard, NScrollbar, useMessage} from "naive-ui";
+import {NCard, NScrollbar, NText, NPopover, NPagination, NButton, useMessage} from "naive-ui";
 import {reactive, ref} from "vue";
 import store from "@/store";
 import {getWordsInfo, updateLearnWordlist} from "@/request/api/wordlist";
@@ -70,7 +70,11 @@ export default {
   name: "WordCardList",
   components: {
     NCard,
-    NScrollbar
+    NScrollbar,
+    NText,
+    NPopover,
+    NPagination,
+    NButton,
   },
   setup() {
     const message = useMessage()

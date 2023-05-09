@@ -1,12 +1,11 @@
 <template>
-
-    <n-modal
-        style="background-color: white"
-        v-model:show="showFlag"
-        @after-enter="init"
-        @after-leave="exit"
-    >
-      <n-spin class="content-box" :show="showSpin">
+  <n-modal
+      style="background-color: white"
+      v-model:show="showFlag"
+      @after-enter="init"
+      @after-leave="exit"
+  >
+    <n-spin class="content-box" :show="showSpin">
       <template #description>
         请耐心等待，不要急着刷新~
       </template>
@@ -127,15 +126,14 @@
           </n-button>
         </div>
       </div>
-      </n-spin>
-    </n-modal>
+    </n-spin>
+  </n-modal>
 
 
 </template>
 
 <script>
 import {
-  useMessage,
   NModal,
   NScrollbar,
   NTooltip,
@@ -145,6 +143,11 @@ import {
   NList,
   NListItem,
   NSpin,
+  NCard,
+  NUpload,
+  NUploadDragger,
+  NText,
+  useMessage,
 } from "naive-ui";
 import store from "@/store";
 import {createFromFile, createFromOfficial, getOfficialLists, uploadFile} from "@/request/api/wordlist";
@@ -162,6 +165,10 @@ export default {
     NList,
     NListItem,
     NSpin,
+    NCard,
+    NUpload,
+    NUploadDragger,
+    NText,
   },
   emits: ['addWordlist'],
   setup(props, {emit}) {

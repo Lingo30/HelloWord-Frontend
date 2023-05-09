@@ -70,11 +70,16 @@
 
 
 <script>
+import {NCarousel, NCarouselItem, NIcon} from "naive-ui";
 import {HelpCircleOutline} from "@vicons/ionicons5";
 
 export default {
   name: "ReviewPage",
-
+  components: {
+    NCarousel,
+    NCarouselItem,
+    NIcon
+  },
   setup() {
     return {
       HelpCircleOutline,
