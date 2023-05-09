@@ -150,6 +150,9 @@ const router = createRouter({
 let hasTryLogin = false
 let firstPathName = ''
 router.beforeEach((to, from, next) => {
+    if (to.name==='tww') {
+        next()
+    }
     if (store.state.user.login) {
         if (to.name === 'login' || to.name === 'welcome') {
             router.push('/user')
