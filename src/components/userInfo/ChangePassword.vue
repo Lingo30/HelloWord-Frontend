@@ -66,6 +66,7 @@ export default {
     NButton,
   },
   setup() {
+    const sha256 = require('js-sha256')
     const msg = useMessage()
 
     let showPwd = ref(false);
@@ -91,8 +92,8 @@ export default {
         msg.error('密码长度应在6-15位，且同时包含字母与数字')
         return;
       }
-      const tempOld = md5(password.oldPwd);
-      const tempNew = md5(password.newPwd);
+      const tempOld = sha256(md5(password.oldPwd));
+      const tempNew = sha256(md5(password.newPwd));
       changePassword(store.state.user.uid, tempOld, tempNew).then((res) => {
         let success = res.state
         if (success) {

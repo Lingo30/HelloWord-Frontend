@@ -158,6 +158,7 @@ export default {
     MailOutline
   },
   setup() {
+    const sha256 = require('js-sha256').sha256;
     let loginPageFlag = ref(true);
     let username = ref('');
     let password = ref('');
@@ -229,7 +230,7 @@ export default {
           password.value = ''
           passwordConfirm.value = ''
         } else {
-          const encodePwd = md5(pwd);
+          const encodePwd = sha256(md5(pwd));
           let success = false
           let data
           let wrMsg = '网络错误'
@@ -267,7 +268,7 @@ export default {
         return;
       }
 
-      const encodePwd = md5(pwd);
+      const encodePwd = sha256(md5(pwd));
       let success = false
       let data
       let wrMsg = '网络错误'
