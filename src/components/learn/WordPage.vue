@@ -182,12 +182,12 @@ export default {
 		// 	})
 		// },
 		getGroupWord() {
-      let success = false
-      let errMsg = ''
+			let success = false
+			let errMsg = ''
 			get_group_words_in_list(store.state.user.uid).then((res) => {
 				// alert(res.hasBook)
-        success = res.state
-        errMsg = res.msg
+				success = res.state
+				errMsg = res.msg
 				if(res.hasBook==false) {
 					// alert(111)
 					router.push('/user/wordlist')
@@ -209,19 +209,19 @@ export default {
 					}
 				}
 			}).catch(err => errMsg = '网络错误').finally(() => {
-        if(!success) {
-          this.message.error(errMsg)
-        }
-      })
+				if(!success) {
+					this.message.error(errMsg)
+				}
+      		})
 		},
 		saveGroup() {
-      let success = false
-      let errMsg = ''
-			group_word_learn_save(store.state.user.uid, this.learnWords, this.list_id).then((res) => {
-				// pass
-        success = res.state
-        errMsg = res.msg
-			}).catch(err => errMsg = '网络错误').finally(() => {
+		let success = false
+		let errMsg = ''
+		group_word_learn_save(store.state.user.uid, this.learnWords, this.list_id).then((res) => {
+			// pass
+        	success = res.state
+        	errMsg = res.msg
+		}).catch(err => errMsg = '网络错误').finally(() => {
         if(!success) {
           this.message.error(errMsg)
         }
