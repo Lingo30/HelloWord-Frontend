@@ -131,7 +131,7 @@ export default {
   /* margin-left: 5%; */
   font-size: 55px;
   line-height: 25px;
-  font-family: YouSheBiaoTiYuan;
+  /* font-family: YouSheBiaoTiYuan; */
 }
 
 .n-card {

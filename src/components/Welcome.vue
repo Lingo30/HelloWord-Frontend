@@ -221,7 +221,8 @@ export default {
 .textTitle {
   font-size: 60px;
   line-height: 35px;
-  font-family: YouSheBiaoTiHei;
+  /* font-family: YouSheBiaoTiHei; */
+  font-weight: 700;
 }
 .welcome_top {
   position: fixed;
@@ -245,12 +246,14 @@ background: linear-gradient(90deg, rgba(255,255,255,1) 0%, rgba(255,255,255,1) 5
 .content_title {
   font-size: 80px;
   line-height: 80px;
-  font-family: YouSheBiaoTiHei;
+  /* font-family: YouSheBiaoTiHei; */
+  font-weight: 500;
 }
 .card_title {
   font-size: 60px;
   line-height: 65px;
-  font-family: YouSheBiaoTiHei;
+  /* font-family: YouSheBiaoTiHei; */
+  font-weight: 500;
 }
 .content_secondtitle {
   font-size: 26px;
@@ -269,10 +272,11 @@ background: linear-gradient(90deg, rgba(255,255,255,1) 0%, rgba(255,255,255,1) 5
 .bg_btn {
   align-items: center;
   justify-content: center;
-  font-family: YouSheBiaoTiYuan;
+  /* font-family: YouSheBiaoTiYuan; */
   font-size: 26px;
   color: white;
   transition: all 0.5s;
+  /* font-weight: 500; */
 }
 
 .bg_btn:hover {
@@ -284,7 +288,7 @@ background: linear-gradient(90deg, rgba(255,255,255,1) 0%, rgba(255,255,255,1) 5
 .bg_btn_plus {
   align-items: center;
   justify-content: center;
-  font-family: YouSheBiaoTiYuan;
+  /* font-family: YouSheBiaoTiYuan; */
   font-size: 34px;
   color: white;
   transition: all 0.4s;
@@ -297,11 +301,12 @@ background: linear-gradient(90deg, rgba(255,255,255,1) 0%, rgba(255,255,255,1) 5
 }
 .btn_login {
   /* font-family: YouSheBiaoTiHei; */
-  font-family: YouSheBiaoTiYuan;
+  /* font-family: YouSheBiaoTiYuan; */
   font-size: 22px;
   color: rgba(59, 130, 246);
   background-color: white;
   transition: all 0.25s;
+  /* font-weight: 500; */
 }
 .btn_login:hover {
   cursor: pointer;
@@ -317,6 +322,7 @@ background: linear-gradient(90deg, rgba(255,255,255,1) 0%, rgba(255,255,255,1) 5
   line-height: 40px;
   font-family: GSC-Extended-Heavy;
   color: rgb(110, 110, 110);
+  /* font-weight: 500; */
 }
 .card_content {
   transition: all 0.5s;
@@ -336,7 +342,7 @@ background: linear-gradient(90deg, rgba(255,255,255,1) 0%, rgba(255,255,255,1) 5
 .end_text {
   font-size: 64px;
   line-height: 80px;
-  font-family: YouSheBiaoTiHei;
+  /* font-family: YouSheBiaoTiHei; */
 }
 .end_second_text {
   font-size: 30px;
