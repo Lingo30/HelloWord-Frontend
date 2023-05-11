@@ -39,7 +39,9 @@
                     name="验证码"
                     placeholder="验证码"
                 />
-                <div style="margin-left: 30px" id="loginVerify"></div>
+                <div style="margin-left: 30px" class="verify-img">
+                  <n-image :src="verifyImg" @click="refreshVerifyCode" preview-disabled/>
+                </div>
               </div>
               <div style="margin: 26px;">
                 <button @click="login(username, password,verifyInput)" class="loginButton">
@@ -47,8 +49,8 @@
                 </button>
               </div>
               <div class="content-bottom">
-                <div @click="topassword">忘记密码？</div>
-                <div @click="change()">注册</div>
+                <div @click="change(false,true)">忘记密码？</div>
+                <div @click="change(false,false)">注册</div>
               </div>
             </div>
           </div>
@@ -64,31 +66,6 @@
                     placeholder="用户名"
                     maxlength="50"
                 />
-              </div>
-              <div style="margin:25px 0px">
-                <n-icon size="12">
-                  <mail-outline></mail-outline>
-                </n-icon>
-                <input
-                    v-model="email"
-                    name="邮箱"
-                    placeholder="邮箱"
-                    maxlength="50"
-                />
-              </div>
-              <div style="margin:25px 0px 25px 15px">
-                <!--                <img src="../../assets/img/email.png" height="12" width="12">-->
-                <input
-                    class="email-verify"
-                    style="width: 57%"
-                    v-model="emailVerificationCodeInput"
-                    name="邮箱验证码"
-                    placeholder="邮箱验证码"
-                    maxlength="20"
-                />
-                <button style="margin-left: 25px" @click="sendVerificationCode" :disabled="!canSendEmail" class="sendCodeButton">
-                  {{ canSendEmail ? '发送验证码' : `重新发送(${countdown}s)` }}
-                </button>
               </div>
               <div style="margin:25px 0px">
                 <img src="../../assets/img/key.png" height="12" width="12">
@@ -118,15 +95,51 @@
                     placeholder="验证码"
                     maxlength="10"
                 />
-                <div style="margin-left: 27px" id="registerVerify"></div>
+                <div style="margin-left: 27px" class="verify-img">
+                  <n-image :src="verifyImg" @click="refreshVerifyCode" preview-disabled/>
+                </div>
+              </div>
+              <div style="margin:25px 0px">
+                <n-icon size="12">
+                  <mail-outline></mail-outline>
+                </n-icon>
+                <input
+                    v-model="email"
+                    name="邮箱"
+                    placeholder="邮箱"
+                    maxlength="50"
+                />
+              </div>
+              <div style="margin:25px 0px 25px 15px">
+                <!--                <img src="../../assets/img/email.png" height="12" width="12">-->
+                <input
+                    class="email-verify"
+                    style="width: 57%"
+                    v-model="emailVerificationCodeInput"
+                    name="邮箱验证码"
+                    placeholder="邮箱验证码"
+                    maxlength="20"
+                />
+                <button
+                    style="margin-left: 25px"
+                    @click="forgetPageFlag? sendResetEmail(username,email,verifyInput):sendVerificationCode()"
+                    :disabled="!canSendEmail"
+                    class="sendCodeButton"
+                >
+                  {{ canSendEmail ? '发送验证码' : `重新发送(${countdown}s)` }}
+                </button>
               </div>
               <div style="margin:6px">
-                <button @click="register(username,password, passwordConfirm,verifyInput)" class="loginButton">
+                <button v-if="forgetPageFlag" @click="resetPassword(username,password, passwordConfirm,verifyInput)"
+                        class="loginButton">
+                  重设密码
+                </button>
+                <button v-else @click="register(username,password, passwordConfirm,verifyInput)" class="loginButton">
                   注册
                 </button>
               </div>
               <div class="content-bottom-register">
-                <div @click="change()">已有账号？点此登录</div>
+                <div @click="change(true,false)">{{ forgetPageFlag ? '想起密码？继续登录' : '已有账号？点此登录' }}</div>
               </div>
             </div>
           </div>
@@ -140,12 +153,11 @@
 <script>
 import {onMounted, ref} from "vue";
 import md5 from 'js-md5';
-import {NIcon, useMessage} from 'naive-ui'
-import {registerAPI, loginAPI, sendEmail} from "@/request/api/user";
+import {NIcon, NImage, useMessage} from 'naive-ui'
+import {registerAPI, loginAPI, sendEmail, reset, getVerifyImg, sendResetPasswordEmail} from "@/request/api/user";
 import store from "@/store";
 import router from "@/router";
 import {USERID} from "@/store/local";
-import {GVerify} from "@/components/login/GVerify";
 import {MailOutline} from "@vicons/ionicons5";
 
 export default {
@@ -155,27 +167,32 @@ export default {
   },
   components: {
     NIcon,
+    NImage,
     MailOutline
   },
   setup() {
     const sha256 = require('js-sha256').sha256;
     let loginPageFlag = ref(true);
+    let forgetPageFlag = ref(false);
     let username = ref('');
     let password = ref('');
     let passwordConfirm = ref('');
     let verifyInput = ref('')//验证码
 
-    let loginVerifyCode = null
-    let registerVerifyCode = null
+    let verifyImg = ref('')//验证码图片url
+    let imgCode = ''//验证码图片key
 
     const message = useMessage();
 
-    function change() {
-      loginPageFlag.value = !loginPageFlag.value;
+    function change(loginFlag, forgetFlag) {
+      refreshVerifyCode()
+      loginPageFlag.value = loginFlag
+      forgetPageFlag.value = forgetFlag
       username.value = ""
       password.value = ""
       passwordConfirm.value = ""
       verifyInput.value = ""
+      canSendEmail.value = true
     }
 
     function saveUserInfo(data) {
@@ -193,6 +210,40 @@ export default {
     let countdown = ref(60);
     const emailVerificationCodeInput = ref('');
 
+    //重置密码时发送邮件
+    function sendResetEmail(name, email, verify) {
+      if (!canSendEmail.value) return;
+
+      if (verify === '') {
+        message.info('请先输入上方图片验证码')
+        return;
+      }
+      let success = false
+      let errMsg = ''
+      sendResetPasswordEmail(name, email, verify, imgCode).then(res => {
+        success = res.state
+        errMsg = res.msg
+        if (success) {
+          message.info("记得找找是不是在垃圾邮件里~")
+          canSendEmail.value = false;
+          countdown.value = 60;
+          const timer = setInterval(() => {
+            countdown.value--;
+            if (countdown.value <= 0) {
+              clearInterval(timer);
+              canSendEmail.value = true;
+            }
+          }, 1000);
+        }
+      }).catch(err => errMsg = '网络错误').finally(() => {
+        if (!success) {
+          message.error(errMsg)
+          refreshVerifyCode()
+        }
+      })
+    }
+
+    //注册时发送邮箱验证码
     function sendVerificationCode() {
       if (!canSendEmail.value) return;
       canSendEmail.value = false;
@@ -204,7 +255,7 @@ export default {
           message.info("记得找找是不是在垃圾邮件里~")
         else
           message.error(res.msg)
-      }).catch(err=>{
+      }).catch(err => {
         message.error('网络错误')
       })
       const timer = setInterval(() => {
@@ -216,10 +267,24 @@ export default {
       }, 1000);
     }
 
-    async function register(name, pwd, pwdConfirm, verify) {
-      if (!registerVerifyCode.validate(verify)) {
-        message.error('验证码错误')
-      } else if (pwd !== pwdConfirm) {
+    async function refreshVerifyCode() {
+      let success = false
+      let errMsg = ''
+      await getVerifyImg().then((res) => {
+        success = res.state
+        errMsg = res.msg
+        if (success) {
+          verifyImg.value = res.img
+          imgCode = res.imgCode
+        }
+      }).catch(err => errMsg = '网络错误')
+      if (!success) {
+        message.error(errMsg)
+      }
+    }
+
+    function register(name, pwd, pwdConfirm, verify) {
+      if (pwd !== pwdConfirm) {
         message.error("密码前后不一致");
       } else if (name === '' || pwd === '') {
         message.error("用户名或密码不能为空");
@@ -233,12 +298,12 @@ export default {
           const encodePwd = sha256(md5(pwd));
           let success = false
           let data
-          let wrMsg = '网络错误'
-          registerAPI(name, encodePwd, email.value, emailVerificationCodeInput.value).then((res) => {
+          let wrMsg = ''
+          registerAPI(name, encodePwd, email.value, emailVerificationCodeInput.value, verify, imgCode).then((res) => {
             success = res.state
             data = res.data
             wrMsg = res.msg
-          }).catch(err=>{}).finally(() => {
+          }).catch(err => wrMsg = '网络错误').finally(() => {
             if (success) {
               saveUserInfo(data);
               message.success("注册成功");
@@ -246,37 +311,31 @@ export default {
               router.push('/user')
             } else {
               message.error(wrMsg);
-              registerVerifyCode.refresh()
+              refreshVerifyCode()
             }
           })
           return
         }
       }
-      registerVerifyCode.refresh()
+      refreshVerifyCode()
     }
 
     function login(name, pwd, verify) {
-      if (!loginVerifyCode.validate(verify)) {
-        message.error('验证码错误')
-        loginVerifyCode.refresh()
-        return;
-      }
-
       if (name === '' || pwd === '') {
         message.error("用户名或密码不能为空");
-        loginVerifyCode.refresh()
+        refreshVerifyCode()
         return;
       }
 
       const encodePwd = sha256(md5(pwd));
       let success = false
       let data
-      let wrMsg = '网络错误'
-      loginAPI(name, encodePwd).then((res) => {
+      let wrMsg = ''
+      loginAPI(name, encodePwd, verify, imgCode).then((res) => {
         success = res.state
         data = res.data
         wrMsg = res.msg
-      }).catch(err=>{}).finally(() => {
+      }).catch(err => wrMsg = '网络错误').finally(() => {
         if (success) {
           saveUserInfo(data);
           message.success("登录成功");
@@ -284,29 +343,66 @@ export default {
           router.push('/user')
         } else {
           message.error(wrMsg);
-          loginVerifyCode.refresh()
+          refreshVerifyCode()
         }
       })
     }
 
+    function resetPassword(name, pwd, pwdConfirm, verify) {
+      if (pwd !== pwdConfirm) {
+        message.error("密码前后不一致");
+      } else if (name === '' || pwd === '') {
+        message.error("用户名或密码不能为空");
+      } else {
+        let format = /^(?=.*[a-zA-Z])(?=.*[0-9])[a-zA-Z0-9~!@&%#_]{6,15}$/gi
+        if (!format.test(password.value)) {
+          message.error('密码长度应在6-15位，且同时包含字母与数字')
+          password.value = ''
+          passwordConfirm.value = ''
+        } else {
+          const encodePwd = sha256(md5(pwd));
+          let success = false
+          let wrMsg = ''
+          reset(name, encodePwd, email.value, emailVerificationCodeInput.value, verify, imgCode).then((res) => {
+            success = res.state
+            wrMsg = res.msg
+          }).catch(err => wrMsg = '网络错误').finally(() => {
+            if (success) {
+              message.success("修改成功");
+              change(true, false)
+            } else {
+              message.error(wrMsg);
+              refreshVerifyCode()
+            }
+          })
+          return
+        }
+      }
+      refreshVerifyCode()
+    }
+
     onMounted(() => {
-      registerVerifyCode = new GVerify('registerVerify', 'register')
-      loginVerifyCode = new GVerify('loginVerify', 'login')
+      refreshVerifyCode()
     })
 
     return {
       loginPageFlag,
+      forgetPageFlag,
       username,
       password,
       passwordConfirm,
       verifyInput,
+      verifyImg,
 
       change,
+      refreshVerifyCode,
       register,
       login,
+      resetPassword,
 
       email,
       emailVerificationCodeInput,
+      sendResetEmail,
       sendVerificationCode,
       canSendEmail,
       countdown,
@@ -457,18 +553,15 @@ input:-webkit-autofill::first-line {
   font-weight: bold;
 }
 
-#loginVerify {
+.verify-img {
   width: 0;
   height: 25px;
   display: inline-flex;
-  /*position: relative;*/
 }
 
-#registerVerify {
-  width: 0;
-  height: 25px;
-  display: inline-flex;
-  /*position: relative;*/
+.verify-img:hover {
+  cursor: pointer;
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.2);
 }
 
 .sendCodeButton {

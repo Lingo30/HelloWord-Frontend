@@ -11,7 +11,14 @@ export function cookieLogin(uid) {
     })
 }
 
-export function loginAPI(name, pwd) {
+export function getVerifyImg() {
+    return request({
+        url: 'get_verify_img/',
+        method: 'post',
+    })
+}
+
+export function loginAPI(name, pwd, verify, imgCode) {
     /*
     返回数据：
     state: true/false 是否登录成功
@@ -24,6 +31,8 @@ export function loginAPI(name, pwd) {
     const data = JSON.stringify({
         name: name,
         password: pwd,
+        verify: verify,
+        imgCode: imgCode,
     })
     return request({
         url: 'login/',
@@ -32,7 +41,7 @@ export function loginAPI(name, pwd) {
     })
 }
 
-export function registerAPI(name, pwd, email, code) {
+export function registerAPI(name, pwd, email, code, verify, imgCode) {
     /*
     返回数据：
     state: true/false 是否注册成功
@@ -47,9 +56,41 @@ export function registerAPI(name, pwd, email, code) {
         password: pwd,
         email: email,
         code: code,
+        verify: verify,
+        imgCode: imgCode,
     })
     return request({
         url: 'register/',
+        method: 'post',
+        data
+    })
+}
+
+export function sendResetPasswordEmail(name, email, verify, imgCode) {
+    const data = JSON.stringify({
+        name: name,
+        email: email,
+        verify: verify,
+        imgCode: imgCode,
+    })
+    return request({
+        url: 'send_reset_password_email_code/',
+        method: 'post',
+        data
+    })
+}
+
+export function reset(name, pwd, email, code, verify, imgCode) {
+    const data = JSON.stringify({
+        name: name,
+        password: pwd,
+        email: email,
+        code: code,
+        verify: verify,
+        imgCode: imgCode,
+    })
+    return request({
+        url: 'reset_password//',
         method: 'post',
         data
     })
@@ -90,7 +131,6 @@ export function submitAvatar(imgFile, uid) {
     });
     formData.append('user_id', blob2)
 
-    console.log(blob2)
     return request({
         url: "submit_image/",
         method: "post",
