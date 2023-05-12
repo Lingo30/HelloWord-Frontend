@@ -66,7 +66,7 @@ export default {
     NButton,
   },
   setup() {
-    const sha256 = require('js-sha256')
+    const sha256 = require('js-sha256').sha256;
     const msg = useMessage()
 
     let showPwd = ref(false);
