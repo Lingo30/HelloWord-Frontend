@@ -175,7 +175,7 @@ export default {
         errMsg = res.msg
         res.history.forEach((item) => {
           let newList = {
-            time: item.time,
+            time: item.time.replace("T"," ").split(":").slice(0,2).join(":"),
             type: !item.type,
             content: item.content,
           };
