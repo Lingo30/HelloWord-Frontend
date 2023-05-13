@@ -11,8 +11,8 @@ module.exports = defineConfig({
                 target: 'https://sayhelloword.com',//代理的目标地址
                 changeOrigin: true,
                 pathRewrite: {
-                    '^/api': '/dev-api',
-                    // '^/api': '/prod-api',
+                    // '^/api': '/dev-api',
+                    '^/api': '/prod-api',
                 }
             }
         }
