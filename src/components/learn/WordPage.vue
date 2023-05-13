@@ -8,6 +8,10 @@
         <div class="word_meaning_box">
           <div class="word_reading" v-if="shown==true">
             音标: [{{ group_words[curId].phonetic_symbol }}]
+			<router-link to="" @click="play" v-if="shown==true">
+				<!-- 播放 -->
+				<img src="../../assets/img/sound1.png">
+			</router-link>
           </div>
           <div class="word_meaning" v-if="shown==true">
             <n-scrollbar>
@@ -171,16 +175,23 @@ export default {
 		}
 	},
 	methods: {
-		// searchWord(word) {
-		// 	searchWordAPI(word).then((res) => {
-		// 		if(res.data.code === 200) {
-		// 			this.group_words = res.data.group_words
-		// 			this.curId = 0
-		// 		} else {
-		// 			message.error("查询错误！");
-		// 		}
-		// 	})
-		// },
+		getSearchWord(word) {
+			alert(word)
+			this.value=""
+			this.showModal=true
+			get_search_word(word).then((res) => {
+				// this.searchWord = res.searchWord
+				// if(res.state==false) {
+				// 	alert(false)
+				// } else {
+				// 	this.searchWord = res.searchWord
+				// }
+			}).catch(err => errMsg = '网络错误').finally(() => {
+				if(!success) {
+				this.message.error(errMsg)
+        	}
+      })
+		},
 		getGroupWord() {
 			let success = false
 			let errMsg = ''
@@ -204,6 +215,7 @@ export default {
 						store.state.user.groupWords.splice(0, store.state.user.groupWords.length)
 						this.group_words.forEach((ele) => store.state.user.groupWords.push(ele))
 						this.list_id = res.list_id
+						this.play();
 					} else {
 						router.push('/user/finish')
 					}
@@ -252,6 +264,7 @@ export default {
 				this.learnWords[pos] = {word_id: this.group_words[this.curId].word_id, forget_times: times, simple: false}
 			}
 			this.showWord()
+			this.play()
 			//this.nextWord()
 		},
 		nextWord() {
@@ -270,6 +283,7 @@ export default {
 			this.forget_times = 0
 			this.curId = this.curId + 1
 			this.getRelated(this.group_words[this.curId].word_id)
+			this.play()
 		},
 		getRelated() {
 			//TODO 通过uid获取所有词单id
@@ -292,7 +306,18 @@ export default {
 		showWord() {
 			this.shown = true
 			this.forget_times = 1
-		}
+			this.play()
+		},
+		play() {
+			this.audio = new Audio();
+			this.audio.src = 'https://dict.youdao.com/speech?audio=' + this.group_words[this.curId].word;
+			this.audio.play();
+		},
+		play1() {
+			this.audio = new Audio();
+			this.audio.src = 'https://dict.youdao.com/speech?audio=' + this.searchWord.word;
+			this.audio.play();
+		},
 	},
 	created() {
 		this.getGroupWord();
