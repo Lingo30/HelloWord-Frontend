@@ -12,6 +12,7 @@ module.exports = defineConfig({
                 changeOrigin: true,
                 pathRewrite: {
                     '^/api': '/dev-api',
+                    // '^/api': '/prod-api',
                 }
             }
         }
