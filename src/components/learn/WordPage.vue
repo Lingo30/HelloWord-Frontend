@@ -1,5 +1,23 @@
 <template>
 	<div>
+		<div class="word_search">
+			<div class="search">
+				<n-input
+				v-model:value="value"
+				type="text"
+				placeholder="您需要查询的单词"
+				style="border-radius: 15px;"
+				maxlength="30"
+				on-clear="getSearchWord"
+			/>
+			</div>
+			<div class="search_button">
+				<n-button type="primary" style="border-radius: 10px;" @click="getSearchWord(value)">
+					查找
+				</n-button>
+			</div>
+		</div>
+
 		<div class="class_table">
       <n-card style="overflow-x: hidden;overflow-y: auto;" class="word_card shadow-lg">
         <div class="word_name">
@@ -33,26 +51,6 @@
           </n-button>
         </div>
       </n-card>
-<!--			<div class="word_box">-->
-<!--				&lt;!&ndash; <div class="word_search">-->
-<!--					<div class="search">-->
-<!--						<n-input-->
-<!--						v-model:value="value"-->
-<!--						type="text"-->
-<!--						placeholder="您需要查询的单词"-->
-<!--						style="border-radius: 15px;"-->
-<!--					/>-->
-<!--					</div>-->
-<!--					<div class="search_button">-->
-<!--						<n-button type="primary" style="border-radius: 10px;" @click="searchWord()">-->
-<!--							查找-->
-<!--						</n-button>-->
-<!--					</div>-->
-<!--				</div> &ndash;&gt;-->
-<!--				<div class="word_card_box">-->
-<!--					-->
-<!--				</div>-->
-<!--		</div>-->
 			<div class="info_card shadow-lg">
 				<n-card :bordered="false" class="info_card1 shadow-lg">
 					<div class="info_box">
@@ -61,7 +59,10 @@
 						</div>
 						<div class="info_content" v-if="shown==true">
               <n-scrollbar>
-                <n-card :bordered="false" content-style="padding: 1.5%;" class="info_word1" v-for="(synonym, index) in relation.synonyms">
+                <n-card :bordered="false" content-style="padding: 1.5%;" 
+					class="info_word1" v-for="(synonym, index) in relation.synonyms"
+					@click="getSearchWord(synonym.word)"
+				>
                   <div class="related_word">
                     {{synonym.word}} [{{synonym.phonetic_symbol}}]
                   </div>
@@ -80,7 +81,10 @@
 						</div>
 						<div class="info_content" v-if="shown==true">
               <n-scrollbar>
-                <n-card :bordered="false" content-style="padding: 1.5%;" class="info_word2" v-for="(antonym, index) in relation.antonyms">
+                <n-card :bordered="false" content-style="padding: 1.5%;" 
+					class="info_word2" v-for="(antonym, index) in relation.antonyms"
+					@click="getSearchWord(antonym.word)"
+				>
                   <div class="related_word">
                     {{ antonym.word }} [{{antonym.phonetic_symbol}}]
                   </div>
@@ -114,9 +118,9 @@
 
 
 <script>
-import {NCard, NScrollbar, NButton, useMessage} from 'naive-ui'
+import {NCard, NScrollbar, NButton, NInput, NModal, useMessage} from 'naive-ui'
 // import {searchWordAPI, getWordAPI} from "@/request/api/user";
-import {get_group_words_in_list, searchWordAPI, deleteWordAPI, group_word_learn_save, get_word_releation} from "@/request/api/learn";
+import {get_group_words_in_list, get_search_word, deleteWordAPI, group_word_learn_save, get_word_releation} from "@/request/api/learn";
 import store from "@/store";
 import {reactive, ref } from 'vue';
 import router from '@/router';
@@ -127,10 +131,13 @@ export default {
     NCard,
     NScrollbar,
     NButton,
+	NInput,
+	NModal,
   },
 	data() {
 		return {
-      message: useMessage(),
+     		message: useMessage(),
+			value: ref(''),
 			group_words: reactive([ {
 					// id: 1,
                     word_id: 1,
@@ -339,37 +346,27 @@ export default {
     background-color: rgba(255,255,255,0.3);
     box-shadow: 10px 12px 16px 10px  rgba(0,0,0,0.24), 10px 17px 50px 10px #4E655D;
   }
-	.word_box {
-		position: relative;
-    margin-left:0%;
-		width: 50%;
-    height: 90%;
-    /*background-color: aqua;*/
-		display: flex;
-		flex-direction: column;
-	}
-	.word_search {
-		margin-top: 8%;
+
+  .word_search {
+		margin-top: 2%;
 		top: 10%;
-		height: 5%;
+		/* height: 10%; */
 		/* background-color: blue; */
 		display: flex;
 		opacity: 65%;
 	}
 	.search {
-		margin-left: 20%;
-		width: 55%;
+		margin-left: 15%;
+		width: 60%;
 		/* background-color: black; */
 		overflow: auto;
 	}
 	.search_button {
-		width: 10%;
-		margin-left: 1%;
+		width: 8%;
+		/* margin-left: 1%; */
 		/* background-color: wheat; */
 		overflow: auto;
 	}
-
-
 	.word_card_box {
 		/* position: relative; */
 		/* margin-left: 3%; */

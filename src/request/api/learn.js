@@ -114,3 +114,22 @@ export function get_word_releation(word_id) {
     })
 }
 
+export function get_search_word(word) {
+    /*
+        searchWord: {
+				word: "abandon",
+				phonetic_symbol: "ә'bændәn",
+				definition_cn: "vt. 放弃",
+				example: "",
+			},
+    */
+    const data = JSON.stringify({
+        word: word
+    })
+    return request({
+        // url: "get_search_word/",
+        url: "https://mock.apifox.cn/m2/2544762-0-default/80899841",
+        method: 'post',
+        data
+    })
+}
