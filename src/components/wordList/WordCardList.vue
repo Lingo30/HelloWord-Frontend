@@ -52,19 +52,25 @@
         <!--          </div>-->
         <!--        </template>-->
       </n-pagination>
-      <n-button class="set-learn-button" size="tiny" v-show="showPagination&&!selectedFlag" type="info"
-                @click="selectWordlist(listId)">
-        设为背诵词单
-      </n-button>
+      <n-space>
+        <n-button class="set-learn-button" size="tiny" v-show="showPagination&&!official" type="info"
+                  @click="uploadWordlist(listId)">
+          上传词单
+        </n-button>
+        <n-button class="set-learn-button" size="tiny" v-show="showPagination&&!selectedFlag" type="info"
+                  @click="selectWordlist(listId)">
+          设为背诵
+        </n-button>
+      </n-space>
     </div>
   </div>
 </template>
 
 <script>
-import {NCard, NScrollbar, NText, NPopover, NPagination, NButton, useMessage} from "naive-ui";
+import {NCard, NScrollbar, NText, NPopover, NPagination, NButton, NSpace, useMessage, useDialog} from "naive-ui";
 import {reactive, ref} from "vue";
 import store from "@/store";
-import {getWordsInfo, updateLearnWordlist} from "@/request/api/wordlist";
+import {getWordsInfo, submitOfficial, updateLearnWordlist} from "@/request/api/wordlist";
 
 export default {
   name: "WordCardList",
@@ -75,9 +81,14 @@ export default {
     NPopover,
     NPagination,
     NButton,
+    NSpace,
+  },
+  props: {
+    official: Boolean,
   },
   setup() {
     const message = useMessage()
+    const dialog = useDialog()
     const words = reactive([])
     // for (let i = 0; i < 20; i++)
     //   words.push({
@@ -131,6 +142,34 @@ export default {
       })
     }
 
+    //申请上传为官方词单
+    function uploadWordlist(listId) {
+      dialog.info({
+        title: '提交确认',
+        content: '要把你的词单上传为官方词单吗？',
+        positiveText: '确定',
+        negativeText: '让我再想想',
+        onPositiveClick: (listId) => {
+          submitToOfficial(listId)
+        }
+      })
+    }
+
+    function submitToOfficial(listId) {
+      let success = false
+      let errMsg = ''
+      submitOfficial(store.state.user.uid, listId).then(res => {
+        success = res.state
+        errMsg = res.msg
+      }).catch(err => errMsg = '网络错误').finally(() => {
+        if (success) {
+          message.success('你的提交申请已收到，我们会尽快审核')
+        } else {
+          message.error(errMsg)
+        }
+      })
+    }
+
     function selectWordlist(listId) {
       // 服务器更新正在背诵的词单
       let success = false
@@ -162,6 +201,7 @@ export default {
 
       showWords,
       changePage,
+      uploadWordlist,
       selectWordlist,
     }
   }
@@ -209,7 +249,8 @@ export default {
   display: flex;
   flex-direction: row;
   margin-bottom: 1vh;
-  justify-content: center;
+  justify-content: space-between;
+  padding: 0 3px 0 5px;
 }
 
 .set-learn-button {

@@ -108,6 +108,7 @@ export default {
       num: 10000000,
       learned: 9999999,
       creator: '',
+      official: false,
       date: {
         month: '',
         day: ''
@@ -117,7 +118,7 @@ export default {
 
     function handleClick() {
       if (props.editFlag) return
-      emit('handleClick', props.listId, info.num)
+      emit('handleClick', props.listId, info.num, info.official)
     }
 
     function handleClose() {

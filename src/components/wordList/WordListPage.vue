@@ -56,7 +56,7 @@
         </div>
       </div>
       <div class="right">
-        <WordCardList ref="wordCardListRef"/>
+        <WordCardList ref="wordCardListRef" :official="officialFlagRef"/>
       </div>
     </div>
   </n-space>
@@ -96,9 +96,11 @@ export default {
     const updateList = []//待更新词单名的词单，{listId:123,name:'aaa'}
     const message = useMessage()
     let createPageRef = ref(null)
+    const officialFlagRef = ref(true)//当前选中的词单是否为官方词单
 
-    function clickWordList(id, totalNum) {
+    function clickWordList(id, totalNum, isOficial) {
       clickedId.value = id
+      officialFlagRef.value = isOficial
       wordCardListRef.value.showWords(id, totalNum)
     }
 
@@ -198,6 +200,7 @@ export default {
       listIds,
       editFlag,
       createPageRef,
+      officialFlagRef,
 
       updateName,
       editWordList,
