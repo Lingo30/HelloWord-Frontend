@@ -1,7 +1,6 @@
 <template>
-  <TextBox ref="textBoxRef" :active="inputActive">
+  <TextBox ref="textBoxRef" :active="inputActive" :type="0">
     <template v-slot:left>
-
       <n-button id="left" round strong type="info">导入文本
         <input class="file-btn" type="file" accept=".txt" @change="handleFileUpload"/>
       </n-button>

@@ -1,14 +1,20 @@
 <template>
   <n-space vertical id="CardBox">
     <n-space id="AllContainer">
-      <n-space   class="export-box">
+      <n-space  class="export-box">
         <n-button type="info" ghost @click="handleExportInput" style="width:6vw; margin-left: 1vw;" class="export-btn">
           <template #icon>
             <n-icon><log-in-icon /></n-icon>
           </template>
           导出
         </n-button>
-        <n-button type="info" ghost @click="handleExportTranslation" style="width:6vw; margin-left: 30vw;" class="export-btn">
+        <n-button type="info" ghost @click="handleHistory" style="width:7vw; margin-left: 18vw;" class="export-btn">
+          <template #icon>
+            <n-icon><CalendarOutline /></n-icon>
+          </template>
+          历史记录
+        </n-button>
+        <n-button type="info" ghost @click="handleExportTranslation" style="width:6vw; margin-left: 31vw;" class="export-btn">
           <template #icon>
             <n-icon><log-in-icon /></n-icon>
           </template>
@@ -70,21 +76,26 @@
 
         </n-card>
       </n-space>
+      <div>
+        <HistoryRecd ref="historyRef" :type="type"></HistoryRecd>
+      </div>
       <div id="ButtonContainer">
         <slot id="left" name="left"></slot>
         <slot id="right" name="right"></slot>
       </div>
+
     </n-space>
   </n-space>
 </template>
 
 <script>
 import {computed, h, ref} from "vue";
-import { LogInOutline as LogInIcon } from '@vicons/ionicons5'
+import { LogInOutline as LogInIcon,CalendarOutline } from '@vicons/ionicons5'
 import {getSentenceAnalysis} from "@/request/api/review";
 import {NSpace, NButton, NIcon, NSpin, NInput, NTag, NCard, NRate, NAvatar, useNotification} from "naive-ui";
 import Kaleido from "@/assets/img/kaleidoBlank.png";
 import store from "@/store";
+import HistoryRecd from "@/components/textDIsplay/HistoryRecd";
 
 export default {
   name: "TextBox",
@@ -105,8 +116,10 @@ export default {
       type: String,
       default: "",
     },
+    type: Number,
   },
   components: {
+    HistoryRecd,
     NSpace,
     NButton,
     NIcon,
@@ -115,7 +128,8 @@ export default {
     NTag,
     NCard,
     NRate,
-    LogInIcon
+    LogInIcon,
+    CalendarOutline,
   },
 
   setup(props,{emit}) {
@@ -126,6 +140,12 @@ export default {
     const inputSpin = ref(false);
     const inputHeight = computed(() => (props.active ? "60vh" : "50vh"));
     const notification = useNotification();
+    const historyRef = ref(null)
+
+    function handleHistory() {
+      // console.log(historyRef.value.showHistory);
+      historyRef.value.showHistory = true
+    }
 
     async function onSelect(event) {
       selectedText.value = event.target.value.substring(
@@ -152,22 +172,12 @@ export default {
             duration: 3e3,
 
           })
-          // if (lastTimes === 0)
-          //   msg.success('这是最后一句啦，我先歇了=v=')
-          // else if (lastTimes <= 5)
-          //   msg.success('今天还能再帮你分析' + lastTimes + '个句子-v-')
           analysis.value = res.translation
           analysis.value += '\n'
           analysis.value += res.structure
-          // console.log(analysis.value);
-          // structure
         }
         else {
           errorMsg = res.last_times === 0?'今天打烊了，明天再问我好吗QAQ':res.msg
-          // if (res.last_times === 0)
-          //   msg.error('今天打烊了，明天再问我好吗QAQ')
-          // else
-          //   msg.error(res.msg)
         }
       }).catch().finally(()=>{
         if (!success) {
@@ -247,6 +257,8 @@ export default {
 
     return {
       value: ref(null),
+      handleHistory,
+      historyRef,
       rateValue,
       inputSpin,
       analysisSpin,
@@ -259,6 +271,7 @@ export default {
       selectedWords,
       handleTagChecked,
       inputHeight,
+      CalendarOutline,
     };
   }
 }

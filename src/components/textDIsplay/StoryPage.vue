@@ -4,6 +4,7 @@
            :words="words"
            :staticText="inputPlaceholder"
            :input-value="story"
+           :type="1"
            @handleTagChecked="handleSelectedWords"
            @update:selectedWords="handleSelectedWords">
     <template v-slot:left>
