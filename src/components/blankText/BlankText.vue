@@ -10,6 +10,12 @@
           </template>
           导出
         </n-button>
+        <n-button type="info" ghost @click="handleHistory" style="width:7vw; margin-left: 28vw;" class="export-btn">
+          <template #icon>
+            <n-icon><CalendarOutline /></n-icon>
+          </template>
+          历史记录
+        </n-button>
       </n-space>
 
       <n-space class="text-card">
@@ -55,6 +61,9 @@
           </n-scrollbar>
         </n-card>
       </n-space>
+      <div>
+        <HistoryRecd ref="historyRef" :type="2"></HistoryRecd>
+      </div>
       <div class="btn-box">
         <n-button round class="left button" type="info" @click="changeArticle">换一篇文章吧</n-button>
         <n-button round class="right button" type="info" ghost @click="submitAnswers">提交</n-button>
@@ -68,7 +77,7 @@
 import {h, onBeforeMount, reactive, ref} from "vue";
 import {getBlankText} from "@/request/api/review";
 import store from "@/store";
-import {LogInOutline as LogInIcon} from '@vicons/ionicons5'
+import {LogInOutline as LogInIcon,CalendarOutline} from '@vicons/ionicons5'
 import {
   NSpace,
   NButton,
@@ -80,10 +89,10 @@ import {
   NListItem,
   NThing,
   NAvatar,
-  useMessage,
   useNotification
 } from "naive-ui";
 import Kaleido from "@/assets/img/kaleidoBlank.png";
+import HistoryRecd from "@/components/textDIsplay/HistoryRecd";
 
 export default {
   name: "BlankText",
@@ -91,6 +100,8 @@ export default {
     NSpace,
     NButton,
     NIcon,
+    CalendarOutline,
+    HistoryRecd,
     NSpin,
     NCard,
     NScrollbar,
@@ -100,15 +111,6 @@ export default {
     LogInIcon
   },
   setup() {
-    // const content = ref('Once upon a time in the magical world of Valoran, there lived a young Summoner named Lily. She had a deep fascination with the champions and their unique abilities. She would often watch their battles and dream of one day becoming a skilled Summoner herself.\n' +
-    //     '\n' +
-    //     'One day, Lily received an invitation to attend the prestigious League of Legends tournament in Valoran. She was overjoyed and immediately set out on her journey. Upon arriving, she was mesmerized by the grandeur of the arena and the cheering crowds.\n' +
-    //     '\n' +
-    //     'As the tournament began, Lily was excited to see her favorite champion, Vayne, in action. Vayne was known for her exceptional marksmanship and swift agility. However, during the match, Vayne was injured and couldn\'t continue the battle.\n' +
-    //     '\n' +
-    //     'Feeling disheartened, Lily knew that the team needed a miracle to win. Suddenly, a new champion appeared in the arena, wielding a massive sword and donning armor made of obsidian. It was none other than the legendary warrior, Jarvan IV.\n' +
-    //     '\n' +
-    //     'With his incredible strength and unwavering courage, Jarvan IV led the team to victory, impressing Lily and the entire crowd. From that day on, Lily became a devoted fan of Jarvan IV and vowed to one day master the art of Summoning and become a great Summoner just like him.');
     const content = ref('');
     const wordList = reactive([]);
     const userAnswers = reactive([]);
@@ -116,7 +118,6 @@ export default {
     const realAnswers = reactive([]);
     const usedWords = ref(null)
     const showSpin = ref(false);
-    const msg = useMessage();
     const notification = useNotification()
 
     async function load() {
@@ -181,9 +182,9 @@ export default {
       showSpin.value = false;
     }
 
-    onBeforeMount(() => {
-      load()
-    })
+    // onBeforeMount(() => {
+    //   load()
+    // })
 
     // 判断是否是单词空的第一个字符
     const isBlankStart = (index) => {
@@ -263,8 +264,19 @@ export default {
       document.body.removeChild(hiddenLink);
     }
 
+    // 历史记录相关
+    const historyRef = ref(null)
+
+    function handleHistory() {
+      historyRef.value.showHistory = true
+      // console.log(historyRef.value.showHistory);
+    }
+
     return {
       inputs,
+      historyRef,
+      handleHistory,
+      CalendarOutline,
       handleExportInput,
       init,
       showSpin,
