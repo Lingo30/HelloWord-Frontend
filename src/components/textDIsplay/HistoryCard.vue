@@ -27,6 +27,7 @@ import {AccessibilityOutline} from '@vicons/ionicons5'
 import Checkmark16Filled from "@vicons/fluent/Checkmark16Filled";
 import {onMounted, reactive, ref} from "vue";
 import store from "@/store";
+import {getRecordInfo} from "@/request/api/review";
 
 export default {
   name: "HistoryCard",
@@ -65,28 +66,24 @@ export default {
       emit('handleClick', props.listId)
     }
 
-    // onMounted(() => {
-    //   // 根据 listId获取用户词单的基本信息
-    //   let errMsg = ''
-    //   let success = false
-    //   getUserWordlistInfo(props.listId).then((res) => {
-    //     success = res.state
-    //     errMsg = res.msg
-    //     info.name = res.name
-    //     info.num = res.num
-    //     info.learned = res.learned
-    //     info.creator = res.creator
-    //     info.date = res.date
-    //     newName.value = info.name
-    //     if (props.clicked) {
-    //       handleClick()
-    //     }
-    //   }).catch(err => errMsg = '网络错误').finally(() => {
-    //     if (!success) {
-    //       message.error(errMsg)
-    //     }
-    //   })
-    // })
+    onMounted(() => {
+      // 根据 listId获取用户词单的基本信息
+      let errMsg = ''
+      let success = false
+      getRecordInfo(store.state.user.uid,props.type,props.listId).then((res) => {
+        success = res.state
+        errMsg = res.msg
+        info.content = res.content
+        info.date = res.date
+        if (props.clicked) {
+          handleClick()
+        }
+      }).catch(err => errMsg = '网络错误').finally(() => {
+        if (!success) {
+          message.error(errMsg)
+        }
+      })
+    })
 
     return {
       AccessibilityOutline,

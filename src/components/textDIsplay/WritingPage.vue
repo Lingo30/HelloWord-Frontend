@@ -1,5 +1,5 @@
 <template>
-  <TextBox ref="textBoxRef" :active="inputActive" :type="0">
+  <TextBox ref="textBoxRef" :active="inputActive" :type="0" @loadHistory="loadHistory">
     <template v-slot:left>
       <n-button id="left" round strong type="info">导入文本
         <input class="file-btn" type="file" accept=".txt" @change="handleFileUpload"/>
@@ -105,10 +105,17 @@ export default {
       textBoxRef.value.analysisSpin = false;
       // console.log(textBoxRef.value.analysis);
     }
+
+    function loadHistory(history) {
+      textBoxRef.value.analysis = history.analysis
+      textBoxRef.value.rateValue = parseFloat(history.rating)/2
+    }
+
     return {
       inputActive,
       textBoxRef,
       handleFileUpload,
+      loadHistory,
       onRightButtonClick
     }
   }
