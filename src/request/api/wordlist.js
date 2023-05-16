@@ -206,7 +206,7 @@ export function getAim(uid) {
     })
 }
 
-export function setAim(uid,aim) {
+export function setAim(uid, aim) {
     const data = JSON.stringify({
         userId: uid,
         num: aim
@@ -214,6 +214,18 @@ export function setAim(uid,aim) {
 
     return request({
         url: 'set_daily_num/',//TODO
+        method: 'post',
+        data
+    })
+}
+
+export function submitOfficial(uid, listId) {
+    const data = JSON.stringify({
+        userId: uid,
+        listId: listId,
+    })
+    return request({
+        url: 'submit_official_wordlist',
         method: 'post',
         data
     })
