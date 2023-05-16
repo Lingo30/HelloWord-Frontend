@@ -128,7 +128,7 @@ export function get_search_word(word) {
     })
     return request({
         // url: "get_search_word/",
-        url: "https://mock.apifox.cn/m2/2544762-0-default/80899841",
+        url: "get_search_word/",
         method: 'post',
         data
     })
