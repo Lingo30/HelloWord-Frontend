@@ -111,7 +111,38 @@
 			</div>
 		</div>
 	</div>
-
+	<n-modal
+		v-model:show="showModal"
+		class="searchModal"
+		:mask-closable="false"
+		:style="bodyStyle"
+		preset="card"
+		content="你确认"
+		:segmented="segmented"
+		@positive-click="onPositiveClick"
+		@negative-click="onNegativeClick"
+	>
+		<div class="word_name_search">
+          {{searchWord.word}}
+        </div>
+		<div class="word_meaning_box_search">
+          	<div class="word_reading_search">
+				音标: [{{ searchWord.phonetic_symbol }}]
+				<router-link to="" @click="play1">
+					<img src="../../assets/img/sound1.png">
+				</router-link>
+          	</div>
+			<div>
+			<audio></audio>
+			</div>
+			<div class="word_meaning_search">
+				{{ searchWord.definition_cn }}
+			</div>
+			<div class="word_example_search">
+				例句：{{ searchWord.example }}
+			</div>
+        </div>
+	</n-modal>
 
 
   </template>
@@ -134,10 +165,18 @@ export default {
 	NInput,
 	NModal,
   },
-	data() {
+  data() {
 		return {
-     		message: useMessage(),
+      		message: useMessage(),
 			value: ref(''),
+			showModal: ref(false),
+			// searchRef: ref(null),
+			bodyStyle: {
+				width: "35%",
+				height: "550px",
+				// height: "600px",
+				border: "2px",
+        	},
 			group_words: reactive([ {
 					// id: 1,
                     word_id: 1,
@@ -158,15 +197,15 @@ export default {
 						definition_cn: "",
 						phonetic_symbol: "",
 						},
-					],
-					antonyms: [{
-                        word_id: 6,
-						word: "",
-						definition_cn: "",
-						phonetic_symbol: "",
-						},
-					],
-					example: "",
+				],
+				antonyms: [{
+					word_id: 6,
+					word: "",
+					definition_cn: "",
+					phonetic_symbol: "",
+					},
+				],
+				example: "",
             }),
 			learnWords: [ {
 					word_id: 1,
@@ -174,7 +213,12 @@ export default {
 					simple: false,
 				},
 			],
-
+			searchWord: {
+				word: "abandon",
+				phonetic_symbol: "ә'bændәn",
+				definition_cn: "vt. 放弃, 抛弃, 遗弃, 使屈从, 沉溺, 放纵\nn. 放任, 无拘束, 狂热",
+				example: "At this point, Jobs, his doctors, and Apple are silent on the specific health issues that have required him to abandon his post. 现在，乔布斯，他的医生，和苹果公司在他的要求他放弃苹果职位的特殊健康问题上保持着沉默。",
+			},
 			curId: ref(0),
 			forget_times: ref(0),
 			shown: ref(false),
@@ -187,12 +231,12 @@ export default {
 			this.value=""
 			this.showModal=true
 			get_search_word(word).then((res) => {
-				// this.searchWord = res.searchWord
-				// if(res.state==false) {
-				// 	alert(false)
-				// } else {
-				// 	this.searchWord = res.searchWord
-				// }
+				this.searchWord = res.searchWord
+				if(res.state==false) {
+					alert(false)
+				} else {
+					this.searchWord = res.searchWord
+				}
 			}).catch(err => errMsg = '网络错误').finally(() => {
 				if(!success) {
 				this.message.error(errMsg)
@@ -410,12 +454,24 @@ export default {
 		margin-left: 15%;
 		margin-right: 15%;
 		height: 10%;
-    align-items: center;
-    justify-content: center;
-    line-height: 100%;
+    	align-items: center;
+    	justify-content: center;
+    	line-height: 100%;
 		background-color: rgba(255, 255, 255, 0.6);
 		text-align: center;
 		font-size: 40px;
+		border-radius: 10px;
+	}
+	.word_name_search {
+		/* background-color: white; */
+		margin-top: 1%;
+		height: 10%;
+    	align-items: center;
+    	justify-content: center;
+    	line-height: 100%;
+		background-color: rgba(255, 255, 255, 0.6);
+		text-align: center;
+		font-size: 35px;
 		border-radius: 10px;
 	}
 	.word_meaning_box {
@@ -425,13 +481,29 @@ export default {
 		height: 50%;
 		background-color: rgba(255, 255, 255, 0.6);
 		text-align: center;
-		font-size: 25px;
+		font-size: 28px;
+		display: flex;
+		flex-direction: column;
+		border-radius: 10px;
+	}
+	.word_meaning_box_search {
+		margin-top: 2%;
+		height: 50%;
+		background-color: rgba(255, 255, 255, 0.6);
+		text-align: center;
+		font-size: 22px;
 		display: flex;
 		flex-direction: column;
 		border-radius: 10px;
 	}
 	.word_reading {
 		margin-top: 10%;
+		height: 20%;
+		font-style: italic;
+		/* background-color: #679B9B; */
+	}
+	.word_reading_search {
+		/* margin-top: 10%; */
 		height: 20%;
 		font-style: italic;
 		/* background-color: #679B9B; */
@@ -444,6 +516,22 @@ export default {
 		font-size: large;
 		/* text-align: left; */
 		/* background-color: #679B9B; */
+	}
+	.word_meaning_search {
+		margin-top: 3%;
+		/* height: 40%; */
+		font-style: italic;
+		white-space: pre-wrap;
+		font-size: large;
+		/* text-align: left; */
+		/* background-color: #679B9B; */
+	}
+	.word_example_search {
+		margin-top: 5%;
+		margin-left: 5%;
+		width: 90%;
+		height: 50%;
+		font-style: italic;
 	}
 	.delword {
 		margin-top: 10%;
