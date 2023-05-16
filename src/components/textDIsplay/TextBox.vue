@@ -77,7 +77,7 @@
         </n-card>
       </n-space>
       <div>
-        <HistoryRecd ref="historyRef" :type="type"></HistoryRecd>
+        <HistoryRecd ref="historyRef" :type="type" @loadHistory="loadHistory"></HistoryRecd>
       </div>
       <div id="ButtonContainer">
         <slot id="left" name="left"></slot>
@@ -254,10 +254,14 @@ export default {
       document.body.removeChild(hiddenLink);
     }
 
+    function loadHistory(history) {
+      emit("loadHistory",history)
+    }
 
     return {
       value: ref(null),
       handleHistory,
+      loadHistory,
       historyRef,
       rateValue,
       inputSpin,

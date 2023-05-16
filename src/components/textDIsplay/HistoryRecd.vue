@@ -47,9 +47,11 @@
 </template>
 
 <script>
-import {reactive, ref} from "vue";
-import {NModal, NButton,NDatePicker,NSpace,NScrollbar} from "naive-ui";
+import {computed, onMounted, reactive, ref} from "vue";
+import {NModal, NButton,NDatePicker,NSpace,NScrollbar,useMessage} from "naive-ui";
 import HistoryCard from "@/components/textDIsplay/HistoryCard";
+import store from "@/store";
+import {getBlankRecord, getHistoryRecordId, getStoryRecord, getWritingRecord} from "@/request/api/review";
 
 export default {
   name: "HistoryRecd",
@@ -64,10 +66,11 @@ export default {
   props: {
     type: Number
   },
-  setup(props) {
+  setup(props,{emit}) {
     let showHistory = ref(false);
     const listIds = reactive([1, 2, 3, 4, 5, 6, 7, 8])
     const historyContent = ref("ffffffff")
+    const message = useMessage()
 
     function handleClose() {
       showHistory.value = false
@@ -89,45 +92,126 @@ export default {
     let todayFormatted = `${today.getFullYear()}.${today.getMonth() + 1 < 10 ? '0' + (today.getMonth() + 1) : today.getMonth() + 1}.${today.getDate() < 10 ? '0' + today.getDate() : today.getDate()}`;
     let oneWeekAgoFormatted = `${oneWeekAgo.getFullYear()}.${oneWeekAgo.getMonth() + 1 < 10 ? '0' + (oneWeekAgo.getMonth() + 1) : oneWeekAgo.getMonth() + 1}.${oneWeekAgo.getDate() < 10 ? '0' + oneWeekAgo.getDate() : oneWeekAgo.getDate()}`;
 
+    const dateRange = ref([oneWeekAgoFormatted, todayFormatted])
+
+    let startDate = computed(()=>{
+      let [year, month, day] = dateRange.value[0].split(".");
+      return {
+        "year": parseInt(year),
+        "month": parseInt(month),
+        "day": parseInt(day),
+      };
+    })
+
+    let endDate = computed(()=>{
+      let [year, month, day] = dateRange.value[1].split(".");
+      return {
+        "year": parseInt(year),
+        "month": parseInt(month),
+        "day": parseInt(day),
+      };
+    })
+
+    async function getRecordId() {
+      let success = false
+      let errMsg = ''
+      await getHistoryRecordId(store.state.user.uid,props.type,startDate.value,endDate.value).then((res) => {
+        success = res.state
+        errMsg = res.msg
+        listIds.splice(0, listIds.length)
+        if (res.state) {
+          res.ids.forEach((id) => listIds.push(Number(id)));
+          if (listIds.length > 0) {
+            clickedId.value = listIds[0]
+          }
+        }
+      }).catch(err => errMsg = '网络错误').finally(() => {
+        if (!success) {
+          message.error(errMsg)
+        }
+      })
+    }
+
+    onMounted(() => {
+      getRecordId()
+    })
+
+    // 保存三种模式的数据
+    let story = ref("")
+    let comment = reactive({
+      analysis: String,
+      rating: Number
+    })
+    const wordList = ref([]);
+    const realAnswers = ref([]);
+    const usedWords = ref([])
 
     function showHisContent(id) {
-      // TODO 从后端获取
-      // console.log(type);
-      historyContent.value = id+" "+props.type+"We dosafjdlaskjga" +
-          "sadlfjlasdfasjlfdjaslgaslgj" +
-          "" +
-          "dfslajkdfsalfjasldfjasldkjf" +
-          "fsdlkfjsfdlsdjfslfkjsdfjsldfs" +
-          "fagjalgfgafg      dafsdfasdfa" +
-          "asdfffffffffffffffffffffffffffff" +
-          "fffffffffffffffffffffff" +
-          "ffffffffffffffffffffff" +"We dosafjdlaskjga" +
-          "sadlfjlasdfasjlfdjaslgaslgj" +
-          "" +
-          "dfslajkdfsalfjasldfjasldkjf" +
-          "fsdlkfjsfdlsdjfslfkjsdfjsldfs" +
-          "fagjalgfgafg      dafsdfasdfa" +
-          "asdfffffffffffffffffffffffffffff" +
-          "fffffffffffffffffffffff" +
-          "ffffffffffffffffffffff"+"We dosafjdlaskjga" +
-          "sadlfjlasdfasjlfdjaslgaslgj" +
-          "" +
-          "dfslajkdfsalfjasldfjasldkjf" +
-          "fsdlkfjsfdlsdjfslfkjsdfjsldfs" +
-          "fagjalgfgafg      dafsdfasdfa" +
-          "asdfffffffffffffffffffffffffffff" +
-          "fffffffffffffffffffffff" +
-          "ggggggggggggggggggggggggggggggggggggggggggggggggggggggggg"
-      // console.log(historyContent.value);
+      let errMsg = ''
+      let success = false
+      if (props.type === 0) {
+        getWritingRecord(store.state.user.uid,id).then((res)=>{
+          success = res.state
+          errMsg = res.msg
+          historyContent.value = res.content
+          comment.analysis = res.comment.analysis
+          comment.rating = res.comment.rating
+        }).catch(err => errMsg = '网络错误').finally(() => {
+          if (!success) {
+            message.error(errMsg)
+          }
+        })
+      }
+      else if (props.type === 1) {
+        getStoryRecord(store.state.user.uid,id).then((res)=>{
+          success = res.state
+          errMsg = res.msg
+          historyContent.value = res.content
+          story.value = res.content
+        }).catch(err => errMsg = '网络错误').finally(() => {
+          if (!success) {
+            message.error(errMsg)
+          }
+        })
+      }
+      else {
+        getBlankRecord(store.state.user.uid,id).then((res)=>{
+          success = res.state
+          errMsg = res.msg
+          historyContent.value = res.content
+          wordList.value = res.wordList
+          realAnswers.value = res.answer
+          usedWords.value = res.originWords
+        }).catch(err => errMsg = '网络错误').finally(() => {
+          if (!success) {
+            message.error(errMsg)
+          }
+        })
+      }
+    }
+
+    // 向父组件传递数据
+    function handleConfirm() {
+      if (props.type === 0) {
+        emit("loadHistory",comment)
+      }
+      else if (props.type === 1) {
+        emit("loadHistory",story.value)
+      }
+      else {
+        emit("loadHistory",historyContent.value,wordList.value,realAnswers.value,usedWords.value)
+      }
+      showHistory.value = false
     }
 
     return {
       showHistory,
       handleClose,
       clickHistory,
+      handleConfirm,
       historyContent,
       listIds,
-      dateRange: ref([oneWeekAgoFormatted, todayFormatted]),
+      dateRange,
       bodyStyle: {
         width: "70%",
         height: "85vh",

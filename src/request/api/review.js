@@ -61,3 +61,66 @@ export function getBlankText(uid) {
         timeout: 40000
     })
 }
+
+export function getHistoryRecordId(uid,type,startDate,endDate) {
+    const data = JSON.stringify({
+        user_id: uid,
+        type: type,
+        start_date: startDate,
+        end_date: endDate
+    })
+    return request({
+        url: "get_history_record_id/",
+        method: 'post',
+        data:data,
+    })
+}
+
+export function getRecordInfo(uid,type,recordId) {
+    const data = JSON.stringify({
+        user_id: uid,
+        type: type,
+        record_id: recordId
+    })
+    return request({
+        url: "get_record_info/",
+        method: 'post',
+        data:data,
+    })
+}
+
+export function getStoryRecord(uid,recordId) {
+    const data = JSON.stringify({
+        user_id: uid,
+        record_id: recordId
+    })
+    return request({
+        url: "get_story_record/",
+        method: 'post',
+        data:data,
+    })
+}
+
+export function getWritingRecord(uid,recordId) {
+    const data = JSON.stringify({
+        user_id: uid,
+        record_id: recordId
+    })
+    return request({
+        url: "get_writing_record/",
+        method: 'post',
+        data:data,
+    })
+}
+
+export function getBlankRecord(uid,recordId) {
+    const data = JSON.stringify({
+        user_id: uid,
+        record_id: recordId
+    })
+    return request({
+        url: "get_blank_record/",
+        method: 'post',
+        data:data,
+    })
+}

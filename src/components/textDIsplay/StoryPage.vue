@@ -6,6 +6,7 @@
            :input-value="story"
            :type="1"
            @handleTagChecked="handleSelectedWords"
+           @loadHistory="loadHistory"
            @update:selectedWords="handleSelectedWords">
     <template v-slot:left>
       <n-button id="left" round strong type="info" @click="onLeftButtonClick">故事模式</n-button>
@@ -144,8 +145,14 @@ export default {
       selectedWords.value = retWords;
       // console.log(selectedWords.value);
     }
+
+    function loadHistory(history) {
+      story.value = history
+    }
+
     return {
       words,
+      loadHistory,
       textBoxRef,
       story,
       handleSelectedWords,

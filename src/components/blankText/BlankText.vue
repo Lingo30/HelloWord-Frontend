@@ -62,7 +62,7 @@
         </n-card>
       </n-space>
       <div>
-        <HistoryRecd ref="historyRef" :type="2"></HistoryRecd>
+        <HistoryRecd ref="historyRef" :type="2" @loadHistory="loadHistory"></HistoryRecd>
       </div>
       <div class="btn-box">
         <n-button round class="left button" type="info" @click="changeArticle">换一篇文章吧</n-button>
@@ -140,10 +140,6 @@ export default {
             }),
             duration: 3e3,
           })
-          // if (lastTimes === 0)
-          //   msg.success('这是最后一题啦，我先歇了=v=')
-          // else
-          //   msg.success('今天还能再出' + lastTimes + '道题-v-')
           content.value = res.content
           wordList.splice(0);
           wordList.push(...res.wordList);
@@ -152,10 +148,6 @@ export default {
           arr = [...res.originWords];
         } else {
           errorMsg = res.last_times === 0 ? '明天再给你出题哇，累了捏QAQ' : res.msg
-          // if (res.last_times === 0)
-          //   msg.error('明天再给你出题哇，累了捏QAQ')
-          // else
-          //   msg.error(res.msg)
         }
       }).catch().finally(() => {
         if (!success) {
@@ -182,9 +174,9 @@ export default {
       showSpin.value = false;
     }
 
-    // onBeforeMount(() => {
-    //   load()
-    // })
+    onBeforeMount(() => {
+      load()
+    })
 
     // 判断是否是单词空的第一个字符
     const isBlankStart = (index) => {
@@ -272,10 +264,25 @@ export default {
       // console.log(historyRef.value.showHistory);
     }
 
+    function loadHistory(nContent,nWordList,answer,originWords) {
+      content.value = nContent
+      wordList.splice(0);
+      wordList.push(...nWordList);
+      realAnswers.splice(0);
+      realAnswers.push(...answer);
+      let arr = [...originWords];
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      usedWords.value = new Set(arr)
+    }
+
     return {
       inputs,
       historyRef,
       handleHistory,
+      loadHistory,
       CalendarOutline,
       handleExportInput,
       init,
