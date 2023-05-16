@@ -157,10 +157,21 @@ export function editWordlists(userId, deleteLists, updateLists) {
     })
 }
 
-// 上传文件并解析
+// 上传文件并解析文件中的所有单词
 export function uploadFile(fileData, progressFunc) {
     return request({
         url: "get_wordList_from_file/",
+        headers: {'Content-Type': 'multipart/form-data'},
+        method: 'post',
+        onUploadProgress: progressFunc,
+        data: fileData
+    })
+}
+
+// 上传文件并智能解析
+export function uploadFileSmart(fileData, progressFunc) {
+    return request({
+        url: "get_wordList_smart_from_file/",
         headers: {'Content-Type': 'multipart/form-data'},
         method: 'post',
         onUploadProgress: progressFunc,
