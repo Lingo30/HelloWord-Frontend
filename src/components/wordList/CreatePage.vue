@@ -20,14 +20,21 @@
               :class="pageIdx===0?'choose-button-clicked':''"
               @click="switchPage(0)"
           >
-            官方
+            官方词单
           </n-button>
           <n-button
               class="choose-button"
               :class="pageIdx===1?'choose-button-clicked':''"
               @click="switchPage(1)"
           >
-            文件
+            文件导入
+          </n-button>
+          <n-button
+              class="choose-button"
+              :class="pageIdx===2?'choose-button-clicked':''"
+              @click="switchPage(2)"
+          >
+            智能提取
           </n-button>
         </div>
 
@@ -72,18 +79,32 @@
             </div>
           </n-scrollbar>
           <!--        文件导入-->
-          <n-upload
-              ref="uploadRef"
-              class="drop-area"
-              v-else-if="pageIdx===1&&!showFileResultFlag"
-              directory-dnd
-              :custom-request="upload"
-              @before-upload="uploadCheck"
-          >
-            <n-upload-dragger>
-              <p style="width: 180px;margin: 80px auto">将文件拖拽到此处即可完成文件上传。支持500KB以内的.txt文件</p>
-            </n-upload-dragger>
-          </n-upload>
+          <n-spin v-else-if="pageIdx===1&&!showFileResultFlag" :show="loading">
+            <n-upload
+                ref="uploadRef"
+                class="drop-area"
+                directory-dnd
+                :custom-request="generateFromFile"
+                @before-upload="uploadCheck"
+            >
+              <n-upload-dragger>
+                <p style="width: 180px;margin: 80px auto">将文件拖拽到此处即可完成文件上传。支持500KB以内的.txt文件</p>
+              </n-upload-dragger>
+            </n-upload>
+          </n-spin>
+          <!--          文件智能提取-->
+          <n-spin v-else-if="pageIdx===2&&!showFileResultFlag" :show="loading">
+            <n-upload
+                ref="uploadRef"
+                class="drop-area"
+                directory-dnd
+                :custom-request="generateSmart"
+            >
+              <n-upload-dragger>
+                <p style="width: 180px;margin: 80px auto">智能提取文件中的单词</p>
+              </n-upload-dragger>
+            </n-upload>
+          </n-spin>
           <!--        文件导入后的展示-->
           <div style="display: flex;height: 100%;width: 100%" v-else-if="showFileResultFlag">
             <n-scrollbar>
@@ -92,7 +113,7 @@
                   <n-list hoverable>
                     <n-list-item
                         style="padding-top: 5px;padding-bottom: 5px"
-                        v-for="word in fileWords"
+                        v-for="word in previewWordlist"
                         :key="word.wordId"
                     >
                       <n-text>{{ word.word }}</n-text>
@@ -150,8 +171,14 @@ import {
   useMessage,
 } from "naive-ui";
 import store from "@/store";
-import {createFromFile, createFromOfficial, getOfficialLists, uploadFile} from "@/request/api/wordlist";
-import {reactive, ref} from "vue";
+import {
+  createFromFile,
+  createFromOfficial,
+  getOfficialLists,
+  uploadFile,
+  uploadFileSmart
+} from "@/request/api/wordlist";
+import {computed, reactive, ref} from "vue";
 
 export default {
   name: "CreatePage",
@@ -175,12 +202,24 @@ export default {
     const message = useMessage()
     const showSpin = ref(false)
 
+    let showFileResultFlag = computed(() => {
+      return previewWordlist.value.length !== 0
+    })//是否完成文件解析展示
+
     let showFlag = ref(false)
     let pageIdx = ref(0)
     let lists = reactive([])//所有官方词单，只在每次打开创建页面时获取
     let clickedListId = ref(undefined)//选择的官方词单id
-    let showFileResultFlag = ref(false)//是否完成文件解析展示
     let loading = ref(false)
+    let previewWordlist = computed(() => {
+      if (pageIdx.value === 1) {
+        return fileWords
+      } else if (pageIdx.value === 2) {
+        return smartFileWords
+      } else {
+        return reactive([])
+      }
+    })//预览词单
     let fileWords = reactive([
       // {
       //   wordId: 0,
@@ -203,6 +242,13 @@ export default {
       //   meaning: 'n. 单词',
       // },
     ])//文件解析生成的单词
+    let smartFileWords = reactive([
+      // {
+      //   wordId: 0,
+      //   word: 'this',
+      //   meaning: 'pron. 这',
+      // },
+    ])//智能解析
     let myWordlistName = ref('')
 
     function switchPage(idx) {
@@ -233,18 +279,7 @@ export default {
     }
 
     //后端解析文件生成词单列表
-    function upload(
-        {
-          file,
-          data,
-          headers,
-          withCredentials,
-          action,
-          onFinish,
-          onError,
-          onProgress,
-        }
-    ) {
+    function upload(file, data, onProgress, uploadAPI) {
       const formData = new FormData();
       if (data) {
         Object.keys(data).forEach((key) => {
@@ -256,19 +291,18 @@ export default {
         onProgress({percent: Math.ceil(progress.loaded / progress.total * 100)});
         if (progress.loaded === progress.total) {
           loading.value = true
-          showFileResultFlag.value = true
         }
       })
       // 向后端请求
       let success = false
       let errMsg = ''
-      uploadFile(formData, progressFunc).then((res) => {
+      uploadAPI(formData, progressFunc).then((res) => {
         success = res.state
         errMsg = res.msg
         if (success) {
-          fileWords.splice(0, fileWords.length)
+          previewWordlist.value.splice(0, previewWordlist.value.length)
           res.wordlist.forEach((word) => {
-            fileWords.push(word)
+            previewWordlist.value.push(word)
           })
         }
       }).catch(err => errMsg = "网络错误").finally(() => {
@@ -279,23 +313,55 @@ export default {
       })
     }
 
+    //提取文件中的所有单词
+    function generateFromFile(
+        {
+          file,
+          data,
+          headers,
+          withCredentials,
+          action,
+          onFinish,
+          onError,
+          onProgress,
+        }
+    ) {
+      upload(file, data, onProgress, uploadFile)
+    }
+
+    //智能提取
+    function generateSmart(
+        {
+          file,
+          data,
+          headers,
+          withCredentials,
+          action,
+          onFinish,
+          onError,
+          onProgress,
+        }
+    ) {
+      upload(file, data, onProgress, uploadFileSmart)//TODO
+    }
+
     //从预览词单列表删除单词
     function deleteWordFromFile(wordId) {
-      for (let i = 0; i < fileWords.length; i++) {
-        if (fileWords[i].wordId === wordId) {
-          fileWords.splice(i, 1)
+      for (let i = 0; i < previewWordlist.value.length; i++) {
+        if (previewWordlist.value[i].wordId === wordId) {
+          previewWordlist.value.splice(i, 1)
           break
         }
       }
-      if (fileWords.length === 0) {
-        showFileResultFlag.value = !showFileResultFlag.value
+      if (previewWordlist.value.length === 0) {
+        showFileResultFlag.value = false
       }
     }
 
     //关闭文件生成的预览词单列表
     function closeFileShowResult() {
-      showFileResultFlag.value = !showFileResultFlag.value
-      fileWords.splice(0, fileWords.length)
+      showFileResultFlag.value = false
+      previewWordlist.value.splice(0, previewWordlist.value.length)
     }
 
     //创建词单
@@ -327,12 +393,12 @@ export default {
         })
       } else if (createMethod === 1 && showFileResultFlag.value) {
         // 文件创建词单
-        if (fileWords.length === 0) {
+        if (previewWordlist.value.length === 0) {
           message.error("不可创建空词单")
           return
         }
         let words = []
-        fileWords.forEach((word) => words.push(word.wordId))
+        previewWordlist.value.forEach((word) => words.push(word.wordId))
         createFromFile(store.state.user.uid, listName, words).then((res) => {
           success = res.state
           errMsg = res.msg
@@ -363,7 +429,7 @@ export default {
       let errMsg = ''
       getOfficialLists().then((res) => {
         success = res.state
-        errMsg=res.msg
+        errMsg = res.msg
         if (res.state) {
           res.lists.forEach((wordlist) => lists.push(wordlist))
         }
@@ -377,6 +443,8 @@ export default {
     function exit() {
       pageIdx.value = 0
       lists.splice(0, lists.length)
+      fileWords.splice(0, fileWords.length)
+      smartFileWords.splice(0, smartFileWords.length)
     }
 
     return {
@@ -386,15 +454,17 @@ export default {
       clickedListId,
       showFileResultFlag,
       loading,
-      fileWords,
       showSpin,
       myWordlistName,
+
+      previewWordlist,
 
       init,
       exit,
       switchPage,
       clickOfficialCard,
-      upload,
+      generateFromFile,
+      generateSmart,
       uploadCheck,
       deleteWordFromFile,
       closeFileShowResult,
