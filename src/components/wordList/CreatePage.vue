@@ -391,12 +391,8 @@ export default {
             showSpin.value = false
           }
         })
-      } else if (createMethod === 1 && showFileResultFlag.value) {
+      } else if (showFileResultFlag.value) {
         // 文件创建词单
-        if (previewWordlist.value.length === 0) {
-          message.error("不可创建空词单")
-          return
-        }
         let words = []
         previewWordlist.value.forEach((word) => words.push(word.wordId))
         createFromFile(store.state.user.uid, listName, words).then((res) => {
