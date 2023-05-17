@@ -107,8 +107,9 @@ export default {
     }
 
     function loadHistory(history) {
-      textBoxRef.value.analysis = history.analysis
-      textBoxRef.value.rateValue = parseFloat(history.rating)/2
+      textBoxRef.value.textValue = history.content
+      textBoxRef.value.analysis = history.comment.analysis
+      textBoxRef.value.rateValue = parseFloat(history.comment.rating)/2
     }
 
     return {

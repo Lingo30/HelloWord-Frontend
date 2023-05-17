@@ -47,7 +47,7 @@
 </template>
 
 <script>
-import {computed, onMounted, reactive, ref} from "vue";
+import {computed, onBeforeMount, reactive, ref} from "vue";
 import {NModal, NButton,NDatePicker,NSpace,NScrollbar,useMessage} from "naive-ui";
 import HistoryCard from "@/components/textDIsplay/HistoryCard";
 import store from "@/store";
@@ -68,8 +68,8 @@ export default {
   },
   setup(props,{emit}) {
     let showHistory = ref(false);
-    const listIds = reactive([1, 2, 3, 4, 5, 6, 7, 8])
-    const historyContent = ref("ffffffff")
+    const listIds = reactive([])
+    const historyContent = ref("")
     const message = useMessage()
 
     function handleClose() {
@@ -132,16 +132,19 @@ export default {
       })
     }
 
-    onMounted(() => {
+    onBeforeMount(() => {
       getRecordId()
     })
 
     // 保存三种模式的数据
-    let story = ref("")
-    let comment = reactive({
-      analysis: String,
-      rating: Number
+    let writing = reactive({
+      content: String,
+      comment: {
+        analysis: String,
+        rating: Number
+      }
     })
+    let story = ref("")
     const wordList = ref([]);
     const realAnswers = ref([]);
     const usedWords = ref([])
@@ -154,8 +157,9 @@ export default {
           success = res.state
           errMsg = res.msg
           historyContent.value = res.content
-          comment.analysis = res.comment.analysis
-          comment.rating = res.comment.rating
+          writing.comment.analysis = res.comment.analysis
+          writing.comment.rating = res.comment.rating
+          writing.content = res.content
         }).catch(err => errMsg = '网络错误').finally(() => {
           if (!success) {
             message.error(errMsg)
@@ -193,7 +197,7 @@ export default {
     // 向父组件传递数据
     function handleConfirm() {
       if (props.type === 0) {
-        emit("loadHistory",comment)
+        emit("loadHistory",writing)
       }
       else if (props.type === 1) {
         emit("loadHistory",story.value)
@@ -223,14 +227,14 @@ export default {
 
 <style scoped>
 .container {
-  height: 63%;
-  /*background-color: blue;*/
+  height: 95%;
+  /*background-color: red;*/
 }
 
 .select-box {
   flex-direction: column;
   width: 100%;
-  height: 60%;
+  height: 90%;
   padding: 10px;
   display: flex;
   justify-content: center;
@@ -241,7 +245,7 @@ export default {
 .content-box {
   flex-direction: column;
   width: 100%;
-  height: 60%;
+  height: 90%;
   padding: 10px;
   display: flex;
   justify-content: center;

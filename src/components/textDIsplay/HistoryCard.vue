@@ -25,7 +25,7 @@
 import {NCard, NText, useMessage} from 'naive-ui'
 import {AccessibilityOutline} from '@vicons/ionicons5'
 import Checkmark16Filled from "@vicons/fluent/Checkmark16Filled";
-import {onMounted, reactive, ref} from "vue";
+import {onBeforeMount, reactive, ref} from "vue";
 import store from "@/store";
 import {getRecordInfo} from "@/request/api/review";
 
@@ -52,25 +52,23 @@ export default {
     ]
 
     let info = reactive({
-      content:'dadsss',
+      content:'',
       date: {
-        month: 'Apr',
-        day: '03'
+        month: '',
+        day: ''
       }
     })
     let newName = ref('')
 
 
     function handleClick() {
-      if (props.editFlag) return
       emit('handleClick', props.listId)
     }
 
-    onMounted(() => {
-      // 根据 listId获取用户词单的基本信息
+    onBeforeMount(async () => {
       let errMsg = ''
       let success = false
-      getRecordInfo(store.state.user.uid,props.type,props.listId).then((res) => {
+      await getRecordInfo(store.state.user.uid, props.type, props.listId).then((res) => {
         success = res.state
         errMsg = res.msg
         info.content = res.content

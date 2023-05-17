@@ -71,6 +71,7 @@ export function getHistoryRecordId(uid,type,startDate,endDate) {
     })
     return request({
         url: "get_history_record_id/",
+        // url: 'https://mock.apifox.cn/m2/2544762-0-default/82215362',
         method: 'post',
         data:data,
     })
@@ -84,6 +85,7 @@ export function getRecordInfo(uid,type,recordId) {
     })
     return request({
         url: "get_record_info/",
+        // url: "https://mock.apifox.cn/m2/2544762-0-default/82215401",
         method: 'post',
         data:data,
     })
@@ -96,6 +98,7 @@ export function getStoryRecord(uid,recordId) {
     })
     return request({
         url: "get_story_record/",
+        // url: "https://mock.apifox.cn/m2/2544762-0-default/82215410",
         method: 'post',
         data:data,
     })
@@ -108,6 +111,7 @@ export function getWritingRecord(uid,recordId) {
     })
     return request({
         url: "get_writing_record/",
+        // url:"https://mock.apifox.cn/m2/2544762-0-default/82215421",
         method: 'post',
         data:data,
     })
@@ -120,6 +124,7 @@ export function getBlankRecord(uid,recordId) {
     })
     return request({
         url: "get_blank_record/",
+        // url: "https://mock.apifox.cn/m2/2544762-0-default/82215439",
         method: 'post',
         data:data,
     })
