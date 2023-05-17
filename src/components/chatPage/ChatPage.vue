@@ -13,7 +13,7 @@
               <div class="chat_top">
                 <img src="../../assets/img/kaleidoBlank.png" height="135" width="130">
               </div>
-              <n-scrollbar class="chat" style="height: 57vh ;text-align: left;margin-top: 3vh">
+              <n-scrollbar class="chat" style="height: 57vh ;text-align: left;margin-top: 3vh;">
                 <div ref="chat_message" class="chat_parent" style="overflow:hidden; width: 30vw">
 <!--                <div ref="chat_box" class="chat" style="overflow-x:hidden; overflow-y:auto; max-height:500px" >-->
 
@@ -21,17 +21,32 @@
                 </div>
               </n-scrollbar>
               <div  class="bottom">
-                <n-input class="message" v-model:value="value" round placeholder="Type a message..." type="textarea"
-                        @keydown.enter.prevent="handleEnter"
-                        ref="inputRef"
-                         maxlength="100"
-                        :autosize="{
-                  maxRows: 2
-                }">
-                </n-input>
-                <NButton class="send" @click="sendChat" strong secondary type="info" style="font-size: 15px">
-                  提问
-                </NButton>
+                <div class="text_line" v-show="mode === false">
+                  <div class="videobutton" @click="changeMode" ></div>
+                  <n-input class="message" v-model:value="value" round placeholder="Type a message..." type="textarea"
+                            @keydown.enter.prevent="handleEnter"
+                            ref="inputRef"
+                            maxlength="100"
+                            :autosize="{
+                            maxRows: 2
+                              }"></n-input>
+                  <NButton class="send" @click="sendChat" strong secondary type="info" style="font-size: 15px">提问</NButton>
+                </div>
+                <div class="video" v-show="mode === true">
+                  <div class="textbutton" @click="changeMode" ></div>
+                  <NButton @click="voice" strong secondary type="info" style="font-size: 15px; width: 20.5%; height: 100%; margin-left: 0.5%">
+                    开始讲话
+                  </NButton>
+                  <NButton @click="handleStop" strong secondary type="info" style="font-size: 15px; width: 20.5%; height: 100%; margin-left: 0.5%">
+                    停止讲话
+                  </NButton>
+                  <NButton @click="submit" strong secondary type="info" style="font-size: 15px; width: 14%; height: 100%; margin-left: 0.5%">
+                    发送
+                  </NButton>
+                  <NButton @click="handlePlay" strong secondary type="info" style="font-size: 15px; width: 14%; height: 100%; margin-left: 0.5%">
+                    播放
+                  </NButton>
+                </div>
               </div>
             </div>
             <template #description>
@@ -50,10 +65,12 @@
 import {NSpin, NScrollbar, NInput, NButton, NAvatar, useNotification, useMessage} from 'naive-ui';
 import ChatMessage from "@/components/chatPage/ChatMessage";
 import {getHistoryChatAPI, sendChatAPI} from "@/request/api/chat";
-import {h, nextTick, ref} from 'vue'
+import {h, nextTick, reactive, ref, toRefs} from 'vue'
 import store from "@/store";
 import Kaleido from "@/assets/img/kaleidoBlank.png";
 import {AUTHENTICATE_ERR} from "@/store/local";
+import Recorder from 'js-audio-recorder'
+import {submitAvatar} from "@/request/api/user";
 
 export default {
   components: {
@@ -67,6 +84,12 @@ export default {
   props: {
     msg: String
   },
+
+  data() {
+    return {
+    }
+  },
+
   setup() {
     const message = useMessage()
     const notification = useNotification()
@@ -74,15 +97,90 @@ export default {
     const value = ref('')
     const messages = ref([])
     const inputRef = ref(null)
+    let mode = ref(false)
+
+    const data = reactive({
+      //用于存储创建的语音对象
+      recorder: null,
+      formData: null,
+      // 控制录音动画的显示隐藏
+      showAnima: false,
+      mation: true,
+      isHistory: true,
+      // 录音时长
+      duration: 0,
+      submit () { // 发送语音的方法// todo
+        data.recorder.pause() // 暂停录音
+        data.timer = null
+        console.log('上传录音')// 上传录音
+        let formData = new FormData();
+        var blob = data.recorder.getWAVBlob()//获取wav格式音频数据
+        //此处获取到blob对象后需要设置fileName满足当前项目上传需求，其它项目可直接传把blob作为		  file塞入formData
+        var newbolb = new Blob([blob], { type: 'audio/wav' })
+        var fileOfBlob = new File([newbolb], new Date().getTime() + '.wav')
+        //formData是传给后端的对象,
+        formData.append('file', fileOfBlob)
+        //计算出录音时长
+        data.duration = Math.ceil((new Date() - data.duration) / 1000);
+        console.log(data.duration);
+        //发送给后端的方法 todo
+        sendAudio(formData).then(res => {
+           console.log(res);
+        })
+      },
+      // 录音按钮的点击事件
+      voice () {
+        //实例化语音对象
+        data.recorder = new Recorder({
+          sampleBits: 16, // 采样位数，支持 8 或 16，默认是16
+          sampleRate: 16000, // 采样率，支持 11025、16000、22050、24000、44100、48000，根据浏览器默认值，我的chrome是48000
+          numChannels: 1 // 声道，支持 1 或 2， 默认是1
+        })
+        //记录开始录音的时间
+        data.duration = new Date();
+        Recorder.getPermission().then(() => {
+          console.log('开始录音')
+          data.recorder.start() // 开始录音
+        }, (error) => {
+          console.log(`${error.name} : ${error.message}`)
+        })
+      },
+      handleStop () {
+        console.log('停止录音')
+        data.recorder.stop() // 停止录音
+        data.mation = false;
+      },
+      handlePlay () {
+        console.log('播放录音')
+        data.recorder.play() // 播放录音
+      },
+      handleDestroy () {
+        console.log('销毁实例')
+        if (data.recorder) {
+          data.recorder.destroy() // 毁实例
+        }
+      },
+    })
 
     return {
+      ...toRefs(data),
       message,
       inputRef,
       messages,
       showSpin,
       value,
+      mode,
       sendChat,
+      changeMode,
       handleEnter,
+    }
+
+    function changeMode() {
+      mode.value = !mode.value;
+    }
+
+    async function sendAudio(e) {
+      // todo
     }
 
     async function handleEnter(event) {
@@ -188,7 +286,6 @@ export default {
       });
       this.showSpin = false;
     },
-
   }
 }
 
@@ -239,9 +336,9 @@ export default {
   position: relative;
 }
 .send {
-  margin-left: 5%;
+  margin-left: 0.5%;
   height: 100%;
-  width: 20%;
+  width: 14.5%;
 }
 .message {
   width: 80%;
@@ -249,6 +346,7 @@ export default {
   font-size: 20px;
   text-align: left;
 }
+
 .bottom {
   position: absolute;
   bottom: 5%;
@@ -257,6 +355,40 @@ export default {
   color: #2A928F;
   height: 8%;
   width: 80%;
+  font-size:20px;
+}
+.videobutton{
+  background-image: url('../../assets/img/video.png');
+  background-size: 100% 100%;
+  width: 5vh;
+  height: 5vh;
+}
+.textbutton{
+  background-image: url('../../assets/img/text.png');
+  background-size: 100% 100%;
+  width: 5vh;
+  height: 5vh;
+}
+.video{
+  position: absolute;
+  /*bottom: 5%;*/
+  display: flex;
+  justify-content: space-between;
+  color: #2A928F;
+  height: 5vh;
+  width: 28vw;
+  font-size:20px;
+}
+
+.text_line {
+  position: absolute;
+  /*bottom: 5%;*/
+  display: flex;
+  justify-content: space-between;
+  color: #2A928F;
+  height: 5vh;
+  width: 28vw;
+  /*background-color: #2c3e50;*/
   font-size:20px;
 }
 .content-login{
@@ -278,6 +410,7 @@ export default {
   display: flex;
   justify-content: center;
   margin: auto;
+  /*background-color: #2A928F;*/
 }
 
 .content-bottom :hover{
