@@ -10,9 +10,9 @@
         请耐心等待，不要急着刷新~
       </template>
       <div class="container">
-      <span style="font-size: 2em; margin-left: 5px; margin-bottom: 5px; height: 10%">
-        词单导入
-      </span>
+        <span style="font-size: 2em; margin-left: 5px; margin-bottom: 5px; height: 10%">
+          词单导入
+        </span>
 
         <div class="choose-button-group">
           <n-button
@@ -35,6 +35,13 @@
               @click="switchPage(2)"
           >
             智能提取
+          </n-button>
+          <n-button
+              class="choose-button"
+              :class="pageIdx===3?'choose-button-clicked':''"
+              @click="switchPage(3)"
+          >
+            关键词生成
           </n-button>
         </div>
 
@@ -105,6 +112,9 @@
               </n-upload-dragger>
             </n-upload>
           </n-spin>
+          <div style="height: 100%;width: 100%;padding-top: 5px" v-else-if="pageIdx===3&&!showFileResultFlag">
+            <n-dynamic-tags v-model:value="tags"/>
+          </div>
           <!--        文件导入后的展示-->
           <div style="display: flex;height: 100%;width: 100%" v-else-if="showFileResultFlag">
             <n-scrollbar>
@@ -136,7 +146,7 @@
           </div>
         </div>
         <!--      底部输入词单名和确认-->
-        <div class="foot" v-if="pageIdx!==1||showFileResultFlag">
+        <div class="foot" v-if="pageIdx===0||showFileResultFlag">
           <n-input maxlength="50" class="input-name" v-model:value="myWordlistName"/>
           <n-button
               class="button"
@@ -146,11 +156,14 @@
             生成词单
           </n-button>
         </div>
+        <div class="tags-preview-button" v-if="pageIdx===3&&!showFileResultFlag">
+          <n-button class="button" @click="generateFromTags(tags)">
+            预览词单
+          </n-button>
+        </div>
       </div>
     </n-spin>
   </n-modal>
-
-
 </template>
 
 <script>
@@ -168,13 +181,14 @@ import {
   NUpload,
   NUploadDragger,
   NText,
+  NDynamicTags,
   useMessage,
 } from "naive-ui";
 import store from "@/store";
 import {
   createFromFile,
   createFromOfficial,
-  getOfficialLists,
+  getOfficialLists, getTagWordlist,
   uploadFile,
   uploadFileSmart
 } from "@/request/api/wordlist";
@@ -196,6 +210,7 @@ export default {
     NUpload,
     NUploadDragger,
     NText,
+    NDynamicTags,
   },
   emits: ['addWordlist'],
   setup(props, {emit}) {
@@ -216,6 +231,8 @@ export default {
         return fileWords
       } else if (pageIdx.value === 2) {
         return smartFileWords
+      } else if (pageIdx.value === 3) {
+        return tagWords
       } else {
         return reactive([])
       }
@@ -249,6 +266,14 @@ export default {
       //   meaning: 'pron. 这',
       // },
     ])//智能解析
+    let tagWords = reactive([
+      // {
+      //   wordId: 0,
+      //   word: 'this',
+      //   meaning: 'pron. 这',
+      // },
+    ])//关键词生成
+    let tags = ref([])
     let myWordlistName = ref('')
 
     function switchPage(idx) {
@@ -296,7 +321,7 @@ export default {
       const progressFunc = ((progress) => {
         onProgress({percent: Math.ceil(progress.loaded / progress.total * 100)});
         if (progress.loaded === progress.total) {
-          loading.value = true
+          showSpin.value = true
         }
       })
 
@@ -313,7 +338,7 @@ export default {
           })
         }
       }).catch(err => errMsg = "网络错误").finally(() => {
-        loading.value = false
+        showSpin.value = false
         if (!success) {
           message.error(errMsg)
         }
@@ -349,7 +374,28 @@ export default {
           onProgress,
         }
     ) {
-      upload(file, data, onProgress, uploadFileSmart)//TODO
+      upload(file, data, onProgress, uploadFileSmart)
+    }
+
+    function generateFromTags(tags) {
+      let success = false
+      let errMsg = ''
+      showSpin.value = true
+      getTagWordlist(store.state.user.uid, tags).then(res => {
+        success = res.state
+        errMsg = res.msg
+        if (success) {
+          previewWordlist.value.splice(0, previewWordlist.value.length)
+          res.wordlist.forEach((word) => {
+            previewWordlist.value.push(word)
+          })
+        }
+      }).catch(err => errMsg = '网络错误').finally(() => {
+        if (!success) {
+          message.error(errMsg)
+        }
+        showSpin.value = false
+      })
     }
 
     //从预览词单列表删除单词
@@ -359,9 +405,6 @@ export default {
           previewWordlist.value.splice(i, 1)
           break
         }
-      }
-      if (previewWordlist.value.length === 0) {
-        showFileResultFlag.value = false
       }
     }
 
@@ -459,6 +502,7 @@ export default {
       loading,
       showSpin,
       myWordlistName,
+      tags,
 
       previewWordlist,
 
@@ -468,6 +512,7 @@ export default {
       clickOfficialCard,
       generateFromFile,
       generateSmart,
+      generateFromTags,
       uploadCheck,
       deleteWordFromFile,
       closeFileShowResult,
@@ -561,6 +606,13 @@ export default {
   height: 7%;
   display: flex;
   justify-content: space-between;
+  margin-bottom: 5px;
+}
+
+.tags-preview-button {
+  height: 7%;
+  display: flex;
+  justify-content: right;
   margin-bottom: 5px;
 }
 
