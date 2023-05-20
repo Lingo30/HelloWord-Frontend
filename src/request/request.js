@@ -7,8 +7,7 @@ import {AUTHENTICATE_ERR} from "@/store/local";
 
 const request = axios.create({
     withCredentials: true,
-    // baseURL: BACKEND_BASE_URL,
-    baseURL: '',
+    baseURL: BACKEND_BASE_URL,
     timeout: 5000
 })
 
