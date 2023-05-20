@@ -287,12 +287,19 @@ export default {
         });
       }
       formData.append('file', file.file);
+      const idJson = JSON.stringify(store.state.user.uid)
+      const blob = new Blob([idJson], {
+        type: 'application/json'
+      })
+      formData.append('userId', blob)
+
       const progressFunc = ((progress) => {
         onProgress({percent: Math.ceil(progress.loaded / progress.total * 100)});
         if (progress.loaded === progress.total) {
           loading.value = true
         }
       })
+
       // 向后端请求
       let success = false
       let errMsg = ''
