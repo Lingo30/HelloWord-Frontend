@@ -179,6 +179,19 @@ export function uploadFileSmart(fileData, progressFunc) {
     })
 }
 
+//获取用户根据关键词生成的词单
+export function getTagWordlist(userId, tags) {
+    const data = JSON.stringify({
+        userId: userId,
+        tags: tags,
+    })
+    return request({
+        url: 'get_wordlist_from_tags/',
+        method: 'post',
+        data
+    })
+}
+
 // 更新用户选择进行学习的词单
 export function updateLearnWordlist(userId, listId) {
     const data = JSON.stringify({
