@@ -7,6 +7,7 @@
           hoverable
           v-for="word in words"
           :key="word.wordId"
+          @click="getContent(word.word)"
       >
         <template #header>
           <div class="head">
@@ -64,13 +65,47 @@
       </n-space>
     </div>
   </div>
+
+  <n-modal
+		v-model:show="showModal"
+		class="searchModal"
+		:mask-closable="false"
+		:style="bodyStyle"
+		preset="card"
+		content="你确认"
+		:segmented="segmented"
+		@positive-click="onPositiveClick"
+		@negative-click="onNegativeClick"
+	>
+		<div class="word_name_search">
+          {{searchWord.word}}
+        </div>
+		<div class="word_meaning_box_search">
+          	<div class="word_reading_search">
+				音标: [{{ searchWord.phonetic_symbol }}]
+				<router-link to="" @click="play(searchWord.word)">
+					<img src="../../assets/img/sound1.png">
+				</router-link>
+          	</div>
+			<div>
+			<audio></audio>
+			</div>
+			<div class="word_meaning_search">
+				{{ searchWord.definition_cn }}
+			</div>
+			<div class="word_example_search">
+				例句：{{ searchWord.example }}
+			</div>
+        </div>
+	</n-modal>
 </template>
 
 <script>
-import {NCard, NScrollbar, NText, NPopover, NPagination, NButton, NSpace, useMessage, useDialog} from "naive-ui";
+import {NCard, NScrollbar, NText, NPopover, NPagination, NButton, NSpace, useMessage, useDialog, NModal} from "naive-ui";
 import {reactive, ref} from "vue";
 import store from "@/store";
 import {getWordsInfo, submitOfficial, updateLearnWordlist} from "@/request/api/wordlist";
+import {get_search_word} from "@/request/api/learn"
 
 export default {
   name: "WordCardList",
@@ -82,6 +117,7 @@ export default {
     NPagination,
     NButton,
     NSpace,
+    NModal
   },
   props: {
     official: Boolean,
@@ -104,6 +140,7 @@ export default {
     let pageNum = ref(10)//总页数
     let curPage = ref(1)//当前页数
     let selectedFlag = ref(false)
+    let searchWord = reactive({})
 
     //默认展示第一页
     function showWords(listId, totalNum) {
@@ -191,6 +228,35 @@ export default {
       })
     }
 
+    function getContent(wordStr) {
+      let success = false
+			let errMsg = ''
+			get_search_word(wordStr).then((res) => {
+				success = res.state
+				if (res.state == false) {
+					errMsg = '查询失败'
+				} else {
+					this.searchWord.word = res.word
+					this.searchWord.definition_cn = res.definition_cn
+					this.searchWord.phonetic_symbol = res.phonetic_symbol
+					this.searchWord.example = res.example
+					this.showModal = true
+          this.play(wordStr)
+				}
+			}).catch(err => errMsg = '网络错误').finally(() => {
+				if (!success) {
+					this.message.error(errMsg)
+					// alert("网络错误")
+				}
+			})
+    }
+
+    function play(wordStr) {
+      this.audio = new Audio();
+			this.audio.src = 'https://dict.youdao.com/speech?audio=' + wordStr;
+			this.audio.play();
+    }
+
     return {
       words,
       showPagination,
@@ -203,6 +269,22 @@ export default {
       changePage,
       uploadWordlist,
       selectWordlist,
+      getContent,
+      play,
+
+      showModal: ref(false),
+      bodyStyle: {
+        width: "35%",
+        height: "550px",
+        border: "2px",
+      },
+      searchWord,
+      // : {
+      //   word: "abandon",
+      //   phonetic_symbol: "ә'bændәn",
+      //   definition_cn: "vt. 放弃, 抛弃, 遗弃, 使屈从, 沉溺, 放纵\nn. 放任, 无拘束, 狂热",
+      //   example: "At this point, Jobs, his doctors, and Apple are silent on the specific health issues that have required him to abandon his post. 现在，乔布斯，他的医生，和苹果公司在他的要求他放弃苹果职位的特殊健康问题上保持着沉默。",
+      // },
     }
   }
 }
@@ -260,4 +342,50 @@ export default {
   margin-left: 2px;
   border-radius: 100px;
 }
+
+.word_name_search {
+		/* background-color: white; */
+		margin-top: 1%;
+		height: 10%;
+    	align-items: center;
+    	justify-content: center;
+    	line-height: 100%;
+		background-color: rgba(255, 255, 255, 0.6);
+		text-align: center;
+		font-size: 35px;
+		border-radius: 10px;
+	}
+	.word_meaning_box_search {
+		margin-top: 2%;
+		height: 50%;
+		background-color: rgba(255, 255, 255, 0.6);
+		text-align: center;
+		font-size: 22px;
+		display: flex;
+		flex-direction: column;
+		border-radius: 10px;
+	}
+
+	.word_reading_search {
+		/* margin-top: 10%; */
+		height: 20%;
+		font-style: italic;
+		/* background-color: #679B9B; */
+	}
+	.word_meaning_search {
+		margin-top: 3%;
+		/* height: 40%; */
+		font-style: italic;
+		white-space: pre-wrap;
+		font-size: large;
+		/* text-align: left; */
+		/* background-color: #679B9B; */
+	}
+	.word_example_search {
+		margin-top: 5%;
+		margin-left: 5%;
+		width: 90%;
+		height: 50%;
+		font-style: italic;
+	}
 </style>

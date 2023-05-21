@@ -2,22 +2,13 @@
   <n-space class="container">
     <TodayAim style="margin-top: 2%"></TodayAim>
     <div style="margin-top: 2%" class="container_box">
-      <CreatePage ref="createPageRef" @add-wordlist="addWordlist"/>
+      <CreatePage ref="createPageRef" @add-wordlist="addWordlist" />
       <div class="left">
         <div class="card-list">
           <n-scrollbar>
-            <WordListCard
-                v-for="(id,index) in listIds"
-                :key="id"
-                :list-id="id"
-                :color-idx="index"
-                :editFlag="editFlag"
-                :clicked="clickedId===id"
-                ref="wordListCardsRef"
-                @update-name="updateName"
-                @handle-click="clickWordList"
-                @handle-close="removeWordList"
-            />
+            <WordListCard v-for="(id, index) in listIds" :key="id" :list-id="id" :color-idx="index" :editFlag="editFlag"
+              :clicked="clickedId === id" ref="wordListCardsRef" @update-name="updateName" @handle-click="clickWordList"
+              @handle-close="removeWordList" />
           </n-scrollbar>
         </div>
         <div class="edit-new-button">
@@ -26,12 +17,11 @@
               取消
             </n-button>
             <div v-else class="prompt-button-div">
-              <n-button @click="editWordList" style="width: 100%; height: 4vh" round type="info"
-                        :bordered="false">
+              <n-button @click="editWordList" style="width: 100%; height: 4vh" round type="info" :bordered="false">
                 编辑单词本
               </n-button>
-              <router-link :to="{name:'help',query:{idxs:[2,1]}}">
-                <n-icon size="2vh" :component="HelpCircleOutline" color="black" class="prompt-icon"/>
+              <router-link :to="{ name: 'help', query: { idxs: [2, 1] } }">
+                <n-icon size="2vh" :component="HelpCircleOutline" color="black" class="prompt-icon" />
               </router-link>
             </div>
           </div>
@@ -40,38 +30,39 @@
               完成
             </n-button>
             <div v-else class="prompt-button-div">
-              <n-button @click="createPageRef.showFlag=true" style="width: 100%; height: 4vh" round ghost type="info">
+              <n-button @click="createPageRef.showFlag = true" style="width: 100%; height: 4vh" round ghost type="info">
                 新建单词本
               </n-button>
-              <router-link :to="{name:'help',query:{idxs:[2,2]}}">
-                <n-icon size="2vh" :component="HelpCircleOutline" color="black" class="prompt-icon"/>
+              <router-link :to="{ name: 'help', query: { idxs: [2, 2] } }">
+                <n-icon size="2vh" :component="HelpCircleOutline" color="black" class="prompt-icon" />
               </router-link>
             </div>
           </div>
         </div>
         <div v-show="false">
-          <router-link :to="{name:'help',query:{idxs:[2,1]}}">
-            <n-icon size="3vh" :component="HelpCircleOutline" color="black"/>
+          <router-link :to="{ name: 'help', query: { idxs: [2, 1] } }">
+            <n-icon size="3vh" :component="HelpCircleOutline" color="black" />
           </router-link>
         </div>
       </div>
       <div class="right">
-        <WordCardList ref="wordCardListRef" :official="officialFlagRef"/>
+        <WordCardList ref="wordCardListRef" :official="officialFlagRef" />
       </div>
     </div>
   </n-space>
+  
 </template>
 
 <script>
-import {NScrollbar, NSpace, NButton, NIcon, useMessage} from "naive-ui"
+import { NScrollbar, NSpace, NButton, NIcon, useMessage, NModal } from "naive-ui"
 import WordListCard from "@/components/wordList/WordListCard.vue";
 import WordCardList from "@/components/wordList/WordCardList.vue";
-import {onMounted, reactive, ref} from "vue";
+import { onMounted, reactive, ref } from "vue";
 import store from "@/store";
-import {getUserLists, editWordlists} from "@/request/api/wordlist";
+import { getUserLists, editWordlists } from "@/request/api/wordlist";
 import CreatePage from "@/components/wordList/CreatePage.vue";
 import TodayAim from "@/components/wordList/TodayAim";
-import {HelpCircleOutline} from "@vicons/ionicons5";
+import { HelpCircleOutline } from "@vicons/ionicons5";
 
 export default {
   name: "WordList",
@@ -83,7 +74,8 @@ export default {
     TodayAim,
     CreatePage,
     WordCardList,
-    WordListCard
+    WordListCard,
+    NModal
   },
   setup() {
     const wordCardListRef = ref(null)
