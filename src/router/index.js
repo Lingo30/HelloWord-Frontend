@@ -18,6 +18,7 @@ import UserInfo from "@/components/userInfo/UserInfo";
 import store from '@/store/index'
 import {USERID} from "@/store/local";
 import {cookieLogin} from "@/request/api/user";
+import Administrator from "@/components/admin/Administrator.vue";
 
 const routes = [
     //格式要求示例
@@ -136,6 +137,12 @@ const routes = [
             },
         ]
     },
+    //管理员界面
+    {
+        path: '/administrator',
+        name: 'admin',
+        component: Administrator,
+    }
 ]
 
 const router = createRouter({
@@ -150,8 +157,16 @@ const router = createRouter({
 let hasTryLogin = false
 let firstPathName = ''
 router.beforeEach((to, from, next) => {
-    if (to.name==='tww') {
+    if (to.name === 'tww') {
         next()
+    }
+    if (store.state.admin.login) {
+        if (to.name === 'admin') {
+            next()
+        } else {
+            router.push({name: 'admin'})
+        }
+        return
     }
     if (store.state.user.login) {
         if (to.name === 'login' || to.name === 'welcome') {
