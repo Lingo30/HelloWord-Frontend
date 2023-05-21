@@ -113,8 +113,8 @@ export function createFromOfficial(userId, listName, listId) {
     })
 }
 
-//TODO 通过检索文件得到单词列表，再根据单词列表生成词单
-export function createFromFile(userId, listName, words) {
+// 根据用户前端展示的预览词单生成用户词单
+export function createFromPre(userId, listName, words) {
     const data = JSON.stringify({
         userId: userId,
         name: listName,
