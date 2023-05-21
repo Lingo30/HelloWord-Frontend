@@ -82,7 +82,12 @@
       maxWidth: '640px',
     }"
         >
-
+          <n-form-item label="会员时间" path="vip">
+            <span style="font-variant-numeric: tabular-nums">
+              <n-countdown :duration="lastTime" active />
+              <n-button :bordered="false" ghost color="#787b0d" @click="handleVip">点击免费加时</n-button>
+            </span>
+          </n-form-item>
           <n-form-item label="邮箱" path="email">
             <span class="text">{{ model.email }}</span>
           </n-form-item>
@@ -118,6 +123,7 @@
         </n-form>
       </div>
       <ChangePassword ref="changePwd"></ChangePassword>
+      <VipPage ref="vipRef"></VipPage>
     </div>
   </div>
 </template>
@@ -136,6 +142,7 @@ import {
   NFormItem,
   NInput,
   NTag,
+  NCountdown,
   useMessage
 } from "naive-ui"
 import store from "@/store";
@@ -145,12 +152,14 @@ import DynamicTags from "@/components/userInfo/DynamicTags";
 import ChangePassword from "@/components/userInfo/ChangePassword";
 import {TOKEN, USERID} from "@/store/local";
 import cookie from "@/store/cookie";
+import VipPage from "@/components/userInfo/VipPage";
 
 export default ({
   name: "UserInfo",
   components: {
     NSpace,
     NImage,
+    NCountdown,
     NButton,
     NStatistic,
     NNumberAnimation,
@@ -159,7 +168,8 @@ export default ({
     NInput,
     NTag,
     DynamicTags,
-    ChangePassword
+    ChangePassword,
+    VipPage,
   },
 
   setup() {
@@ -317,8 +327,19 @@ export default ({
 
     checkSelectedTags()
 
+    // todo 获取信息时获取剩余时间
+    const vipRef = ref(null)
+    const lastTime = reactive(10000)
+
+    function handleVip() {
+      vipRef.value.showVipPage = true
+    }
+
     return {
       logout,
+      vipRef,
+      handleVip,
+      lastTime,
       modify,
       changePwd,
       addServerRecommendedTag,
@@ -334,7 +355,7 @@ export default ({
       store,
       model,
       rules: {
-        id: {
+        vip: {
           required: false,
           trigger: ["blur", "input"],
         },
