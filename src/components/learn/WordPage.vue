@@ -227,31 +227,34 @@ export default {
 	},
 	methods: {
 		getSearchWord(word) {
-			alert(word)
 			this.value=""
-			this.showModal=true
+			let success = false
+			let errMsg = ''
 			get_search_word(word).then((res) => {
-				this.searchWord = res.searchWord
+				success = res.state
 				if(res.state==false) {
-					alert(false)
+					errMsg = '查询失败'
 				} else {
-					this.searchWord = res.searchWord
+					this.searchWord.word = res.word
+					this.searchWord.definition_cn = res.definition_cn
+					this.searchWord.phonetic_symbol = res.phonetic_symbol
+					this.searchWord.example = res.example
+					this.showModal=true
 				}
 			}).catch(err => errMsg = '网络错误').finally(() => {
 				if(!success) {
-				this.message.error(errMsg)
-        	}
-      })
+					this.message.error(errMsg)
+					// alert("网络错误")
+        		}
+      		})
 		},
 		getGroupWord() {
 			let success = false
 			let errMsg = ''
 			get_group_words_in_list(store.state.user.uid).then((res) => {
-				// alert(res.hasBook)
 				success = res.state
 				errMsg = res.msg
 				if(res.hasBook==false) {
-					// alert(111)
 					router.push('/user/wordlist')
 					return
 				} else {
@@ -291,7 +294,6 @@ export default {
       })
 		},
 		delWord() {
-			//alert("Delete cur word!")
 			// 服务器删除
 			let pos = this.learnWords.findIndex((val)=>val.word_id==this.group_words[this.curId].word_id)
 			let len = this.learnWords.length
@@ -369,6 +371,14 @@ export default {
 			this.audio.src = 'https://dict.youdao.com/speech?audio=' + this.searchWord.word;
 			this.audio.play();
 		},
+		onNegativeClick () {
+			message.success('Cancel')
+			showModalRef.value = false
+      	},
+		onPositiveClick () {
+			message.success('Submit')
+			showModalRef.value = false
+		}
 	},
 	created() {
 		this.getGroupWord();

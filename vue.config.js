@@ -13,7 +13,7 @@ module.exports = defineConfig({
                 pathRewrite: {
                     '^/api': '/dev-api',
                     // '^/api': '/prod-api',
-                }
+                }   
             }
         }
     }
