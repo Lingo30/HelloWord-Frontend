@@ -18,7 +18,8 @@ export default createStore({
             ],
         },
         admin: {
-            login: true,//TODO 是否是管理员登录
+            login: false,//TODO 是否是管理员登录
+            id: 0,//管理员id
         },
         modifyVisible: false,
     },

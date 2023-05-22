@@ -1,5 +1,19 @@
 import request from "@/request/request";
 
+export function adminLogin(id, pwd, verify, imgCode){
+    const data = JSON.stringify({
+        name: id,
+        password: pwd,
+        verify: verify,
+        imgCode: imgCode,
+    })
+    return request({
+        url: 'adminLogin/',
+        method: 'post',
+        data: data,
+    })
+}
+
 export function sendSpecialMessage(uid, message) {
     const data = JSON.stringify({
         userId: uid,

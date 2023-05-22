@@ -19,6 +19,7 @@ import store from '@/store/index'
 import {USERID} from "@/store/local";
 import {cookieLogin} from "@/request/api/user";
 import Administrator from "@/components/admin/Administrator.vue";
+import AdminLogin from "@/components/admin/AdminLogin.vue";
 
 const routes = [
     //格式要求示例
@@ -142,6 +143,11 @@ const routes = [
         path: '/administrator',
         name: 'admin',
         component: Administrator,
+    },
+    {
+        path: '/hello-login',
+        name: 'adminLogin',
+        component: AdminLogin,
     }
 ]
 
@@ -160,6 +166,24 @@ router.beforeEach((to, from, next) => {
     if (to.name === 'tww') {
         next()
     }
+
+    if (to.name === 'adminLogin' || to.name === 'admin') {
+        if (store.state.admin.login) {
+            if (to.name === 'admin') {
+                next()
+            } else {
+                router.push({name: 'admin'})
+            }
+        } else {
+            if (to.name === 'adminLogin') {
+                next()
+            } else {
+                router.push({name: 'adminLogin'})
+            }
+        }
+        return;
+    }
+
     if (store.state.admin.login) {
         if (to.name === 'admin') {
             next()
@@ -167,7 +191,11 @@ router.beforeEach((to, from, next) => {
             router.push({name: 'admin'})
         }
         return
+    } else if (to.name === 'adminLogin') {
+        next()
+        return
     }
+
     if (store.state.user.login) {
         if (to.name === 'login' || to.name === 'welcome') {
             router.push('/user')
