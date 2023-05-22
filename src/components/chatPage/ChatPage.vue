@@ -13,13 +13,20 @@
               <div class="chat_top">
                 <img src="../../assets/img/kaleidoBlank.png" height="135" width="130">
               </div>
-              <n-scrollbar class="chat" style="height: 57vh ;text-align: left;margin-top: 3vh;">
-                <div ref="chat_message" class="chat_parent" style="overflow:hidden; width: 30vw">
-<!--                <div ref="chat_box" class="chat" style="overflow-x:hidden; overflow-y:auto; max-height:500px" >-->
-
-                  <ChatMessage v-for="(item, index) in messages" v-bind:key="index" :type=item.type :time=item.time :content=item.content></ChatMessage>
-                </div>
-              </n-scrollbar>
+              <div v-show="mode === false">
+                <n-scrollbar class="chat" style="height: 57vh ;text-align: left;margin-top: 3vh;">
+                  <div ref="chat_message" class="chat_parent" style="overflow:hidden; width: 30vw">
+                    <ChatMessage v-for="(item, index) in messages" v-bind:key="index" :type=item.type :time=item.time :content=item.content></ChatMessage>
+                  </div>
+                </n-scrollbar>
+              </div>
+              <div v-show="mode === true">
+                <n-scrollbar style="height: 57vh ;text-align: left;margin-top: 3vh;">
+                  <div ref="chat_message" class="chat_parent" style="overflow:hidden; width: 30vw">
+                    <VideoMessage v-for="(item, index) in videos" v-bind:key="index" :type=item.type :time=item.time></VideoMessage>
+                  </div>
+                </n-scrollbar>
+              </div>
               <div  class="bottom">
                 <div class="text_line" v-show="mode === false">
                   <div class="videobutton" @click="changeMode" ></div>
@@ -71,9 +78,10 @@ import Kaleido from "@/assets/img/kaleidoBlank.png";
 import {AUTHENTICATE_ERR} from "@/store/local";
 import Recorder from 'js-audio-recorder'
 import {submitAvatar} from "@/request/api/user";
-
+import VideoMessage from "@/components/chatPage/VideoMessage";
 export default {
   components: {
+    VideoMessage,
     NSpin,
     NScrollbar,
     NInput,
@@ -96,6 +104,7 @@ export default {
     const showSpin = ref(false)
     const value = ref('')
     const messages = ref([])
+    const videos = ref([])
     const inputRef = ref(null)
     let mode = ref(false)
 
@@ -167,6 +176,7 @@ export default {
       message,
       inputRef,
       messages,
+      videos,
       showSpin,
       value,
       mode,
@@ -176,6 +186,7 @@ export default {
     }
 
     function changeMode() {
+      console.log("change");
       mode.value = !mode.value;
     }
 
@@ -261,6 +272,7 @@ export default {
 
   created() {
     this.getHistory();
+    this.getVideoHistory();
   },
 
   methods: {
@@ -284,6 +296,69 @@ export default {
           this.message.error(errMsg)
         }
       });
+      this.showSpin = false;
+    },
+    getVideoHistory() {
+      this.showSpin = true;
+      console.log("video");
+      let newList1 = {
+        time: "11111",
+        type: true,
+      };
+      this.videos.push(newList1);
+      let newList2 = {
+        time: "11111",
+        type: false,
+      };
+      this.videos.push(newList2);
+      let newList3 = {
+        time: "11111",
+        type: true,
+      };
+      this.videos.push(newList3);
+      let newList4 = {
+        time: "11111",
+        type: false,
+      };
+      this.videos.push(newList4);
+      let newList5 = {
+        time: "11111",
+        type: true,
+      };
+      this.videos.push(newList5);
+      let newList6 = {
+        time: "11111",
+        type: false,
+      };
+      this.videos.push(newList6);
+      let newList7 = {
+        time: "11111",
+        type: true,
+      };
+      this.videos.push(newList7);
+      let newList8 = {
+        time: "11111",
+        type: false,
+      };
+      this.videos.push(newList8);
+      // let success = false
+      // let errMsg = ''
+      // getVideoHistoryChatAPI(store.state.user.uid).then((res) => {
+      //   success = res.state
+      //   errMsg = res.msg
+      //   res.history.forEach((item) => {
+      //     let newList = {
+      //       time: item.time.replace("T"," ").split(":").slice(0,2).join(":"),
+      //       type: !item.type,
+      //       content: item.content,
+      //     };
+      //     this.messages.push(newList);
+      //   });
+      // }).catch(err => errMsg = '网络错误').finally(() => {
+      //   if (!success) {
+      //     this.message.error(errMsg)
+      //   }
+      // });
       this.showSpin = false;
     },
   }
