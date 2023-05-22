@@ -42,21 +42,29 @@
     <!--    受理上传词单-->
     <div style="display: flex;flex-direction: column">
       审理上传词单
+      <span style="display: flex">
+        <n-checkbox v-model:checked="submitHandledHistoryFlag">
+          查看历史审核
+        </n-checkbox>
+      </span>
       <n-list>
         <n-list-item v-for="list in showLists" :key="list.listId">
           <div style="display: flex;justify-content: space-between">
             {{ list.listName }}
-            <n-button-group>
-              <n-button type="info" @click="showListDetail(list.listId)">
+            <n-button-group v-if="!submitHandledHistoryFlag">
+              <n-button type="info" @click="showListDetail(list.userId,list.listId)">
                 查看详情
               </n-button>
-              <n-button type="success" @click="acceptWordlist(list.listId)">
+              <n-button type="success" @click="acceptWordlist(list.userId,list.listId)">
                 通过
               </n-button>
-              <n-button type="error" @click="rejectWordlist(list.listId)">
+              <n-button type="error" @click="rejectWordlist(list.userId,list.listId)">
                 拒绝
               </n-button>
             </n-button-group>
+            <n-text v-else>
+              {{ list.handleMessage }}
+            </n-text>
           </div>
         </n-list-item>
       </n-list>
@@ -73,7 +81,7 @@
 </template>
 
 <script>
-import {ref, h, reactive, computed, onMounted} from 'vue'
+import{ref, h, reactive, computed, onMounted} from 'vue'
 import {
   NDivider,
   NInput,
@@ -234,21 +242,35 @@ export default {
 
     const lists = reactive([
       {
+        userId: 11,
         listId: 0,
         listName: 'aaa',
+        handleState: 0,//0：未处理 1：批准 2：拒绝
+        handleMessage: '',//批准或拒绝时的意见
       },
       {
+        userId: 11,
         listId: 1,
         listName: 'bbb',
+        handleState: 1,
+        handleMessage: '批准',
       }
     ])
+    const submitHandledHistoryFlag = ref(false)//是否查看历史处理记录
+    const filterLists = computed(() => {
+      if (submitHandledHistoryFlag.value) {
+        return lists.filter(list => list.handleState !== 0)
+      } else {
+        return lists.filter(list => list.handleState === 0)
+      }
+    })//正在查看的所有处理记录（分页前）
     const curPage = ref(1)
     const pageSize = 5
     let pageNum = computed(() => {
-      return Math.ceil(lists.length / pageSize)
+      return Math.ceil(filterLists.value.length / pageSize)
     })
     let showLists = computed(() => {
-      return lists.slice(pageSize * (curPage.value - 1), Math.min(curPage.value * pageSize, lists.length))
+      return filterLists.value.slice(pageSize * (curPage.value - 1), Math.min(curPage.value * pageSize, lists.length))
     })
 
     const showDetailRef = ref(null)
@@ -262,17 +284,17 @@ export default {
     }
 
     //弹出词单详情的模态框
-    function showListDetail(listId) {
-      showDetailRef.value.init(listId)
+    function showListDetail(userId, listId) {
+      showDetailRef.value.init(userId, listId)
     }
 
-    function acceptWordlist(listId) {
+    function acceptWordlist(userId, listId) {
       //TODO
-      acceptSubmit(listId)
+      acceptSubmit(userId, listId)
     }
 
     //是否允许成为官方词单
-    function rejectWordlist(listId) {
+    function rejectWordlist(userId, listId) {
       //todo
       const message = ref('')
       dialog.info({
@@ -286,7 +308,7 @@ export default {
         action: () => h(NButton,
             {
               onClick() {
-                rejectSubmit(listId, message.value)
+                rejectSubmit(userId, listId, message.value)
               }
             },
             {
@@ -317,6 +339,7 @@ export default {
       pageNum,
       showLists,
       showDetailRef,
+      submitHandledHistoryFlag,
 
       sendMessage,
       updateSelectFeedback,
