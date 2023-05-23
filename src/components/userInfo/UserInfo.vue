@@ -184,7 +184,7 @@ export default ({
           model.days = res.info.days;
           model.wordLists = res.info.lists;
           model.tags = res.info.tags;
-          lastTime.value = res.info.last_time
+          lastTime.value = res.info.last_time*1000
         } else {
           msg.error(res.msg)
         }
