@@ -186,7 +186,7 @@ import {
 } from "naive-ui";
 import store from "@/store";
 import {
-  createFromFile,
+  createFromPre,
   createFromOfficial,
   getOfficialLists, getTagWordlist,
   uploadFile,
@@ -445,7 +445,7 @@ export default {
         // 文件创建词单
         let words = []
         previewWordlist.value.forEach((word) => words.push(word.wordId))
-        createFromFile(store.state.user.uid, listName, words).then((res) => {
+        createFromPre(store.state.user.uid, listName, words).then((res) => {
           success = res.state
           errMsg = res.msg
           listId = res.listId
