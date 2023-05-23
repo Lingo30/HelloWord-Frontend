@@ -3,7 +3,9 @@
 		<div class="word_search">
 			<div class="search">
 				<n-input v-model:value="value" type="text" placeholder="您需要查询的单词" style="border-radius: 15px;"
-					maxlength="30" on-clear="getSearchWord" />
+					maxlength="30"
+                 @keydown.enter.prevent="getSearchWord(value)"
+                 on-clear="getSearchWord" />
 			</div>
 			<div class="search_button">
 				<n-button type="primary" style="border-radius: 10px;" @click="getSearchWord(value)">
