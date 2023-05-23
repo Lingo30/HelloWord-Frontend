@@ -1,21 +1,25 @@
 <template>
   <div>
-    <n-badge :show="unReadFlag" dot>
+    <n-badge :show="unReadFlag" dot style="">
       <!--        这的样式颜色要改一改-->
-      <n-icon size="5vh" color="white" :depth="3" class="clickable">
+      <n-icon size="4vh" color="white" :depth="3" class="clickable" style="top:50%; transform:translate(0,50%);">
         <Megaphone/>
       </n-icon>
     </n-badge>
   </div>
-  <n-modal v-model:show="showFlag" style="background-color: white">
+  <n-modal v-model:show="showFlag" style="background-color: #ADC4BB">
     <div class="notice-modal">
-      <n-list v-if="!showDetailFlag">
-        <n-list-item v-for="message in messages" :key="message.id">
-          <n-badge :show="!message.state" style="color: black;padding-right: 10px" dot>
+      <n-list :show-divider="false" clickable style="width: 35%;background-color: #89AB9E;">
+        <n-list-item
+            v-for="(message,index) in messages" :key="message.id"
+            :class="index===clickedMsg?'message-list-item-clicked':'message-list-item'"
+            @click="showMessageDetail(message,index)"
+        >
+          <n-badge :show="!message.state" style="color: black;padding-left: 10px;padding-right: 10px" dot>
             {{ message.title }}
           </n-badge>
           <template #suffix>
-            <n-button @click="showMessageDetail" :bordered="false">
+            <n-button :bordered="false">
               <n-icon>
                 <ChevronForwardOutline/>
               </n-icon>
@@ -23,16 +27,11 @@
           </template>
         </n-list-item>
       </n-list>
-      <div v-else>
-        <n-button size="large" :bordered="false" @click="showDetailFlag=false">
-          <n-icon size="4vh">
-            <ArrowBackOutline/>
-          </n-icon>
-        </n-button>
+      <div style="height: 100%;width: 65%;">
         <div class="title">
           {{ messageDetail.data.title }}
         </div>
-        <n-divider/>
+        <n-divider style="--n-color:rgb(0, 0, 0)"/>
         <div class="content">
           {{ messageDetail.data.content }}
         </div>
@@ -58,12 +57,12 @@ export default {
     NDivider,
     Megaphone,
     ChevronForwardOutline,
-    ArrowBackOutline,
   },
   setup() {
     const unReadFlag = ref(false)//侧边栏显示是否有未读消息
     const showFlag = ref(false)//是否显示通知公告模态框
     const showDetailFlag = ref(false)//是否显示消息详细内容
+    const clickedMsg = ref(0)//被选中的消息
 
     const messageDetail = reactive({
       data: {
@@ -95,11 +94,13 @@ export default {
 
     function showMessages() {
       //todo 后端返回所有个人消息和公告
-      console.log("ggg");
       showFlag.value = true
+
+      showMessageDetail(messages[clickedMsg.value])
     }
 
-    function showMessageDetail(msg) {
+    function showMessageDetail(msg, index) {
+      clickedMsg.value = index
       showDetailFlag.value = true
       messageDetail.data = msg
       if (!msg.state) {
@@ -115,6 +116,7 @@ export default {
       showDetailFlag,
       messages,
       messageDetail,
+      clickedMsg,
 
       showMessages,
       showMessageDetail,
@@ -128,7 +130,7 @@ export default {
   height: 500px;
   width: 100vh;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   overflow: auto;
   padding: 5px;
   /*background-color: black;*/
@@ -146,5 +148,15 @@ export default {
 .content {
   padding-left: 20px;
   padding-right: 20px;
+}
+
+.message-list-item {
+  margin: 15px;
+  background-color: #26A474;
+}
+
+.message-list-item-clicked {
+  margin: 15px;
+  background-color: #2ab47f;
 }
 </style>
