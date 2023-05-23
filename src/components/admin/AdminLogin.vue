@@ -85,9 +85,9 @@ export default {
     function saveInfo(data) {
       //TODO 存储本地变量
       store.state.admin.login = true
-      store.state.admin.id = data.id
+      store.state.admin.id = data.uid
       // 把用户id保存到本地
-      localStorage.setItem(ADMINID, data.id)
+      localStorage.setItem(ADMINID, data.uid)
     }
 
     async function refreshVerifyCode() {
