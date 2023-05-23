@@ -2,7 +2,7 @@
   <div>
     <n-badge :show="unReadFlag" dot>
       <!--        这的样式颜色要改一改-->
-      <n-icon size="5vh" color="white" :depth="3" class="clickable" @click="showMessages">
+      <n-icon size="5vh" color="white" :depth="3" class="clickable">
         <Megaphone/>
       </n-icon>
     </n-badge>
@@ -95,7 +95,7 @@ export default {
 
     function showMessages() {
       //todo 后端返回所有个人消息和公告
-
+      console.log("ggg");
       showFlag.value = true
     }
 
