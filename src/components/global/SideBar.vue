@@ -45,6 +45,11 @@
       </li>
     </ul>
     <!--    底部用户个人信息页面跳转-->
+    <div style="bottom: 17%" class="bottom-button ">
+      <div labelTooltip="通知公告" class="box s-sidebar__nav-link">
+        <Notification/>
+      </div>
+    </div>
     <div class="bottom-button">
       <router-link labelTooltip="我的信息" to="/user/info" class="s-sidebar__nav-link">
         <div class="box">
@@ -59,10 +64,12 @@
 import {useRouter} from "vue-router";
 import {Person, Chatbubble,BarChart,Book,Notifications,School,HelpCircle} from "@vicons/ionicons5"
 import {NIcon} from 'naive-ui'
+import Notification from "@/components/global/Notification.vue";
 
 export default {
   name: "SideBar",
   components: {
+    Notification,
     NIcon,
   },
   setup() {
