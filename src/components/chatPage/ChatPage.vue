@@ -23,7 +23,7 @@
               <div v-show="mode === true">
                 <n-scrollbar style="height: 57vh ;text-align: left;margin-top: 3vh;">
                   <div ref="chat_message" class="chat_parent" style="overflow:hidden; width: 30vw">
-                    <VideoMessage v-for="(item, index) in videos" v-bind:key="index" :type=item.type :time=item.time></VideoMessage>
+                    <VideoMessage v-for="(item, index) in videos" v-bind:key="index" :type=item.type :time=item.time :content=item.content></VideoMessage>
                   </div>
                 </n-scrollbar>
               </div>
@@ -71,13 +71,12 @@
 <script>
 import {NSpin, NScrollbar, NInput, NButton, NAvatar, useNotification, useMessage} from 'naive-ui';
 import ChatMessage from "@/components/chatPage/ChatMessage";
-import {getHistoryChatAPI, sendChatAPI} from "@/request/api/chat";
+import {getHistoryChatAPI, getVideoHistoryChatAPI, sendChatAPI, submitVideo} from "@/request/api/chat";
 import {h, nextTick, reactive, ref, toRefs} from 'vue'
 import store from "@/store";
 import Kaleido from "@/assets/img/kaleidoBlank.png";
 import {AUTHENTICATE_ERR} from "@/store/local";
 import Recorder from 'js-audio-recorder'
-import {submitAvatar} from "@/request/api/user";
 import VideoMessage from "@/components/chatPage/VideoMessage";
 export default {
   components: {
@@ -118,26 +117,6 @@ export default {
       isHistory: true,
       // 录音时长
       duration: 0,
-      submit () { // 发送语音的方法// todo
-        data.recorder.pause() // 暂停录音
-        data.timer = null
-        console.log('上传录音')// 上传录音
-        let formData = new FormData();
-        var blob = data.recorder.getWAVBlob()//获取wav格式音频数据
-        //此处获取到blob对象后需要设置fileName满足当前项目上传需求，其它项目可直接传把blob作为		  file塞入formData
-        var newbolb = new Blob([blob], { type: 'audio/wav' })
-        var fileOfBlob = new File([newbolb], new Date().getTime() + '.wav')
-        //formData是传给后端的对象,
-        formData.append('file', fileOfBlob)
-        //计算出录音时长
-        data.duration = Math.ceil((new Date() - data.duration) / 1000);
-        console.log(data.duration);
-        //发送给后端的方法 todo
-        sendAudio(formData).then(res => {
-           console.log(res);
-        })
-      },
-      // 录音按钮的点击事件
       voice () {
         //实例化语音对象
         data.recorder = new Recorder({
@@ -181,6 +160,7 @@ export default {
       value,
       mode,
       sendChat,
+      submit,
       changeMode,
       handleEnter,
     }
@@ -189,11 +169,6 @@ export default {
       console.log("change");
       mode.value = !mode.value;
     }
-
-    async function sendAudio(e) {
-      // todo
-    }
-
     async function handleEnter(event) {
       if (event.shiftKey) {
         // 获取当前光标位置
@@ -219,6 +194,56 @@ export default {
       }
     }
 
+    async function submit () {
+      data.recorder.pause()
+      var blob = data.recorder.getWAVBlob()//获取wav格式音频数据
+      var newbolb = new Blob([blob], {type: 'audio/wav'})
+      var videoFile = new File([newbolb], new Date().getTime() + '.wav')
+      let success = false
+      let errMsg = ''
+      let title = ''
+      await submitVideo(videoFile, store.state.user.uid).then((res) => {
+        success = res.state
+        errMsg = res.msg
+        if (!success) {
+          if (res.msg.match(new RegExp(AUTHENTICATE_ERR))) {
+            errMsg = res.msg
+            title = "登录已失效"
+          } else {
+            errMsg = "一天最多只能对话七次哦，不如今天再去学点单词，明天再来找我聊天叭"
+            title = "使用次数已达上限"
+          }
+        } else {
+          let q = {
+            time: res.receive_time,
+            type: false,
+            // content: value.value  todo
+          };
+          videos.value.push(q);
+          let p = {
+            time: res.post_time,
+            type: true,
+            content: res.post_message,
+          };
+          videos.value.push(p);
+        }
+      }).catch(err => {
+      }).finally(() => {
+        if (!success) {
+          notification.create({
+            title: title,
+            content: errorMsg,
+            avatar: () => h(NAvatar, {
+              size: 'small',
+              round: true,
+              src: Kaleido,
+            }),
+            duration: 3e3,
+          })
+          showSpin.value = false;
+        }
+      })
+    }
     async function sendChat() {
       showSpin.value = true
       let errorMsg = "超时啦，请稍后再试试"
@@ -305,60 +330,24 @@ export default {
         time: "11111",
         type: true,
       };
-      this.videos.push(newList1);
-      let newList2 = {
-        time: "11111",
-        type: false,
-      };
-      this.videos.push(newList2);
-      let newList3 = {
-        time: "11111",
-        type: true,
-      };
-      this.videos.push(newList3);
-      let newList4 = {
-        time: "11111",
-        type: false,
-      };
-      this.videos.push(newList4);
-      let newList5 = {
-        time: "11111",
-        type: true,
-      };
-      this.videos.push(newList5);
-      let newList6 = {
-        time: "11111",
-        type: false,
-      };
-      this.videos.push(newList6);
-      let newList7 = {
-        time: "11111",
-        type: true,
-      };
-      this.videos.push(newList7);
-      let newList8 = {
-        time: "11111",
-        type: false,
-      };
-      this.videos.push(newList8);
-      // let success = false
-      // let errMsg = ''
-      // getVideoHistoryChatAPI(store.state.user.uid).then((res) => {
-      //   success = res.state
-      //   errMsg = res.msg
-      //   res.history.forEach((item) => {
-      //     let newList = {
-      //       time: item.time.replace("T"," ").split(":").slice(0,2).join(":"),
-      //       type: !item.type,
-      //       content: item.content,
-      //     };
-      //     this.messages.push(newList);
-      //   });
-      // }).catch(err => errMsg = '网络错误').finally(() => {
-      //   if (!success) {
-      //     this.message.error(errMsg)
-      //   }
-      // });
+      let success = false
+      let errMsg = ''
+      getVideoHistoryChatAPI(store.state.user.uid).then((res) => {
+        success = res.state
+        errMsg = res.msg
+        res.history.forEach((item) => {
+          let newList = {
+            time: item.time.replace("T"," ").split(":").slice(0,2).join(":"),
+            type: !item.type,
+            content: item.content,
+          };
+          this.videos.push(newList);
+        });
+      }).catch(err => errMsg = '网络错误').finally(() => {
+        if (!success) {
+          this.message.error(errMsg)
+        }
+      });
       this.showSpin = false;
     },
   }

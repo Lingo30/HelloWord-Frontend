@@ -1,9 +1,8 @@
 <template>
   <div class="chat_left">
     <div class="chat_left_item_2">
-      <div class="chat_left_time">{{ time }}</div>
-      <div class="videobutton">
-<!--        todo 怎么绑定一个播放按钮-->
+      <div class="chat_left_time">{{time}}</div>
+      <div class="videobutton" @click="this.play">
       </div>
     </div>
   </div>
@@ -19,7 +18,14 @@ export default {
     },
     content: {
       type: String,
-      default: '啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦'
+      default: ''
+    }
+  },
+  methods: {
+    play() {
+      this.audio = new Audio();
+      this.audio.src = this.content;
+      this.audio.play();
     }
   }
 }

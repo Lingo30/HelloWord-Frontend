@@ -2,7 +2,7 @@
   <div class="chat_right">
     <div class="chat_right_item_2">
       <div class="chat_right_time">{{time}}</div>
-      <div class="videobutton">
+      <div class="videobutton" @click="this.play">
       </div>
     </div>
   </div>
@@ -22,10 +22,18 @@ export default {
     },
     content:{
       type:String,
-      default:'啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦'
+      default:''
+    }
+  },
+  methods: {
+    play() {
+      this.audio = new Audio();
+      this.audio.src = this.content;
+      this.audio.play();
     }
   }
 }
+
 </script>
 
 <style scoped>
