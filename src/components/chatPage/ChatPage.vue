@@ -221,12 +221,11 @@ export default {
           };
           videos.value.push(p);
         }
-      }).catch(err => {
-      }).finally(() => {
+      }).catch(err => {}).finally(() => {
         if (!success) {
           notification.create({
             title: title,
-            content: errorMsg,
+            content: errMsg,
             avatar: () => h(NAvatar, {
               size: 'small',
               round: true,
