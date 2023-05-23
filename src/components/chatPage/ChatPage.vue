@@ -91,12 +91,6 @@ export default {
   props: {
     msg: String
   },
-
-  data() {
-    return {
-    }
-  },
-
   setup() {
     const message = useMessage()
     const notification = useNotification()
@@ -410,7 +404,6 @@ export default {
   font-size: 20px;
   text-align: left;
 }
-
 .bottom {
   position: absolute;
   bottom: 5%;
@@ -474,7 +467,6 @@ export default {
   display: flex;
   justify-content: center;
   margin: auto;
-  /*background-color: #2A928F;*/
 }
 
 .content-bottom :hover{
