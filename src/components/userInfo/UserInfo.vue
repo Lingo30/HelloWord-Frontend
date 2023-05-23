@@ -184,6 +184,7 @@ export default ({
           model.days = res.info.days;
           model.wordLists = res.info.lists;
           model.tags = res.info.tags;
+          lastTime.value = res.info.last_time
         } else {
           msg.error(res.msg)
         }
@@ -329,7 +330,7 @@ export default ({
 
     // todo 获取信息时获取剩余时间
     const vipRef = ref(null)
-    const lastTime = reactive(10000)
+    const lastTime = ref(null)
 
     function handleVip() {
       vipRef.value.showVipPage = true

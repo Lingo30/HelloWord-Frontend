@@ -75,8 +75,10 @@
 
 <script>
 import {NModal, NProgress, NRow, NCol, NStatistic, NIcon, NButton, NPopover, useMessage} from "naive-ui";
-import {computed, ref} from "vue";
+import {computed, onBeforeMount, ref} from "vue";
 import {BarChartOutline,CalendarNumberOutline,ChatbubbleOutline} from "@vicons/ionicons5";
+import {getVipInfo} from "@/request/api/user";
+import store from "@/store";
 
 export default {
   name: "VipPage",
@@ -109,7 +111,21 @@ export default {
     const inviteCode = ref("123456")
     const msg = useMessage()
 
-    // todo mount前获取后端数据
+    onBeforeMount(()=>{
+      getVipInfo(store.state.user.uid).then((res) => {
+        let state = res.state
+        if (state) {
+          wordNum.value = res.word_num>wordTar?wordTar:res.word_num
+          dayNum.value = res.day_num>dayTar?dayTar:res.day_num
+          friendsNum.value = res.friend_num
+          inviteCode.value = res.invite_code
+        } else {
+          msg.error(res.msg)
+        }
+      }).catch((err) => {
+        msg.error('网络错误')
+      })
+    })
 
     // 复制邀请码
     const copyToClipboard = async () => {
