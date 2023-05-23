@@ -25,3 +25,35 @@ export function getHistoryChatAPI(uid) {
         data
     })
 }
+
+export function getVideoHistoryChatAPI(uid) {
+    const data = JSON.stringify({
+        user_id: uid,
+    })
+    return request({
+        // url: "https://mock.apifox.cn/m2/2544762-0-default/74215801",
+        url: "get_video_history/",
+        method: 'post',
+        data
+    })
+}
+
+export function submitVideo(videoFile, uid) {
+
+    // 上传文件需要使用FormData对象，
+    const formData = new FormData();
+    formData.append("video", videoFile);
+    const json2 = JSON.stringify(uid);
+    const blob2 = new Blob([json2], {
+        type: 'application/json'
+    });
+    formData.append('user_id', blob2)
+
+    return request({
+        url: "submit_video/",
+        method: "post",
+        // 更改headers以上传文件
+        headers: {'Content-Type': 'multipart/form-data'},
+        data: formData
+    });
+}
