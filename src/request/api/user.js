@@ -102,6 +102,7 @@ export function getInfo(uid) {
     })
     return request({
         url: 'get_user_info/',
+        // url: 'https://mock.apifox.cn/m2/2544762-0-default/83655140?apifoxApiId=83655140',
         method: 'post',
         data
     })
@@ -180,6 +181,18 @@ export function checkEmailCode(email, code) {
     })
     return request({
         url: 'check_email_code/',
+        method: 'post',
+        data
+    })
+}
+
+export function getVipInfo(uid) {
+    const data = JSON.stringify({
+        user_id: uid
+    })
+    return request({
+        url: 'get_vip_info/',
+        // url: 'https://mock.apifox.cn/m2/2544762-0-default/83655288',
         method: 'post',
         data
     })
