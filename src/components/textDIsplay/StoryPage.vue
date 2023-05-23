@@ -105,12 +105,22 @@ export default {
         success = res.state
         if (success) {
           const lastTimes = res.last_times
-          notification.create({
+          let n = notification.create({
             content: lastTimes === 0?'这是最后一篇啦，我先歇了=v=':'今天还能再想' + lastTimes + '篇故事-v-',
             avatar: () => h(NAvatar,{
               size: 'small',
               round: true,
               src: Kaleido,
+            }),
+            action: ()=>h(NButton,{
+              text: true,
+              type: "primary",
+              onClick:()=>{
+                router.push('/user/info/')
+                n.destroy();
+              }
+            },{
+              default: () => "我开会员去:)"
             }),
             duration: 3e3,
 

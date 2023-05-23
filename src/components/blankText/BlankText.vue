@@ -93,6 +93,7 @@ import {
 } from "naive-ui";
 import Kaleido from "@/assets/img/kaleidoBlank.png";
 import HistoryRecd from "@/components/textDIsplay/HistoryRecd";
+import router from "@/router";
 
 export default {
   name: "BlankText",
@@ -131,12 +132,22 @@ export default {
         if (success) {
           // console.log(res)
           const lastTimes = res.last_times
-          notification.create({
+          let n = notification.create({
             content: lastTimes === 0 ? '这是最后一题啦，我先歇了=v=' : '今天还能再出' + lastTimes + '道题-v-',
             avatar: () => h(NAvatar, {
               size: 'small',
               round: true,
               src: Kaleido,
+            }),
+            action: ()=>h(NButton,{
+              text: true,
+              type: "primary",
+              onClick:()=>{
+                router.push('/user/info/')
+                n.destroy();
+              }
+            },{
+              default: () => "我开会员去:)"
             }),
             duration: 3e3,
           })
