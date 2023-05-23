@@ -18,6 +18,7 @@ import {getArticleAnalysis} from "@/request/api/review";
 import {NButton, NAvatar, useMessage,useNotification} from "naive-ui";
 import Kaleido from "@/assets/img/kaleidoBlank.png";
 import store from "@/store";
+import router from "@/router";
 export default {
   name: "WritingPage",
   components: {
@@ -90,12 +91,22 @@ export default {
         }
       }).catch().finally(()=>{
         if (!success) {
-          notification.create({
+          let n = notification.create({
             content: errorMsg,
             avatar: () => h(NAvatar,{
               size: 'small',
               round: true,
               src: Kaleido,
+            }),
+            action: ()=>h(NButton,{
+              text: true,
+              type: "primary",
+              onClick:()=>{
+                router.push('/user/info/')
+                n.destroy();
+              }
+            },{
+              default: () => "我开会员去:)"
             }),
             duration: 3e3,
           })
