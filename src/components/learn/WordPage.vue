@@ -13,7 +13,7 @@
 		</div>
 
 		<div class="class_table">
-			<n-card style="overflow-x: hidden;overflow-y: auto;" class="word_card shadow-lg">
+			<n-card :style="wordCardBackground" class="word_card shadow-lg">
 				<div class="word_name">
 					{{ group_words[curId].word }}
 				</div>
@@ -149,7 +149,10 @@ export default {
 	},
 	data() {
 		return {
-			message: useMessage(),
+      wordCardBackground: {
+        backgroundImage: 'url(' + require('../../assets/img/word_background_4.jpg') + ')',
+      },
+      message: useMessage(),
 			value: ref(''),
 			showModal: ref(false),
 			// searchRef: ref(null),
@@ -231,6 +234,29 @@ export default {
 			})
 		},
 		getGroupWord() {
+      const weekNum = new Date().getDay();
+      switch (weekNum) {
+        case 0:
+          break;
+        case 1:
+          this.wordCardBackground.backgroundImage =  'url(' + require('../../assets/img/word_background_1.png') + ')';
+          break;
+        case 2:
+          this.wordCardBackground.backgroundImage =  'url(' + require('../../assets/img/word_background_2.jpg') + ')';
+          break;
+        case 3:
+          this.wordCardBackground.backgroundImage =  'url(' + require('../../assets/img/word_background_3.jpg') + ')';
+          break;
+        case 4:
+          this.wordCardBackground.backgroundImage =  'url(' + require('../../assets/img/word_background_4.jpg') + ')';
+          break;
+        case 5:
+          this.wordCardBackground.backgroundImage =  'url(' + require('../../assets/img/word_background_5.jpg') + ')';
+          break;
+        case 6:
+          this.wordCardBackground.backgroundImage =  'url(' + require('../../assets/img/word_background_6.jpg') + ')';
+          break;
+      }
 			let success = false
 			let errMsg = ''
 			get_group_words_in_list(store.state.user.uid).then((res) => {
@@ -422,7 +448,6 @@ export default {
 .word_card {
 	height: 90%;
 	width: 40%;
-	background-image: url("../../assets/img/word_background.png");
 	background-size: 100%, 100%;
 	overflow-x: hidden;
 	overflow-y: auto;
