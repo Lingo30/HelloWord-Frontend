@@ -88,6 +88,7 @@
               <!--                验证码-->
               <div style="margin:25px 0px;padding-left: 1vh; display: flex;justify-content: left">
                 <!--                <img src="../../assets/img/key.png" height="12" width="12">-->
+
                 <input
                     style="margin: 0 0 0 0.8vw;width: 40%"
                     v-model="verifyInput"
@@ -112,6 +113,9 @@
               </div>
               <div style="margin:25px 0px 25px 15px">
                 <!--                <img src="../../assets/img/email.png" height="12" width="12">-->
+                <n-icon size="12">
+                  <text-outline></text-outline>
+                </n-icon>
                 <input
                     class="email-verify"
                     style="width: 57%"
@@ -128,6 +132,17 @@
                 >
                   {{ canSendEmail ? '发送验证码' : `重新发送(${countdown}s)` }}
                 </button>
+              </div>
+              <div style="margin:25px 0px">
+                <n-icon size="12">
+                  <people-outline></people-outline>
+                </n-icon>
+                <input
+                    v-model="inviteCode"
+                    name="邀请码"
+                    placeholder="好友邀请码(选填)"
+                    maxlength="15"
+                />
               </div>
               <div style="margin:6px">
                 <button v-if="forgetPageFlag" @click="resetPassword(username,password, passwordConfirm,verifyInput)"
@@ -158,7 +173,7 @@ import {registerAPI, loginAPI, sendEmail, reset, getVerifyImg, sendResetPassword
 import store from "@/store";
 import router from "@/router";
 import {USERID} from "@/store/local";
-import {MailOutline} from "@vicons/ionicons5";
+import {MailOutline,PeopleOutline,TextOutline} from "@vicons/ionicons5";
 
 export default {
   name: 'Login',
@@ -168,7 +183,9 @@ export default {
   components: {
     NIcon,
     NImage,
-    MailOutline
+    MailOutline,
+    PeopleOutline,
+    TextOutline,
   },
   setup() {
     const sha256 = require('js-sha256').sha256;
@@ -181,6 +198,7 @@ export default {
 
     let verifyImg = ref('')//验证码图片url
     let imgCode = ''//验证码图片key
+    let inviteCode = ref('')
 
     const message = useMessage();
 
@@ -299,7 +317,7 @@ export default {
           let success = false
           let data
           let wrMsg = ''
-          registerAPI(name, encodePwd, email.value, emailVerificationCodeInput.value, verify, imgCode).then((res) => {
+          registerAPI(name, encodePwd, email.value, emailVerificationCodeInput.value, verify, imgCode,inviteCode.value).then((res) => {
             success = res.state
             data = res.data
             wrMsg = res.msg
@@ -393,6 +411,7 @@ export default {
       passwordConfirm,
       verifyInput,
       verifyImg,
+      inviteCode,
 
       change,
       refreshVerifyCode,
@@ -444,7 +463,7 @@ export default {
   top: 26%;
   left: 36.5%;
   width: 400px;
-  height: 400px;
+  height: 450px;
   background: rgba(223, 219, 219, 0.2);
   margin-left: 40px;
   display: flex;
@@ -479,7 +498,7 @@ export default {
 .loginbox {
   position: absolute;
   width: 800px;
-  height: 500px;
+  height: 520px;
   top: 50%;
   left: 50%;
   display: flex;

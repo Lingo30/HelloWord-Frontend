@@ -41,7 +41,7 @@ export function loginAPI(name, pwd, verify, imgCode) {
     })
 }
 
-export function registerAPI(name, pwd, email, code, verify, imgCode) {
+export function registerAPI(name, pwd, email, code, verify, imgCode,inviteCode) {
     /*
     返回数据：
     state: true/false 是否注册成功
@@ -58,6 +58,7 @@ export function registerAPI(name, pwd, email, code, verify, imgCode) {
         code: code,
         verify: verify,
         imgCode: imgCode,
+        invite_code: inviteCode,
     })
     return request({
         url: 'register/',
