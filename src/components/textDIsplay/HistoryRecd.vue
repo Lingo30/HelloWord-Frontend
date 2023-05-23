@@ -10,7 +10,7 @@
   >
     <n-space class="container">
       <div style="margin-bottom: 30px" class="select-box">
-        <n-date-picker v-model:formatted-value="dateRange" value-format="yyyy.MM.dd" type="daterange"/>
+        <n-date-picker @confirm="getRecordId" v-model:formatted-value="dateRange" value-format="yyyy.MM.dd" type="daterange"/>
         <n-scrollbar style="margin-top: 15px">
           <HistoryCard
               v-for="(id,index) in listIds"
@@ -113,9 +113,12 @@ export default {
     })
 
     async function getRecordId() {
+      // console.log(dateRange.value)
+      // console.log(startDate.value);
       let success = false
       let errMsg = ''
       await getHistoryRecordId(store.state.user.uid,props.type,startDate.value,endDate.value).then((res) => {
+        // console.log(startDate.value)
         success = res.state
         errMsg = res.msg
         listIds.splice(0, listIds.length)
@@ -213,6 +216,7 @@ export default {
       handleClose,
       clickHistory,
       handleConfirm,
+      getRecordId,
       historyContent,
       listIds,
       dateRange,

@@ -15,14 +15,16 @@
           class="card"
           :class="clicked?'card-clicked':''"
       >
-        {{info.content}}
+        <n-ellipsis style="max-width: 18vw">
+          {{info.content}}
+        </n-ellipsis>
       </n-card>
     </div>
   </div>
 </template>
 
 <script>
-import {NCard, NText, useMessage} from 'naive-ui'
+import {NCard, NText, useMessage,NEllipsis} from 'naive-ui'
 import {AccessibilityOutline} from '@vicons/ionicons5'
 import Checkmark16Filled from "@vicons/fluent/Checkmark16Filled";
 import {onBeforeMount, reactive, ref} from "vue";
@@ -41,6 +43,7 @@ export default {
   components: {
     NCard,
     NText,
+    NEllipsis,
   },
   setup(props, {emit}) {
     const message = useMessage()
