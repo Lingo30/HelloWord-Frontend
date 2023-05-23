@@ -81,7 +81,7 @@
 </template>
 
 <script>
-import{ref, h, reactive, computed, onMounted} from 'vue'
+import {ref, h, reactive, computed, onMounted} from 'vue'
 import {
   NDivider,
   NInput,
@@ -94,7 +94,8 @@ import {
   NListItem,
   NButtonGroup,
   NPagination,
-  useDialog
+  useDialog,
+  useMessage,
 } from 'naive-ui'
 import WordlistDetail from '@/components/admin/WordlistDetail.vue'
 import {
@@ -105,6 +106,7 @@ import {
   sendSpecialMessage,
   sendToAll
 } from "@/request/api/admin";
+import store from "@/store";
 
 export default {
   name: "Administrator",
@@ -124,6 +126,7 @@ export default {
   },
   setup() {
     const dialog = useDialog()
+    const message = useMessage()
 
     const sendUserId = ref('')
     const sendMsg = ref('')
@@ -199,15 +202,31 @@ export default {
     });
 
     //给用户发送消息
-    function sendMessage(message) {
+    function sendMessage(msg) {
       //TODO 发送接口
+      let success = false
+      let errMsg = ''
       if (sendAll.value) {
-        sendToAll(message).then(res => {
-
+        sendToAll(store.state.admin.id, msg).then(res => {
+          success = res.state
+          errMsg = res.msg
+        }).catch(err => errMsg = '网络错误').finally(() => {
+          if (success) {
+            message.success('发送成功')
+          } else {
+            message.error(errMsg)
+          }
         })
       } else {
-        sendSpecialMessage(sendUserId.value, message).then(res => {
-
+        sendSpecialMessage(store.state.admin.id, sendUserId.value, msg).then(res => {
+          success = res.state
+          errMsg = res.msg
+        }).catch(err => errMsg = '网络错误').finally(() => {
+          if (success) {
+            message.success('发送成功')
+          } else {
+            message.error(errMsg)
+          }
         })
       }
     }
@@ -216,7 +235,9 @@ export default {
     function getFeedBacks() {
       //TODO 获取所有反馈
       getUserFeedbacks().then(res => {
-
+        feedbacks.splice(0, feedbacks.length)
+        res.feedbacks.forEach(feedback => feedbacks.push(feedback))
+      }).catch(err => {
       })
     }
 
@@ -279,7 +300,9 @@ export default {
     function getLists() {
       //todo
       getSubmitOfficials().then(res => {
-
+        lists.splice(0, lists.length)
+        res.lists.forEach(list => lists.push(list))
+      }).catch(err => {
       })
     }
 
@@ -290,25 +313,47 @@ export default {
 
     function acceptWordlist(userId, listId) {
       //TODO
-      acceptSubmit(userId, listId)
+      let success = false
+      let errMsg = ''
+      acceptSubmit(store.state.admin.id, listId).then(res => {
+        success = res.state
+        errMsg = res.msg
+      }).catch(err => errMsg = '网络错误').finally(() => {
+        if (success) {
+          message.success('审核成功')
+        } else {
+          message.error(errMsg)
+        }
+      })
     }
 
     //是否允许成为官方词单
     function rejectWordlist(userId, listId) {
       //todo
-      const message = ref('')
+      const msg = ref('')
       dialog.info({
         title: '不通过原因',
         content: () => h(NInput,
             {
-              value: message,
-              onInput: val => message.value = val,
+              value: msg,
+              onInput: val => msg.value = val,
             }
         ),
         action: () => h(NButton,
             {
               onClick() {
-                rejectSubmit(userId, listId, message.value)
+                let success = false
+                let errMsg = ''
+                rejectSubmit(store.state.admin.id, listId, msg.value).then(res => {
+                  success = res.state
+                  errMsg = res.msg
+                }).catch(err => errMsg = '网络错误').finally(() => {
+                  if (success) {
+                    message.success('审核成功')
+                  } else {
+                    message.error(errMsg)
+                  }
+                })
               }
             },
             {

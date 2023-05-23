@@ -25,6 +25,7 @@
 import {NModal, NList, NListItem, NScrollbar, NText} from 'naive-ui'
 import {ref, reactive} from "vue";
 import {getSubmitDetail} from "@/request/api/admin";
+import store from "@/store";
 
 export default {
   name: "WordlistDetail",
@@ -50,10 +51,14 @@ export default {
       },
     ])
 
-    function init(listId) {
+    function init(userId, listId) {
       showFlag.value = true
       //todo 查看提交的某个词单列表
-      getSubmitDetail(listId)
+      getSubmitDetail(store.state.admin.id, listId).then(res => {
+        wordlist.splice(0, wordlist.length)
+        res.words.forEach(word => wordlist.push(word))
+      }).catch(err => {
+      })
     }
 
 
