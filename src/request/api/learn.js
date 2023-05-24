@@ -133,3 +133,22 @@ export function get_search_word(word) {
         data
     })
 }
+
+export function get_user_statistic(user_id) {
+    /*
+        today_num: 0,
+        today_target: 0,
+        week_num: 0,
+        week_data: [0,1,2,3,4,5,6],
+        history_date: ["2023-4-5", "2023-5-7"],
+        history_num: [10, 70],
+    */
+    const data = JSON.stringify({
+        user_id: user_id
+    })
+    return request({
+        url: "get_user_statistic/",
+        method: 'post',
+        data
+    })
+}
