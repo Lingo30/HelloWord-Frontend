@@ -30,8 +30,11 @@
       <div style="height: 100%;width: 65%;">
         <div class="title">
           {{ messageDetail.data.title }}
+          <n-text style="color: #434543; font-size: 12px">
+            {{ messageDetail.data.time }}
+          </n-text>
         </div>
-        <n-divider style="--n-color:rgb(0, 0, 0)"/>
+        <n-divider style="--n-color:rgb(0, 0, 0);margin-top: 0"/>
         <div class="content">
           {{ messageDetail.data.content }}
         </div>
@@ -42,8 +45,10 @@
 
 <script>
 import {reactive, ref} from "vue";
-import {NIcon, NBadge, NModal, NList, NListItem, NButton, NDivider} from "naive-ui";
-import {Megaphone, ChevronForwardOutline, ArrowBackOutline} from "@vicons/ionicons5";
+import {NIcon, NBadge, NModal, NList, NListItem, NButton, NDivider, NText, useMessage} from "naive-ui";
+import {Megaphone, ChevronForwardOutline} from "@vicons/ionicons5";
+import {getMessages, setMessageRead} from "@/request/api/user";
+import store from "@/store";
 
 export default {
   name: "Notification",
@@ -55,10 +60,13 @@ export default {
     NListItem,
     NButton,
     NDivider,
+    NText,
     Megaphone,
     ChevronForwardOutline,
   },
   setup() {
+    const message = useMessage()
+
     const unReadFlag = ref(false)//侧边栏显示是否有未读消息
     const showFlag = ref(false)//是否显示通知公告模态框
     const showDetailFlag = ref(false)//是否显示消息详细内容
@@ -66,9 +74,10 @@ export default {
 
     const messageDetail = reactive({
       data: {
-        id: 0,
-        title: '公告',
-        content: 'ababa',
+        id: -1,
+        title: '',
+        content: '',
+        time: '',
       }
     })
     const messages = reactive([
@@ -77,26 +86,42 @@ export default {
         title: '公告',
         content: 'ababa',
         state: false,//是否已读
+        time: '2023-5-24 10:35',
       },
       {
         id: 1,
         title: 'Re：意见反馈',
         content: 'ababa',
         state: false,
+        time: '2023-5-24 10:35',
       },
       {
         id: 2,
         title: 'Re：Bug反馈',
         content: 'ababa',
         state: true,
+        time: '2023-5-24 10:35',
       },
     ])
 
-    function showMessages() {
+    async function showMessages() {
       //todo 后端返回所有个人消息和公告
       showFlag.value = true
-
-      showMessageDetail(messages[clickedMsg.value])
+      messages.splice(0, messages.length)
+      let success = false
+      let errMsg = ''
+      await getMessages(store.state.user.uid).then(res => {
+        success = res.state
+        errMsg = res.msg
+        if (success) {
+          res.messages.forEach(message => messages.push(message))
+        }
+      }).catch(err => errMsg = '网络错误')
+      if (success) {
+        showMessageDetail(messages[clickedMsg.value])
+      } else {
+        message.error(errMsg)
+      }
     }
 
     function showMessageDetail(msg, index) {
@@ -106,7 +131,8 @@ export default {
       if (!msg.state) {
         msg.state = true
         //todo 更新为已读
-
+        setMessageRead(store.state.user.uid, msg.id).catch(err => {
+        })
       }
     }
 
@@ -141,6 +167,8 @@ export default {
 }
 
 .title {
+  display: flex;
+  flex-direction: column;
   padding-left: 10px;
   font-size: 30px;
 }
