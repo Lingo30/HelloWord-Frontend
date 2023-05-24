@@ -77,7 +77,7 @@ export default {
   },
   setup() {
     const chartRef = ref();
-    var week_data = ref([0, 0, 0, 0, 0, 0, 0])
+    var week_data = ref([0, 0, 0, 0, 0, 70, 0])
     let today_num = ref(0)
     let today_target = ref(0)
     let week_num = ref(0)
@@ -101,18 +101,11 @@ export default {
       ]
     });
     let calendarData = reactive({
-      "2023-5-10": 50,
+      // "2023-5-1": 50,
     })
     const message = useMessage()
 
     onMounted(() => {
-      // today_num.value = 10
-      // week_data = [0, 230, 80, 110, 0, 0, 0]
-      // let history_date = ["2023-4-9", "2023-5-10", "2023-5-12", "2023-5-11"]
-      // let history_num = [10, 20, 30, 40]
-      // for (let i = 0; i < history_date.length; i++) {
-      //   calendarData[history_date[i]] = history_num[i]
-      // }
       let success = false
       let errMsg = ''
       get_user_statistic(store.state.user.uid).then((res) => {
@@ -120,20 +113,21 @@ export default {
         errMsg = res.msg
         today_num.value = res.today_num
         today_target.value = res.today_target
+        week_num.value = res.week_num
         week_data = res.week_data
         let history_date = res.history_date
         let history_num = res.history_num
         for (let i = 0; i < history_date.length; i++) {
           calendarData[history_date[i]] = history_num[i]
         }
+        const myChart = echarts.init(chartRef.value);
+        chartData.series[0].data = week_data
+        myChart.setOption(chartData);
       }).catch(err => errMsg = '网络错误').finally(() => {
         if (!success) {
           this.message.error(errMsg)
         }
       });
-      const myChart = echarts.init(chartRef.value);
-      chartData.series[0].data = week_data
-      myChart.setOption(chartData);
     })
     let aa = { year: 1, month: 2 }
 
