@@ -13,10 +13,10 @@
                   </span>
                 </template>
                 <template #prefix>
-                  {{today_num}}
+                  {{ today_num }}
                 </template>
                 <template #suffix>
-                  {{today_target}}
+                  {{ today_target }}
                 </template>
               </n-statistic>
             </n-col>
@@ -42,7 +42,7 @@
           <template #default="{ year, month, date }">
             <span v-if="calendarData[year + '-' + month + '-' + date]" style="color: rgba(52,104,242, 0.8); 
             font-size: large; font-weight: 600;">
-              {{ calendarData[year + '-' + month + '-' + date]}}
+              {{ calendarData[year + '-' + month + '-' + date] }}
             </span>
           </template>
           <!--        年月-->
@@ -58,10 +58,12 @@
 </template>
 
 <script>
-import { onMounted, ref, reactive} from "vue";
+import { onMounted, ref, reactive } from "vue";
 import { addDays, isYesterday } from "date-fns/esm";
 import * as echarts from 'echarts';
-import { NRow, NCol, NStatistic, NCalendar, NButton } from "naive-ui";
+import { NRow, NCol, NStatistic, NCalendar, NButton, useMessage} from "naive-ui";
+import { get_user_statistic } from "@/request/api/learn";
+import store from "@/store";
 
 export default {
   name: "StatisticPage",
@@ -70,7 +72,8 @@ export default {
     NCol,
     NStatistic,
     NCalendar,
-    NButton
+    NButton,
+    useMessage,
   },
   setup() {
     const chartRef = ref();
@@ -100,23 +103,42 @@ export default {
     let calendarData = reactive({
       "2023-5-10": 50,
     })
+    const message = useMessage()
 
     onMounted(() => {
-      today_num.value=10
-      week_data=[0, 230, 80, 110, 0, 0, 0]
-      let history_date = ["2023-4-9", "2023-5-10", "2023-5-11", "2023-5-12"]
-      let history_num = [10, 20, 30, 40]
-      for(let i = 0; i < history_date.length; i++) {
-        calendarData[history_date[i]] = history_num[i]
-      }
+      // today_num.value = 10
+      // week_data = [0, 230, 80, 110, 0, 0, 0]
+      // let history_date = ["2023-4-9", "2023-5-10", "2023-5-12", "2023-5-11"]
+      // let history_num = [10, 20, 30, 40]
+      // for (let i = 0; i < history_date.length; i++) {
+      //   calendarData[history_date[i]] = history_num[i]
+      // }
+      let success = false
+      let errMsg = ''
+      get_user_statistic(store.state.user.uid).then((res) => {
+        success = res.state
+        errMsg = res.msg
+        today_num.value = res.today_num
+        today_target.value = res.today_target
+        week_data = res.week_data
+        let history_date = res.history_date
+        let history_num = res.history_num
+        for (let i = 0; i < history_date.length; i++) {
+          calendarData[history_date[i]] = history_num[i]
+        }
+      }).catch(err => errMsg = '网络错误').finally(() => {
+        if (!success) {
+          this.message.error(errMsg)
+        }
+      });
       const myChart = echarts.init(chartRef.value);
-      chartData.series[0].data=week_data
+      chartData.series[0].data = week_data
       myChart.setOption(chartData);
     })
     let aa = { year: 1, month: 2 }
 
     function test(params) {
-    
+
     }
 
 
@@ -128,12 +150,12 @@ export default {
       chartRef,
       calendarData,
       handleUpdateValue(_, { year, month, date }) {
-        
+
       },
       isDateDisabled(timestamp) {
-        if (isYesterday(timestamp)) {
-          return true;
-        }
+        // if (isYesterday(timestamp)) {
+        //   return true;
+        // }
         return false;
       },
       test,
@@ -144,20 +166,21 @@ export default {
 
 <style scoped>
 .class_table {
-	position: absolute;
-	width: 90%;
-	height: 80%;
-	top: 50%;
-	left: 53%;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	transform: translate(-50%, -50%);
-	background-color: rgba(255, 255, 255, 0.3);
-	box-shadow: 10px 12px 16px 10px rgba(0, 0, 0, 0.24), 10px 17px 50px 10px #4E655D;
+  position: absolute;
+  width: 90%;
+  height: 80%;
+  top: 50%;
+  left: 53%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: translate(-50%, -50%);
+  background-color: rgba(255, 255, 255, 0.3);
+  box-shadow: 10px 12px 16px 10px rgba(0, 0, 0, 0.24), 10px 17px 50px 10px #4E655D;
   max-width: 1600px;
   max-height: 750px;
 }
+
 .container {
   display: flex;
   overflow: auto;
