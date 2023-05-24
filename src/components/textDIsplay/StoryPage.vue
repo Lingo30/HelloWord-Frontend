@@ -23,7 +23,7 @@ import {onBeforeMount, ref,h} from "vue";
 import {getTodayWords, wordsToStory} from "@/request/api/review";
 import store from "@/store";
 import {useMessage,useNotification, NAvatar,NButton} from 'naive-ui'
-import Kaleido from "../../assets/img/kaleidoBlank.png"
+import Kaleido from "../../assets/img/kaleidoBlank.jpg"
 import router from "@/router";
 export default {
   name: "StoryPage",

@@ -11,7 +11,7 @@
           <n-spin class="content-box" :show="showSpin">
             <div class="content-box">
               <div class="chat_top">
-                <img src="../../assets/img/kaleidoBlank.png" height="135" width="130">
+                <img src="../../assets/img/kaleidoBlank.jpg" height="135" width="130">
               </div>
               <div v-show="mode === false">
                 <n-scrollbar class="chat" style="height: 57vh ;text-align: left;margin-top: 3vh;">
@@ -74,7 +74,7 @@ import ChatMessage from "@/components/chatPage/ChatMessage";
 import {getHistoryChatAPI, getVideoHistoryChatAPI, sendChatAPI, submitVideo} from "@/request/api/chat";
 import {h, nextTick, reactive, ref, toRefs} from 'vue'
 import store from "@/store";
-import Kaleido from "@/assets/img/kaleidoBlank.png";
+import Kaleido from "@/assets/img/kaleidoBlank.jpg";
 import {AUTHENTICATE_ERR} from "@/store/local";
 import Recorder from 'js-audio-recorder'
 import VideoMessage from "@/components/chatPage/VideoMessage";

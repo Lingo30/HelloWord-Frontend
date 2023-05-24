@@ -2,9 +2,8 @@
   <nav class="s-sidebar__nav">
     <ul>
       <li>
-        <n-dropdown trigger="hover" :options="options" @select="handleSelect">
-          <n-button size="large" circle="circle" style="border-width: unset;width: 4vh; height: 4vh; background-color: #13593d;">
-          </n-button>
+        <n-dropdown trigger="hover" :options="options" size="huge" @select="handleSelect">
+          <div :style="wordCardBackground" style="width: 6vh; height: 6vh;background-size: 100% 100%; left: 50%; transform: translate(40%,0)"></div>
         </n-dropdown>
       </li>
       <li>
@@ -81,6 +80,7 @@ import {Person, Chatbubble, BarChart, Book, Notifications, School, HelpCircle} f
 import {h, ref} from "vue";
 import Notification from "@/components/global/Notification.vue";
 import {NIcon, NDropdown, NButton, useMessage, NAvatar} from 'naive-ui'
+import Kaleido from "@/assets/img/kaleidoBlank.jpg";
 
 export default {
   name: "SideBar",
@@ -88,15 +88,14 @@ export default {
     Notification,
     NIcon,
     NDropdown,
-    NButton
+    NButton,
   },
   data() {
     return {
+      wordCardBackground: {
+        backgroundImage: 'url(' + require('../../assets/img/kaleidoBlank.jpg') + ')',
+      },
       custom: ref(0),
-      CustomBackground: {
-        backgroundSize: 100,
-        backgroundImage: 'url(' + require('../../assets/img/kaleidoBlank.png') + ')',
-     },
     }
   },
   setup() {
@@ -108,6 +107,7 @@ export default {
       Person,
       Chatbubble,
       BarChart,
+      Kaleido,
       Book,
       Notifications,
       School,
@@ -116,18 +116,48 @@ export default {
       notificationRef,
       options: [
         {
-          key: "header1",
-          type: "render",
-          render: renderCustomHeader,
+          label: () => h(
+              NAvatar,
+              {
+                src: Kaleido,
+                size: "large",
+                style: "top:50%; transform:translate(0,-50%)"
+              },
+          ),
+          key: "green"
         },
         {
-          key: "header2",
-          type: "render",
-          render: renderCustomHeader2,
+          label: () => h(
+              NAvatar,
+              {
+                src: 'https://img.js.design/assets/img/62cfbf2ac7415e7de064bef5.png',
+                size: "large",
+                style: "top:50%; transform:translate(0,-50%)"
+              },
+          ),
+          key: "blue"
         },
         {
-          key: "header3",
-          render: renderCustomHeader
+        label: () => h(
+              NAvatar,
+              {
+                src: 'https://img.js.design/assets/img/62cfbf28edcf38c72cdb5cab.png',
+                size: "large",
+                style: "top:50%; transform:translate(0,-50%)"
+              },
+          ),
+          key: "pink"
+        },
+        {
+          label: () => h(
+              NAvatar,
+              {
+                src: 'https://img.js.design/assets/img/62cfbf2b4fd2dffdcb34a35c.png',
+                size: "large",
+                style: "top:50%; transform:translate(0,-50%)"
+              },
+          ),
+          key: "purple"
         },
       ],
       handleSelect(key) {
@@ -135,38 +165,6 @@ export default {
       }
     }
   }
-}
-function chooseCustom(a) {
-  console.log(String(a));
-}
-function renderCustomHeader() {
-  return h(
-      [
-        h("NButton", {
-          round: true,
-          onClick: chooseCustom(1),
-          style: "width: 4vh; height: 4vh; border-radius: 2vh",
-          src: "url('../../assets/img/kaleidoBlank.png')"
-        }),
-      ]
-  );
-}
-
-function renderCustomHeader2() {
-  return h(
-      "div",
-      {
-        style: "display: flex; align-items: center;width: 6vh; height: 6vh; padding: 1vh 1vh;"
-      },
-      [
-        h(NButton, {
-          round: true,
-          onClick: chooseCustom(2),
-          style: "width: 4vh; height: 4vh; border-radius: 2vh",
-          src: "url('../../assets/img/kaleidoBlank.png')"
-        }),
-      ]
-  );
 }
 
 </script>
