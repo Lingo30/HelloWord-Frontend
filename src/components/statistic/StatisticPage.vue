@@ -9,14 +9,14 @@
               <n-statistic :value="' / '">
                 <template #label>
                   <span style="color: black">
-                    今日新学/今日复习
+                    今日学习 / 今日目标
                   </span>
                 </template>
                 <template #prefix>
-                  98
+                  {{today_num}}
                 </template>
                 <template #suffix>
-                  23
+                  {{today_target}}
                 </template>
               </n-statistic>
             </n-col>
@@ -24,13 +24,10 @@
               <n-statistic>
                 <template #label>
                   <span style="color: black">
-                    今日学习时长
+                    本周学习单词
                   </span>
                 </template>
-                111
-                <template #suffix>
-                  min
-                </template>
+                {{ week_num }}
               </n-statistic>
             </n-col>
           </n-row>
@@ -45,10 +42,7 @@
           <template #default="{ year, month, date }">
             <span v-if="calendarData[year + '-' + month + '-' + date]" style="color: rgba(52,104,242, 0.8); 
             font-size: large; font-weight: 600;">
-              {{
-                calendarData[year + '-' + month + '-' + date]['new']
-                + calendarData[year + '-' + month + '-' + date]['old']
-              }}
+              {{ calendarData[year + '-' + month + '-' + date]}}
             </span>
           </template>
           <!--        年月-->
@@ -64,10 +58,10 @@
 </template>
 
 <script>
-import { onMounted, ref } from "vue";
+import { onMounted, ref, reactive} from "vue";
 import { addDays, isYesterday } from "date-fns/esm";
 import * as echarts from 'echarts';
-import { NRow, NCol, NStatistic, NCalendar } from "naive-ui";
+import { NRow, NCol, NStatistic, NCalendar, NButton } from "naive-ui";
 
 export default {
   name: "StatisticPage",
@@ -75,11 +69,16 @@ export default {
     NRow,
     NCol,
     NStatistic,
-    NCalendar
+    NCalendar,
+    NButton
   },
   setup() {
     const chartRef = ref();
-    const chartData = {
+    var week_data = ref([0, 0, 0, 0, 0, 0, 0])
+    let today_num = ref(0)
+    let today_target = ref(0)
+    let week_num = ref(0)
+    const chartData = reactive({
       backgroundColor: '',
       tooltip: {
         trigger: 'axis',
@@ -93,35 +92,51 @@ export default {
       },
       series: [
         {
-          data: [150, 230, 224, 218, 135, 147, 260],
+          data: week_data,
           type: 'line'
         }
       ]
-    };
-    const calendarData = {
-      "2023-4-9": { 'new': 2, 'old': 5 },
-      "2023-4-10": { 'new': 3, 'old': 1 },
-      "2023-5-10": { 'new': 30, 'old': 21 },
-    }
+    });
+    let calendarData = reactive({
+      "2023-5-10": 50,
+    })
 
     onMounted(() => {
+      today_num.value=10
+      week_data=[0, 230, 80, 110, 0, 0, 0]
+      let history_date = ["2023-4-9", "2023-5-10", "2023-5-11", "2023-5-12"]
+      let history_num = [10, 20, 30, 40]
+      for(let i = 0; i < history_date.length; i++) {
+        calendarData[history_date[i]] = history_num[i]
+      }
       const myChart = echarts.init(chartRef.value);
+      chartData.series[0].data=week_data
       myChart.setOption(chartData);
     })
     let aa = { year: 1, month: 2 }
 
+    function test(params) {
+    
+    }
+
+
     return {
       value: ref(addDays(Date.now(), 1).valueOf()),//当前日期
+      today_num,
+      today_target,
+      week_num,
       chartRef,
       calendarData,
       handleUpdateValue(_, { year, month, date }) {
+        
       },
       isDateDisabled(timestamp) {
         if (isYesterday(timestamp)) {
           return true;
         }
         return false;
-      }
+      },
+      test,
     };
   }
 }
