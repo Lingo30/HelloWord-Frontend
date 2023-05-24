@@ -207,7 +207,10 @@ export default {
             errMsg = "一天最多只能对话七次哦，不如今天再去学点单词，明天再来找我聊天叭"
             title = "使用次数已达上限"
           }
+          console.log(errMsg)
+          console.log(title)
         } else {
+          console.log("success push")
           let q = {
             time: res.receive_time,
             type: false,

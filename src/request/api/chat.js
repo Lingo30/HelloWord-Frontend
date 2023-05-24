@@ -54,6 +54,7 @@ export function submitVideo(videoFile, uid) {
         method: "post",
         // 更改headers以上传文件
         headers: {'Content-Type': 'multipart/form-data'},
-        data: formData
+        data: formData,
+        timeout: 50000
     });
 }
