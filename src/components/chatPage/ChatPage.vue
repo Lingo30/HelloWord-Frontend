@@ -225,7 +225,9 @@ export default {
           videos.value.push(p);
         }
       }).catch(err => {}).finally(() => {
+        console.log("success push final")
         if (!success) {
+          console.log("not success push")
           notification.create({
             title: title,
             content: errMsg,
