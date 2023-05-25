@@ -1,15 +1,21 @@
 <template>
   <div style="padding: 50px">
     管理员界面
+    <n-button @click="fresh">
+      fresh
+    </n-button>
     <!--    消息发送-->
     <n-space vertical>
       消息发送
+      <div style="display: flex;justify-content: left;width: 50%">
+        <n-input v-model:value="sendMsgTitle" placeholder="标题" style="text-align: left"/>
+      </div>
       <div style="display: flex; flex-direction: row;justify-content: space-between">
         <div style="display: flex; flex-direction: row;height: 30px">
-          <n-input v-model:value="sendUserId" placeholder="用户id" :disabled="sendAll"/>
+          <n-input style="text-align: left" v-model:value="sendUserId" placeholder="用户id" :disabled="sendAll"/>
           <n-checkbox style="width: 100%;padding: 10px" v-model:checked="sendAll">全体发送</n-checkbox>
         </div>
-        <n-button type="success" @click="sendMessage(sendMsg)" :disabled="!sendAll&&sendUserId===''">
+        <n-button type="success" @click="sendMessage(sendMsg,title)" :disabled="!sendAll&&sendUserId===''">
           发送
         </n-button>
       </div>
@@ -17,6 +23,7 @@
           v-model:value="sendMsg"
           type="textarea"
           placeholder="发送内容"
+          style="text-align: left"
       />
     </n-space>
     <n-divider/>
@@ -55,10 +62,10 @@
               <n-button type="info" @click="showListDetail(list.userId,list.listId)">
                 查看详情
               </n-button>
-              <n-button type="success" @click="acceptWordlist(list.userId,list.listId)">
+              <n-button type="success" @click="acceptWordlist(list)">
                 通过
               </n-button>
-              <n-button type="error" @click="rejectWordlist(list.userId,list.listId)">
+              <n-button type="error" @click="rejectWordlist(list)">
                 拒绝
               </n-button>
             </n-button-group>
@@ -107,6 +114,7 @@ import {
   sendToAll
 } from "@/request/api/admin";
 import store from "@/store";
+import {ACCEPT_SUBMIT_WORDLIST, REJECT_SUBMIT_WORDLIST} from "@/store/local";
 
 export default {
   name: "Administrator",
@@ -130,6 +138,7 @@ export default {
 
     const sendUserId = ref('')
     const sendMsg = ref('')
+    const sendMsgTitle = ref('Re: Bug反馈')
     const sendAll = ref(false)
 
     const feedbackFilter = ref(0)//反馈过滤，默认为0（查看全部）
@@ -202,7 +211,7 @@ export default {
     });
 
     //给用户发送消息
-    function sendMessage(msg) {
+    function sendMessage(msg, title) {
       //TODO 发送接口
       let success = false
       let errMsg = ''
@@ -218,7 +227,7 @@ export default {
           }
         })
       } else {
-        sendSpecialMessage(store.state.admin.id, sendUserId.value, msg).then(res => {
+        sendSpecialMessage(store.state.admin.id, sendUserId.value, msg, title).then(res => {
           success = res.state
           errMsg = res.msg
         }).catch(err => errMsg = '网络错误').finally(() => {
@@ -311,16 +320,17 @@ export default {
       showDetailRef.value.init(userId, listId)
     }
 
-    function acceptWordlist(userId, listId) {
+    function acceptWordlist(list) {
       //TODO
       let success = false
       let errMsg = ''
-      acceptSubmit(store.state.admin.id, listId).then(res => {
+      acceptSubmit(store.state.admin.id, list.listId).then(res => {
         success = res.state
         errMsg = res.msg
       }).catch(err => errMsg = '网络错误').finally(() => {
         if (success) {
           message.success('审核成功')
+          list.handleState = ACCEPT_SUBMIT_WORDLIST
         } else {
           message.error(errMsg)
         }
@@ -328,7 +338,7 @@ export default {
     }
 
     //是否允许成为官方词单
-    function rejectWordlist(userId, listId) {
+    function rejectWordlist(list) {
       //todo
       const msg = ref('')
       dialog.info({
@@ -344,12 +354,13 @@ export default {
               onClick() {
                 let success = false
                 let errMsg = ''
-                rejectSubmit(store.state.admin.id, listId, msg.value).then(res => {
+                rejectSubmit(store.state.admin.id, list.listId, msg.value).then(res => {
                   success = res.state
                   errMsg = res.msg
                 }).catch(err => errMsg = '网络错误').finally(() => {
                   if (success) {
                     message.success('审核成功')
+                    list.handleState = REJECT_SUBMIT_WORDLIST
                   } else {
                     message.error(errMsg)
                   }
@@ -371,6 +382,7 @@ export default {
     return {
       sendUserId,
       sendMsg,
+      sendMsgTitle,
       sendAll,
 
       feedbackFilter,
@@ -391,6 +403,10 @@ export default {
       showListDetail,
       acceptWordlist,
       rejectWordlist,
+      fresh() {
+        getFeedBacks()
+        getLists()
+      },
     }
   }
 }

@@ -14,11 +14,12 @@ export function adminLogin(id, pwd, verify, imgCode) {
     })
 }
 
-export function sendSpecialMessage(id, uid, message) {
+export function sendSpecialMessage(id, uid, message, title) {
     const data = JSON.stringify({
         adminId: id,
         userId: uid,
-        message: message
+        message: message,
+        title: title,
     })
     return request({
         url: 'send_message_to_user/',
