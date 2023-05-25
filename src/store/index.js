@@ -7,6 +7,7 @@ export default createStore({
         user: {
             login: false,//用户是否已登录
             uid: 0,//用户id
+            custom: 0, //用户主题色的设置
             wordNum: 0,//每日背诵单词数
             selectWordlist: 0,//选择背诵的词单
             groupWords: [

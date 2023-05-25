@@ -3,7 +3,7 @@
     <ul>
       <li>
         <n-dropdown trigger="hover" :options="options" size="huge" @select="handleSelect">
-          <div :style="wordCardBackground" style="width: 6vh; height: 6vh;background-size: 100% 100%; left: 50%; transform: translate(40%,0)"></div>
+          <div :style="wordCardBackground.at(1)" style="width: 6vh; height: 6vh;background-size: 100% 100%; left: 50%; transform: translate(40%,0)"></div>
         </n-dropdown>
       </li>
       <li>
@@ -81,6 +81,10 @@ import {h, ref} from "vue";
 import Notification from "@/components/global/Notification.vue";
 import {NIcon, NDropdown, NButton, useMessage, NAvatar} from 'naive-ui'
 import Kaleido from "@/assets/img/kaleidoBlank.jpg";
+import store from "@/store";
+import {USERID} from "@/store/local";
+import {changeCustom} from "@/request/api/user";
+import router from "@/router";
 
 export default {
   name: "SideBar",
@@ -92,9 +96,20 @@ export default {
   },
   data() {
     return {
-      wordCardBackground: {
-        backgroundImage: 'url(' + require('../../assets/img/kaleidoBlank.jpg') + ')',
-      },
+      wordCardBackground:[
+        {
+          backgroundImage: 'url(' + require('../../assets/img/kaleidoBlank.jpg') + ')',
+        },
+        {
+          backgroundImage: url('https://img.js.design/assets/img/62cfbf2ac7415e7de064bef5.png'),
+        },
+        {
+          backgroundImage: 'url(' + require('../../assets/img/kaleidoBlank.jpg') + ')',
+        },
+        {
+          backgroundImage: 'url(' + require('../../assets/img/kaleidoBlank.jpg') + ')',
+        },
+      ],
       custom: ref(0),
     }
   },
@@ -161,7 +176,60 @@ export default {
         },
       ],
       handleSelect(key) {
-        message.info(String(key)); // todo 处理选了哪个
+        let success = false
+        let data
+        let wrMsg = ''
+        switch (key) {
+          case "green" :
+            changeCustom(store.state.user.uid, 0).then((res) => {
+              success = res.state
+              wrMsg = res.msg
+            }).catch(err => wrMsg = '网络错误').finally(() => {
+              if (success) {
+                store.state.user.custom = 0;
+              } else {
+                message.error(wrMsg);
+              }
+            })
+            break;
+          case "blue":
+            changeCustom(store.state.user.uid, 1).then((res) => {
+              success = res.state
+              wrMsg = res.msg
+            }).catch(err => wrMsg = '网络错误').finally(() => {
+              if (success) {
+                store.state.user.custom = 1;
+              } else {
+                message.error(wrMsg);
+              }
+            })
+            break;
+          case "pink":
+            changeCustom(store.state.user.uid, 2).then((res) => {
+              success = res.state
+              wrMsg = res.msg
+            }).catch(err => wrMsg = '网络错误').finally(() => {
+              if (success) {
+                store.state.user.custom = 2;
+              } else {
+                message.error(wrMsg);
+              }
+            })
+            break;
+          case "purple":
+            changeCustom(store.state.user.uid, 3).then((res) => {
+              success = res.state
+              wrMsg = res.msg
+            }).catch(err => wrMsg = '网络错误').finally(() => {
+              if (success) {
+                store.state.user.custom = 3;
+              } else {
+                message.error(wrMsg);
+              }
+            })
+            break;
+        }
+        message.info("change custom to " + String(key)); // todo 处理选了哪个
       }
     }
   }

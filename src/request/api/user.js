@@ -109,6 +109,18 @@ export function getInfo(uid) {
     })
 }
 
+export function changeCustom(uid, custom) {
+    const data = JSON.stringify({
+        user_id: uid,
+        user_custom: custom
+    })
+    return request({
+        url: 'change_custom/',
+        method: 'post',
+        data
+    })
+}
+
 export function submitInfo(uid, userInfo) {
     // 上传文件需要使用FormData对象，
     const data = JSON.stringify({
