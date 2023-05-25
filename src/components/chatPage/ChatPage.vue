@@ -204,7 +204,7 @@ export default {
             errMsg = res.msg
             title = "登录已失效"
           } else {
-            errMsg = "一天最多只能对话七次哦，不如今天再去学点单词，明天再来找我聊天叭"
+            errMsg = res.msg
             title = "使用次数已达上限"
           }
           console.log(errMsg)
