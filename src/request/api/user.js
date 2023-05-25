@@ -41,7 +41,7 @@ export function loginAPI(name, pwd, verify, imgCode) {
     })
 }
 
-export function registerAPI(name, pwd, email, code, verify, imgCode,inviteCode) {
+export function registerAPI(name, pwd, email, code, verify, imgCode, inviteCode) {
     /*
     返回数据：
     state: true/false 是否注册成功
@@ -194,6 +194,29 @@ export function getVipInfo(uid) {
     return request({
         url: 'get_vip_info/',
         // url: 'https://mock.apifox.cn/m2/2544762-0-default/83655288',
+        method: 'post',
+        data
+    })
+}
+
+export function getMessages(uid) {
+    const data = JSON.stringify({
+        userId: uid,
+    })
+    return request({
+        url: 'get_messages/',
+        method: 'post',
+        data
+    })
+}
+
+export function setMessageRead(uid, message) {
+    const data = JSON.stringify({
+        userId: uid,
+        messageId: message,
+    })
+    return request({
+        url: 'set_message_state/',
         method: 'post',
         data
     })

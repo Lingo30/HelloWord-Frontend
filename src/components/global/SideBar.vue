@@ -51,9 +51,9 @@
       </li>
     </ul>
     <!--    底部用户个人信息页面跳转-->
-    <div style="bottom: 17%" class="bottom-button ">
+    <div style="bottom: 18%" class="bottom-button ">
       <div labelTooltip="通知公告" class="s-sidebar__nav-link">
-        <div  class="box" @click="notificationRef.showMessages">
+        <div class="box" @click="notificationRef.showMessages">
           <Notification ref="notificationRef"/>
         </div>
       </div>
