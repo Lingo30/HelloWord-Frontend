@@ -127,27 +127,18 @@ export default {
       showSpin.value = true;
       let errorMsg = "超时啦，请稍后再试试"
       let success = false
+      let lastTimes = 1
       await getBlankText(store.state.user.uid).then((res) => {
         success = res.state
         if (success) {
           // console.log(res)
-          const lastTimes = res.last_times
-          let n = notification.create({
+          lastTimes = res.last_times
+          notification.create({
             content: lastTimes === 0 ? '这是最后一题啦，我先歇了=v=' : '今天还能再出' + lastTimes + '道题-v-',
             avatar: () => h(NAvatar, {
               size: 'small',
               round: true,
               src: Kaleido,
-            }),
-            action: ()=>h(NButton,{
-              text: true,
-              type: "primary",
-              onClick:()=>{
-                router.push('/user/info/')
-                n.destroy();
-              }
-            },{
-              default: () => "我开会员去:)"
             }),
             duration: 3e3,
           })
@@ -162,12 +153,22 @@ export default {
         }
       }).catch().finally(() => {
         if (!success) {
-          notification.create({
+          let n = notification.create({
             content: errorMsg,
             avatar: () => h(NAvatar, {
               size: 'small',
               round: true,
               src: Kaleido,
+            }),
+            action: ()=>h(NButton,{
+              text: true,
+              type: "primary",
+              onClick:()=>{
+                router.push('/user/info/')
+                n.destroy();
+              }
+            },{
+              default: () => "我开会员去:)"
             }),
             duration: 3e3,
           })

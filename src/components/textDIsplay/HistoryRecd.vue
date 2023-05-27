@@ -10,7 +10,7 @@
   >
     <n-space class="container">
       <div style="margin-bottom: 30px" class="select-box">
-        <n-date-picker @confirm="getRecordId" v-model:formatted-value="dateRange" value-format="yyyy.MM.dd" type="daterange"/>
+        <n-date-picker @confirm="handleChooseDate" v-model:formatted-value="dateRange" value-format="yyyy.MM.dd" type="daterange"/>
         <n-scrollbar style="margin-top: 15px">
           <HistoryCard
               v-for="(id,index) in listIds"
@@ -47,7 +47,7 @@
 </template>
 
 <script>
-import {computed, onBeforeMount, reactive, ref} from "vue";
+import {computed, nextTick, onBeforeMount, reactive, ref} from "vue";
 import {NModal, NButton,NDatePicker,NSpace,NScrollbar,useMessage} from "naive-ui";
 import HistoryCard from "@/components/textDIsplay/HistoryCard";
 import store from "@/store";
@@ -94,31 +94,33 @@ export default {
 
     const dateRange = ref([oneWeekAgoFormatted, todayFormatted])
 
-    let startDate = computed(()=>{
-      let [year, month, day] = dateRange.value[0].split(".");
-      return {
-        "year": parseInt(year),
-        "month": parseInt(month),
-        "day": parseInt(day),
+    async function handleChooseDate() {
+      // 暂停一帧，保证数据成功更新
+      await nextTick();
+      let [startYear, startMonth, startDay] = dateRange.value[0].split(".");
+      let startDate = {
+        "year": parseInt(startYear),
+        "month": parseInt(startMonth),
+        "day": parseInt(startDay),
       };
-    })
 
-    let endDate = computed(()=>{
-      let [year, month, day] = dateRange.value[1].split(".");
-      return {
-        "year": parseInt(year),
-        "month": parseInt(month),
-        "day": parseInt(day),
+      let [endYear, endMonth, endDay] = dateRange.value[1].split(".");
+      let endDate = {
+        "year": parseInt(endYear),
+        "month": parseInt(endMonth),
+        "day": parseInt(endDay),
       };
-    })
+      // console.log(startDate);
+      getRecordId(startDate, endDate)
+    }
 
-    async function getRecordId() {
+    function getRecordId(startDate,endDate) {
       // console.log(dateRange.value)
       // console.log(startDate.value);
       let success = false
       let errMsg = ''
-      await getHistoryRecordId(store.state.user.uid,props.type,startDate.value,endDate.value).then((res) => {
-        // console.log(startDate.value)
+      getHistoryRecordId(store.state.user.uid,props.type,startDate,endDate).then((res) => {
+        // console.log(startDate.value.day)
         success = res.state
         errMsg = res.msg
         listIds.splice(0, listIds.length)
@@ -136,15 +138,15 @@ export default {
     }
 
     onBeforeMount(() => {
-      getRecordId()
+      handleChooseDate()
     })
 
     // 保存三种模式的数据
     let writing = reactive({
-      content: String,
+      content: '',
       comment: {
-        analysis: String,
-        rating: Number
+        analysis: '',
+        rating: 0
       }
     })
     let story = ref("")
@@ -200,13 +202,16 @@ export default {
     // 向父组件传递数据
     function handleConfirm() {
       if (props.type === 0) {
-        emit("loadHistory",writing)
+        if (writing.content !== null)
+          emit("loadHistory",writing)
       }
       else if (props.type === 1) {
-        emit("loadHistory",story.value)
+        if (story.value !== '')
+          emit("loadHistory",story.value)
       }
       else {
-        emit("loadHistory",historyContent.value,wordList.value,realAnswers.value,usedWords.value)
+        if (historyContent.value !== '')
+          emit("loadHistory",historyContent.value,wordList.value,realAnswers.value,usedWords.value)
       }
       showHistory.value = false
     }
@@ -217,6 +222,7 @@ export default {
       clickHistory,
       handleConfirm,
       getRecordId,
+      handleChooseDate,
       historyContent,
       listIds,
       dateRange,
