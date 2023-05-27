@@ -15,19 +15,17 @@
           class="card"
           :class="clicked?'card-clicked':''"
       >
-        <n-ellipsis style="max-width: 18vw">
-          {{info.content}}
-        </n-ellipsis>
+        {{trimmedContent}}
       </n-card>
     </div>
   </div>
 </template>
 
 <script>
-import {NCard, NText, useMessage,NEllipsis} from 'naive-ui'
+import {NCard, NText, useMessage} from 'naive-ui'
 import {AccessibilityOutline} from '@vicons/ionicons5'
 import Checkmark16Filled from "@vicons/fluent/Checkmark16Filled";
-import {onBeforeMount, reactive, ref} from "vue";
+import {computed, onBeforeMount, reactive, ref} from "vue";
 import store from "@/store";
 import {getRecordInfo} from "@/request/api/review";
 
@@ -43,7 +41,6 @@ export default {
   components: {
     NCard,
     NText,
-    NEllipsis,
   },
   setup(props, {emit}) {
     const message = useMessage()
@@ -86,9 +83,16 @@ export default {
       })
     })
 
+    // 字符超过38省略
+    let trimmedContent = computed(() => {
+      const maxLen = 38
+      return info.content.length > maxLen ? info.content.slice(0, maxLen) + '...' : info.content;
+    });
+
     return {
       AccessibilityOutline,
       Checkmark16Filled,
+      trimmedContent,
       bgColor,
       info,
       newName,
