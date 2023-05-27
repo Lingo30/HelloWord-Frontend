@@ -38,7 +38,7 @@
             </template>
           </n-statistic>
           <n-statistic
-              label="打卡天数"
+              label="本月打卡天数"
               tabular-nums
               class="statistic"
           >
@@ -176,6 +176,7 @@ export default ({
     async function load() {
       await getInfo(store.state.user.uid).then((res) => {
         let state = res.state
+        // console.log(res);
         if (state) {
           model.avatarPath = res.info.avatar_path;
           model.email = res.info.email;
