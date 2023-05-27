@@ -65,11 +65,12 @@ export default {
       textBoxRef.value.analysisSpin = true;
       let errorMsg = "超时啦，请稍后再试试"
       let success = false
+      let lastTimes = 1
       await getArticleAnalysis(store.state.user.uid,inputValue).then((res)=>{
         // console.log(res.comment.analysis);
         success = res.state
         if (success) {
-          const lastTimes = res.last_times
+          lastTimes = res.last_times
           notification.create({
             content: lastTimes === 0?'这是最后一篇啦，我先歇了=v=':'今天还能再帮你分析' + lastTimes + '次作文-v-',
             avatar: () => h(NAvatar,{
