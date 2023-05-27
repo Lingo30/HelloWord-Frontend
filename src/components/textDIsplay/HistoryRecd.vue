@@ -47,7 +47,7 @@
 </template>
 
 <script>
-import {computed, nextTick, onBeforeMount, reactive, ref} from "vue";
+import {nextTick, onBeforeMount, reactive, ref} from "vue";
 import {NModal, NButton,NDatePicker,NSpace,NScrollbar,useMessage} from "naive-ui";
 import HistoryCard from "@/components/textDIsplay/HistoryCard";
 import store from "@/store";
@@ -161,10 +161,10 @@ export default {
         getWritingRecord(store.state.user.uid,id).then((res)=>{
           success = res.state
           errMsg = res.msg
-          historyContent.value = res.content
+          historyContent.value = res.article
           writing.comment.analysis = res.comment.analysis
           writing.comment.rating = res.comment.rating
-          writing.content = res.content
+          writing.content = res.article
         }).catch(err => errMsg = '网络错误').finally(() => {
           if (!success) {
             message.error(errMsg)
@@ -222,6 +222,7 @@ export default {
       clickHistory,
       handleConfirm,
       getRecordId,
+      clickedId,
       handleChooseDate,
       historyContent,
       listIds,
