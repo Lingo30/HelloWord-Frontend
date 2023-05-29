@@ -1,12 +1,13 @@
 <template>
   <nav class="s-sidebar__nav">
-    <ul>
-      <li>
+    <ul class="ul">
+      <li class="li">
         <n-dropdown trigger="hover" :options="options" size="huge" @select="handleSelect">
-          <div :style="wordCardBackground.at(1)" style="width: 6vh; height: 6vh;background-size: 100% 100%; left: 50%; transform: translate(40%,0)"></div>
+          <div :style="wordCardBackground.at(0)" style="width: 6vh; height: 6vh;background-size: 100% 100%; left: 50%; transform: translate(40%,0)"></div>
+<!--          <n-avatar :src="Kaleido" size="large"></n-avatar>-->
         </n-dropdown>
       </li>
-      <li>
+      <li class="li">
         <router-link labelTooltip="单词背诵"  to="/user/learn" class="s-sidebar__nav-link">
           <div class="box">
             <n-icon style="top:50%; transform:translate(0,-50%);" size="4vh" :component="School"
@@ -14,7 +15,7 @@
           </div>
         </router-link>
       </li>
-      <li>
+      <li class="li">
         <router-link labelTooltip="单词复习" to="/user/review" class="s-sidebar__nav-link">
           <div class="box">
             <n-icon style="top:50%; transform:translate(0,-50%);" size="4vh" :component="Notifications"
@@ -22,7 +23,7 @@
           </div>
         </router-link>
       </li>
-      <li>
+      <li class="li">
         <router-link labelTooltip="单词表" to="/user/wordlist" class="s-sidebar__nav-link">
           <div class="box">
             <n-icon style="top:50%; transform:translate(0,-50%);" size="4vh" :component="Book"
@@ -30,7 +31,7 @@
           </div>
         </router-link>
       </li>
-      <li>
+      <li class="li">
         <router-link labelTooltip="智能对话" to="/user/chat" class="s-sidebar__nav-link">
           <div class="box">
             <n-icon style="top:50%; transform:translate(0,-50%);" size="4vh" :component="Chatbubble"
@@ -38,7 +39,7 @@
           </div>
         </router-link>
       </li>
-      <li>
+      <li class="li">
         <router-link labelTooltip="数据统计" to="/user/statistic" class="s-sidebar__nav-link">
           <div class="box">
             <n-icon style="top:50%; transform:translate(0,-50%);" size="4vh" :component="BarChart"
@@ -46,7 +47,7 @@
           </div>
         </router-link>
       </li>
-      <li>
+      <li class="li">
         <router-link labelTooltip="产品介绍" to="/user/help" class="s-sidebar__nav-link">
           <div class="box">
             <n-icon style="top:50%; transform:translate(0,-50%);" size="4vh" :component="HelpCircle"
@@ -101,7 +102,7 @@ export default {
           backgroundImage: 'url(' + require('../../assets/img/kaleidoBlank.jpg') + ')',
         },
         {
-          backgroundImage: url('https://img.js.design/assets/img/62cfbf2ac7415e7de064bef5.png'),
+          backgroundImage: 'https://img.js.design/assets/img/62cfbf2ac7415e7de064bef5.png',
         },
         {
           backgroundImage: 'url(' + require('../../assets/img/kaleidoBlank.jpg') + ')',
@@ -110,14 +111,14 @@ export default {
           backgroundImage: 'url(' + require('../../assets/img/kaleidoBlank.jpg') + ')',
         },
       ],
-      custom: ref(0),
     }
   },
+
   setup() {
     const router = useRouter();
     const message = useMessage();
+    let custom = ref('#26A474')
     let notificationRef = ref(null)
-
     return {
       Person,
       Chatbubble,
@@ -127,6 +128,7 @@ export default {
       Notifications,
       School,
       HelpCircle,
+      custom,
       router,
       notificationRef,
       options: [
@@ -185,8 +187,11 @@ export default {
               success = res.state
               wrMsg = res.msg
             }).catch(err => wrMsg = '网络错误').finally(() => {
+              console.log(store.state.user.custom);
               if (success) {
                 store.state.user.custom = 0;
+                console.log(store.state.user.custom);
+                window.location.reload();
               } else {
                 message.error(wrMsg);
               }
@@ -199,6 +204,8 @@ export default {
             }).catch(err => wrMsg = '网络错误').finally(() => {
               if (success) {
                 store.state.user.custom = 1;
+                console.log(store.state.user.custom);
+                window.location.reload();
               } else {
                 message.error(wrMsg);
               }
@@ -211,6 +218,8 @@ export default {
             }).catch(err => wrMsg = '网络错误').finally(() => {
               if (success) {
                 store.state.user.custom = 2;
+                console.log(store.state.user.custom);
+                window.location.reload();
               } else {
                 message.error(wrMsg);
               }
@@ -223,17 +232,31 @@ export default {
             }).catch(err => wrMsg = '网络错误').finally(() => {
               if (success) {
                 store.state.user.custom = 3;
+                console.log(store.state.user.custom);
+                window.location.reload();
               } else {
                 message.error(wrMsg);
               }
             })
             break;
         }
+        // this.reload();
         message.info("change custom to " + String(key)); // todo 处理选了哪个
       }
     }
-  }
-}
+  },
+
+  created() {
+    if (store.state.user.custom === 1) {
+      this.custom = 'rgba(46,188,210,0.95)';
+    }
+    if (store.state.user.custom === 2) {
+      this.custom = 'rgba(218,127,173,0.95)';
+    }
+    if (store.state.user.custom === 3) {
+      this.custom = 'rgba(155,111,220,0.95)';
+    }
+  }}
 
 </script>
 
@@ -242,13 +265,15 @@ export default {
   position: fixed;
   transition: all .3s ease-in;
   height: 100%;
-  background: #26A474;
+  /*background: #26A474;*/
+  background: v-bind(custom);
+  /*background-color: v-bind("store.state.user.custom == 0 ? #26A474 : rgba(218, 155, 187, 0.95)");*/
   width: 5%;
   left: 0;
   color: rgba(255, 255, 255, 0.7);
 }
 
-.s-sidebar__nav ul {
+.ul {
   position: absolute;
   padding: 0;
   height: 80%;
@@ -259,7 +284,7 @@ export default {
   margin-top: 30%;
 }
 
-.s-sidebar__nav ul li {
+.li {
   width: 100%;
   height: 10%;
   align-items: center;
