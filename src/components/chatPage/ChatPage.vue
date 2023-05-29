@@ -4,14 +4,14 @@
       <!-- 整个注册盒子 -->
       <div class="loginbox">
         <!-- 左侧的注册盒子 -->
-        <div class="background">
+        <div class="background" :style="box.at(index)">
         </div>
         <!-- 右侧的注册盒子 -->
         <div class="content-login">
           <n-spin class="content-box" :show="showSpin">
             <div class="content-box">
               <div class="chat_top">
-                <img src="../../assets/img/kaleidoBlank.jpg" height="135" width="130">
+                <img src="img" height="135" width="130" alt="">
               </div>
               <div v-show="mode === false">
                 <n-scrollbar class="chat" style="height: 57vh ;text-align: left;margin-top: 3vh;">
@@ -87,6 +87,39 @@ export default {
     NButton,
     ChatMessage
   },
+  data() {
+    return {
+      box: [
+        {
+          backgroundImage:  'url(' + require('../../assets/img/Kaleido.png') + ')'
+        },
+        {
+          backgroundImage: 'url(' + require('../../assets/img/Kaleido_blue_blank.png') + ')'
+        },
+        {
+          backgroundImage: 'url(' + require('../../assets/img/Kaleido_pink_blank.png') + ')'
+        },
+        {
+          backgroundImage: 'url(' + require('../../assets/img/Kaleido_purple_blank.png') + ')'
+        }
+      ],
+
+      src: [
+        {
+          src: require('../../assets/img/kaleidoBlank.jpg') ,
+        },
+        {
+          src: require('../../assets/img/Kaleido_blue.png'),
+        },
+        {
+          src: require('../../assets/img/Kaleido_pink.png'),
+        },
+        {
+          src: require('../../assets/img/Kaleido_purple.png')
+        },
+      ]
+    }
+  },
   name: 'HelloWorld',
   props: {
     msg: String
@@ -100,7 +133,7 @@ export default {
     const videos = ref([])
     const inputRef = ref(null)
     let mode = ref(false)
-
+    let index = ref(store.state.user.custom)
     const data = reactive({
       //用于存储创建的语音对象
       recorder: null,
@@ -143,9 +176,11 @@ export default {
         }
       },
     })
-
+    let img = ref('')
     return {
       ...toRefs(data),
+      index,
+      img,
       message,
       inputRef,
       messages,
@@ -296,6 +331,15 @@ export default {
   created() {
     this.getHistory();
     this.getVideoHistory();
+    if (store.state.user.custom === 1) {
+      this.img = this.src.at(1).src;
+    }
+    if (store.state.user.custom === 2) {
+      this.img = this.src.at(2).src;
+    }
+    if (store.state.user.custom === 3) {
+      this.img = this.src.at(3).src;
+    }
   },
 
   methods: {
@@ -494,7 +538,7 @@ export default {
   width: 35%;
   height: 90%;
   margin: auto;
-  background-image:url('../../assets/img/Kaleido.png');
+  background-image: url('../../assets/img/Kaleido.png');
   background-size:cover;
   display: table-cell;
   vertical-align: middle;

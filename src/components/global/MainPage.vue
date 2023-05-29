@@ -18,7 +18,7 @@ export default {
     SideBar
   },
   setup() {
-    let custom = ref('#26A474')
+    let custom = ref('#89AB9E')
     return {
       custom
     }

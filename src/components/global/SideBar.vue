@@ -3,7 +3,7 @@
     <ul class="ul">
       <li class="li">
         <n-dropdown trigger="hover" :options="options" size="huge" @select="handleSelect">
-          <div :style="wordCardBackground.at(0)" style="width: 6vh; height: 6vh;background-size: 100% 100%; left: 50%; transform: translate(40%,0)"></div>
+          <div :style="wordCardBackground.at(index)" style="width: 6vh; height: 6vh;background-size: 100% 100%; left: 50%; transform: translate(40%,0)"></div>
 <!--          <n-avatar :src="Kaleido" size="large"></n-avatar>-->
         </n-dropdown>
       </li>
@@ -102,13 +102,13 @@ export default {
           backgroundImage: 'url(' + require('../../assets/img/kaleidoBlank.jpg') + ')',
         },
         {
-          backgroundImage: 'https://img.js.design/assets/img/62cfbf2ac7415e7de064bef5.png',
+          backgroundImage: 'url(' + require('../../assets/img/Kaleido_blue.png') + ')',
         },
         {
-          backgroundImage: 'url(' + require('../../assets/img/kaleidoBlank.jpg') + ')',
+          backgroundImage: 'url(' + require('../../assets/img/Kaleido_pink.png') + ')',
         },
         {
-          backgroundImage: 'url(' + require('../../assets/img/kaleidoBlank.jpg') + ')',
+          backgroundImage: 'url(' + require('../../assets/img/Kaleido_purple.png') + ')',
         },
       ],
     }
@@ -119,11 +119,13 @@ export default {
     const message = useMessage();
     let custom = ref('#26A474')
     let notificationRef = ref(null)
+    let index = ref(store.state.user.custom)
     return {
       Person,
       Chatbubble,
       BarChart,
       Kaleido,
+      index,
       Book,
       Notifications,
       School,
@@ -248,15 +250,16 @@ export default {
 
   created() {
     if (store.state.user.custom === 1) {
-      this.custom = 'rgba(46,188,210,0.95)';
+      this.custom = 'rgba(7,176,203,0.95)';
     }
     if (store.state.user.custom === 2) {
-      this.custom = 'rgba(218,127,173,0.95)';
+      this.custom = 'rgba(245,141,193,0.95)';
     }
     if (store.state.user.custom === 3) {
       this.custom = 'rgba(155,111,220,0.95)';
     }
-  }}
+  }
+}
 
 </script>
 
