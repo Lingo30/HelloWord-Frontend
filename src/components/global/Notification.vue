@@ -7,9 +7,9 @@
       </n-icon>
     </n-badge>
   </div>
-  <n-modal v-model:show="showFlag" style="background-color: #ADC4BB">
+  <n-modal v-model:show="showFlag" style="background-color: rgba(253,252,252,0.73)">
     <div class="notice-modal">
-      <n-list :show-divider="false" clickable style="width: 35%;background-color: #89AB9E;">
+      <n-list :show-divider="false" clickable style="width: 35%;background-color: #acadad;">
         <n-list-item
             v-for="(message,index) in messages" :key="message.id"
             :class="index===clickedMsg?'message-list-item-clicked':'message-list-item'"
@@ -180,11 +180,11 @@ export default {
 
 .message-list-item {
   margin: 15px;
-  background-color: #26A474;
+  background-color: #929392;
 }
 
 .message-list-item-clicked {
   margin: 15px;
-  background-color: #2ab47f;
+  background-color: #7a7979;
 }
 </style>

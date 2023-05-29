@@ -217,6 +217,7 @@ router.beforeEach((to, from, next) => {
                         //TODO 存储本地变量
                         store.state.user.login = true
                         store.state.user.uid = uid
+                        store.state.user.custom = res.data.custom
                         store.state.user.wordNum = res.data.wordNum
                         store.state.user.selectWordlist = res.data.selectWordlist
                         //设置路由

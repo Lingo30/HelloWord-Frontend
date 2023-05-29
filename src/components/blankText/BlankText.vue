@@ -91,7 +91,7 @@ import {
   NAvatar,
   useNotification
 } from "naive-ui";
-import Kaleido from "@/assets/img/kaleidoBlank.png";
+import Kaleido from "@/assets/img/kaleidoBlank.jpg";
 import HistoryRecd from "@/components/textDIsplay/HistoryRecd";
 import router from "@/router";
 

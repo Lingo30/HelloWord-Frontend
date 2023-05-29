@@ -93,7 +93,7 @@ import {computed, h, ref} from "vue";
 import { LogInOutline as LogInIcon,CalendarOutline } from '@vicons/ionicons5'
 import {getSentenceAnalysis} from "@/request/api/review";
 import {NSpace, NButton, NIcon, NSpin, NInput, NTag, NCard, NRate, NAvatar, useNotification} from "naive-ui";
-import Kaleido from "@/assets/img/kaleidoBlank.png";
+import Kaleido from "@/assets/img/kaleidoBlank.jpg";
 import store from "@/store";
 import HistoryRecd from "@/components/textDIsplay/HistoryRecd";
 

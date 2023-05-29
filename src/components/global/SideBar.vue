@@ -1,15 +1,21 @@
 <template>
   <nav class="s-sidebar__nav">
-    <ul>
-      <li>
-        <router-link labelTooltip="单词背诵" to="/user/learn" class="s-sidebar__nav-link">
+    <ul class="ul">
+      <li class="li">
+        <n-dropdown trigger="hover" :options="options" size="huge" @select="handleSelect">
+          <div :style="wordCardBackground.at(index)" style="width: 6vh; height: 6vh;background-size: 100% 100%; left: 50%; transform: translate(40%,0)"></div>
+<!--          <n-avatar :src="Kaleido" size="large"></n-avatar>-->
+        </n-dropdown>
+      </li>
+      <li class="li">
+        <router-link labelTooltip="单词背诵"  to="/user/learn" class="s-sidebar__nav-link">
           <div class="box">
             <n-icon style="top:50%; transform:translate(0,-50%);" size="4vh" :component="School"
                     :depth="router.currentRoute.value.name!=='learn'?3:1" color="#ffffff"/>
           </div>
         </router-link>
       </li>
-      <li>
+      <li class="li">
         <router-link labelTooltip="单词复习" to="/user/review" class="s-sidebar__nav-link">
           <div class="box">
             <n-icon style="top:50%; transform:translate(0,-50%);" size="4vh" :component="Notifications"
@@ -17,7 +23,7 @@
           </div>
         </router-link>
       </li>
-      <li>
+      <li class="li">
         <router-link labelTooltip="单词表" to="/user/wordlist" class="s-sidebar__nav-link">
           <div class="box">
             <n-icon style="top:50%; transform:translate(0,-50%);" size="4vh" :component="Book"
@@ -25,7 +31,7 @@
           </div>
         </router-link>
       </li>
-      <li>
+      <li class="li">
         <router-link labelTooltip="智能对话" to="/user/chat" class="s-sidebar__nav-link">
           <div class="box">
             <n-icon style="top:50%; transform:translate(0,-50%);" size="4vh" :component="Chatbubble"
@@ -33,7 +39,7 @@
           </div>
         </router-link>
       </li>
-      <li>
+      <li class="li">
         <router-link labelTooltip="数据统计" to="/user/statistic" class="s-sidebar__nav-link">
           <div class="box">
             <n-icon style="top:50%; transform:translate(0,-50%);" size="4vh" :component="BarChart"
@@ -41,7 +47,7 @@
           </div>
         </router-link>
       </li>
-      <li>
+      <li class="li">
         <router-link labelTooltip="产品介绍" to="/user/help" class="s-sidebar__nav-link">
           <div class="box">
             <n-icon style="top:50%; transform:translate(0,-50%);" size="4vh" :component="HelpCircle"
@@ -70,35 +76,191 @@
 </template>
 
 <script>
-import {ref} from "vue";
 import {useRouter} from "vue-router";
 import {Person, Chatbubble, BarChart, Book, Notifications, School, HelpCircle} from "@vicons/ionicons5"
-import {NIcon} from 'naive-ui'
+import {h, ref} from "vue";
 import Notification from "@/components/global/Notification.vue";
+import {NIcon, NDropdown, NButton, useMessage, NAvatar} from 'naive-ui'
+import Kaleido from "@/assets/img/kaleidoBlank.jpg";
+import store from "@/store";
+import {USERID} from "@/store/local";
+import {changeCustom} from "@/request/api/user";
+import router from "@/router";
 
 export default {
   name: "SideBar",
   components: {
     Notification,
     NIcon,
+    NDropdown,
+    NButton,
   },
+  data() {
+    return {
+      wordCardBackground:[
+        {
+          backgroundImage: 'url(' + require('../../assets/img/kaleidoBlank.jpg') + ')',
+        },
+        {
+          backgroundImage: 'url(' + require('../../assets/img/Kaleido_blue.png') + ')',
+        },
+        {
+          backgroundImage: 'url(' + require('../../assets/img/Kaleido_pink.png') + ')',
+        },
+        {
+          backgroundImage: 'url(' + require('../../assets/img/Kaleido_purple.png') + ')',
+        },
+      ],
+    }
+  },
+
   setup() {
     const router = useRouter();
+    const message = useMessage();
+    let custom = ref('#26A474')
     let notificationRef = ref(null)
-
+    let index = ref(store.state.user.custom)
     return {
       Person,
       Chatbubble,
       BarChart,
+      Kaleido,
+      index,
       Book,
       Notifications,
       School,
       HelpCircle,
+      custom,
       router,
       notificationRef,
+      options: [
+        {
+          label: () => h(
+              NAvatar,
+              {
+                src: Kaleido,
+                size: "large",
+                style: "top:50%; transform:translate(0,-50%)"
+              },
+          ),
+          key: "green"
+        },
+        {
+          label: () => h(
+              NAvatar,
+              {
+                src: 'https://img.js.design/assets/img/62cfbf2ac7415e7de064bef5.png',
+                size: "large",
+                style: "top:50%; transform:translate(0,-50%)"
+              },
+          ),
+          key: "blue"
+        },
+        {
+        label: () => h(
+              NAvatar,
+              {
+                src: 'https://img.js.design/assets/img/62cfbf28edcf38c72cdb5cab.png',
+                size: "large",
+                style: "top:50%; transform:translate(0,-50%)"
+              },
+          ),
+          key: "pink"
+        },
+        {
+          label: () => h(
+              NAvatar,
+              {
+                src: 'https://img.js.design/assets/img/62cfbf2b4fd2dffdcb34a35c.png',
+                size: "large",
+                style: "top:50%; transform:translate(0,-50%)"
+              },
+          ),
+          key: "purple"
+        },
+      ],
+      handleSelect(key) {
+        let success = false
+        let data
+        let wrMsg = ''
+        switch (key) {
+          case "green" :
+            changeCustom(store.state.user.uid, 0).then((res) => {
+              success = res.state
+              wrMsg = res.msg
+            }).catch(err => wrMsg = '网络错误').finally(() => {
+              console.log(store.state.user.custom);
+              if (success) {
+                store.state.user.custom = 0;
+                console.log(store.state.user.custom);
+                window.location.reload();
+              } else {
+                message.error(wrMsg);
+              }
+            })
+            break;
+          case "blue":
+            changeCustom(store.state.user.uid, 1).then((res) => {
+              success = res.state
+              wrMsg = res.msg
+            }).catch(err => wrMsg = '网络错误').finally(() => {
+              if (success) {
+                store.state.user.custom = 1;
+                console.log(store.state.user.custom);
+                window.location.reload();
+              } else {
+                message.error(wrMsg);
+              }
+            })
+            break;
+          case "pink":
+            changeCustom(store.state.user.uid, 2).then((res) => {
+              success = res.state
+              wrMsg = res.msg
+            }).catch(err => wrMsg = '网络错误').finally(() => {
+              if (success) {
+                store.state.user.custom = 2;
+                console.log(store.state.user.custom);
+                window.location.reload();
+              } else {
+                message.error(wrMsg);
+              }
+            })
+            break;
+          case "purple":
+            changeCustom(store.state.user.uid, 3).then((res) => {
+              success = res.state
+              wrMsg = res.msg
+            }).catch(err => wrMsg = '网络错误').finally(() => {
+              if (success) {
+                store.state.user.custom = 3;
+                console.log(store.state.user.custom);
+                window.location.reload();
+              } else {
+                message.error(wrMsg);
+              }
+            })
+            break;
+        }
+        // this.reload();
+        message.info("change custom to " + String(key)); // todo 处理选了哪个
+      }
+    }
+  },
+
+  created() {
+    if (store.state.user.custom === 1) {
+      this.custom = 'rgba(7,176,203,0.95)';
+    }
+    if (store.state.user.custom === 2) {
+      this.custom = 'rgba(245,141,193,0.95)';
+    }
+    if (store.state.user.custom === 3) {
+      this.custom = 'rgba(155,111,220,0.95)';
     }
   }
 }
+
 </script>
 
 <style scoped>
@@ -106,13 +268,15 @@ export default {
   position: fixed;
   transition: all .3s ease-in;
   height: 100%;
-  background: #26A474;
+  /*background: #26A474;*/
+  background: v-bind(custom);
+  /*background-color: v-bind("store.state.user.custom == 0 ? #26A474 : rgba(218, 155, 187, 0.95)");*/
   width: 5%;
   left: 0;
   color: rgba(255, 255, 255, 0.7);
 }
 
-.s-sidebar__nav ul {
+.ul {
   position: absolute;
   padding: 0;
   height: 80%;
@@ -123,7 +287,7 @@ export default {
   margin-top: 30%;
 }
 
-.s-sidebar__nav ul li {
+.li {
   width: 100%;
   height: 10%;
   align-items: center;

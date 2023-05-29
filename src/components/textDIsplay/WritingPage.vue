@@ -16,7 +16,7 @@ import TextBox from "./TextBox";
 import {ref, onMounted, h} from "vue";
 import {getArticleAnalysis} from "@/request/api/review";
 import {NButton, NAvatar, useMessage,useNotification} from "naive-ui";
-import Kaleido from "@/assets/img/kaleidoBlank.png";
+import Kaleido from "@/assets/img/kaleidoBlank.jpg";
 import store from "@/store";
 import router from "@/router";
 export default {

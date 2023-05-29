@@ -219,6 +219,7 @@ export default {
       store.state.user.uid = data.uid
       store.state.user.wordNum = data.wordNum
       store.state.user.selectWordlist = data.selectWordlist
+      store.state.user.custom = data.custom  // todo
       // 把用户id保存到本地
       localStorage.setItem(USERID, data.uid)
     }

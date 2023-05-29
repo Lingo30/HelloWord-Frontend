@@ -378,7 +378,7 @@ export default {
   left: 20%;
   transform: translate(-50%, 0);
   /*background-color: #2c3e50;*/
-  background-image: url('../../assets/img/kaleidoBlank.png');
+  background-image: url('../../assets/img/kaleidoBlank.jpg');
   background-size: 100% 100%;
 }
 
