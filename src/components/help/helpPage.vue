@@ -1,9 +1,9 @@
 <template>
   <div class="container">
     <div class="head">
-      <div class="logo">
+      <div class="logo" :style="wordCardBackground.at(index)">
       </div>
-      <div class="word">
+      <div class="word" :style="word.at(index)">
       </div>
     </div>
     <div class="content">
@@ -288,11 +288,44 @@ export default {
   props: {
     idxs: Array,//跳转到此页面时企图打开的条目（[1,2]表示打开第一条的第二条，在from路由的query参数给出）
   },
+  data() {
+    return {
+      wordCardBackground:[
+        {
+          backgroundImage: 'url(' + require('../../assets/img/kaleidoBlank.jpg') + ')',
+        },
+        {
+          backgroundImage: 'url(' + require('../../assets/img/Kaleido_blue.png') + ')',
+        },
+        {
+          backgroundImage: 'url(' + require('../../assets/img/Kaleido_pink.png') + ')',
+        },
+        {
+          backgroundImage: 'url(' + require('../../assets/img/Kaleido_purple.png') + ')',
+        },
+      ],
+      word:[
+        {
+          backgroundImage: 'url(' + require('../../assets/img/title.png') + ')',
+        },
+        {
+          backgroundImage: 'url(' + require('../../assets/img/word_blue.png') + ')',
+        },
+        {
+          backgroundImage: 'url(' + require('../../assets/img/word_pink.png') + ')',
+        },
+        {
+          backgroundImage: 'url(' + require('../../assets/img/word_purple.png') + ')',
+        },
+      ],
+    }
+  },
   setup(props) {
     const message = useMessage()
     const feedbackType = ref('')
     const modules = ref([])
     const feedback = ref('')
+    let index = ref(store.state.user.custom)
 
     //判断有哪个子条目会自动打开
     function autoOpen(idxArr) {
@@ -341,7 +374,7 @@ export default {
       feedbackType,
       modules,
       feedback,
-
+      index,
       autoOpen,
       commit,
     }
@@ -387,6 +420,7 @@ export default {
   width: 50%;
   position: fixed;
   left: 50%;
+  margin-left: 2vw;
   transform: translate(-50%, 0);
   /*background-color: #2c3e50;*/
   background-image: url('../../assets/img/title.png');
