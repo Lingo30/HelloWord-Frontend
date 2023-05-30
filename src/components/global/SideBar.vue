@@ -193,7 +193,7 @@ export default {
               if (success) {
                 store.state.user.custom = 0;
                 console.log(store.state.user.custom);
-                window.location.reload();
+                location.reload();
               } else {
                 message.error(wrMsg);
               }
@@ -207,7 +207,7 @@ export default {
               if (success) {
                 store.state.user.custom = 1;
                 console.log(store.state.user.custom);
-                window.location.reload();
+                location.reload();
               } else {
                 message.error(wrMsg);
               }
@@ -221,7 +221,7 @@ export default {
               if (success) {
                 store.state.user.custom = 2;
                 console.log(store.state.user.custom);
-                window.location.reload();
+                location.reload();
               } else {
                 message.error(wrMsg);
               }
@@ -235,7 +235,7 @@ export default {
               if (success) {
                 store.state.user.custom = 3;
                 console.log(store.state.user.custom);
-                window.location.reload();
+                location.reload();
               } else {
                 message.error(wrMsg);
               }
