@@ -15,7 +15,7 @@
 import TextBox from "./TextBox";
 import {ref, onMounted, h} from "vue";
 import {getArticleAnalysis} from "@/request/api/review";
-import {NButton, NAvatar, useMessage,useNotification} from "naive-ui";
+import {NButton, NAvatar, useMessage, useNotification, NCard} from "naive-ui";
 import Kaleido from "@/assets/img/kaleidoBlank.jpg";
 import store from "@/store";
 import router from "@/router";
@@ -99,7 +99,7 @@ export default {
               round: true,
               src: Kaleido,
             }),
-            action: ()=>h(NButton,{
+            action: ()=>errorMsg === '我读不动啦QAQ' ?h(NButton,{
               text: true,
               type: "primary",
               onClick:()=>{
@@ -108,6 +108,9 @@ export default {
               }
             },{
               default: () => "我开会员去:)"
+            }):
+            h(NCard,{
+              bordered: false,
             }),
             duration: 3e3,
           })

@@ -22,7 +22,7 @@ import TextBox from "./TextBox";
 import {onBeforeMount, ref,h} from "vue";
 import {getTodayWords, wordsToStory} from "@/request/api/review";
 import store from "@/store";
-import {useMessage,useNotification, NAvatar,NButton} from 'naive-ui'
+import {useMessage, useNotification, NAvatar, NButton, NCard} from 'naive-ui'
 import Kaleido from "../../assets/img/kaleidoBlank.jpg"
 import router from "@/router";
 export default {
@@ -134,7 +134,7 @@ export default {
               round: true,
               src: Kaleido,
             }),
-            action: ()=>h(NButton,{
+            action: ()=>errorMsg === '再想AI的脑袋也顶不住啦QAQ' ?h(NButton,{
               text: true,
               type: "primary",
               onClick:()=>{
@@ -143,6 +143,9 @@ export default {
               }
             },{
               default: () => "我开会员去:)"
+            }):
+            h(NCard,{
+              bordered: false,
             }),
             duration: 3e3,
           })
