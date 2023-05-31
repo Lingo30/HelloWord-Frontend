@@ -152,6 +152,7 @@ export default {
           errorMsg = res.last_times === 0 ? '明天再给你出题哇，累了捏QAQ' : res.msg
         }
       }).catch().finally(() => {
+        // console.log(lastTimes);
         if (!success) {
           let n = notification.create({
             content: errorMsg,
@@ -160,7 +161,7 @@ export default {
               round: true,
               src: Kaleido,
             }),
-            action: ()=>h(NButton,{
+            action: ()=>errorMsg === '明天再给你出题哇，累了捏QAQ' ?h(NButton,{
               text: true,
               type: "primary",
               onClick:()=>{
@@ -169,6 +170,9 @@ export default {
               }
             },{
               default: () => "我开会员去:)"
+            }):
+            h(NCard,{
+              bordered: false,
             }),
             duration: 3e3,
           })
