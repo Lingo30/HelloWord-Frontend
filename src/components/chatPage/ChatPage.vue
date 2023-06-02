@@ -10,9 +10,9 @@
         <div class="content-login">
           <n-spin class="content-box" :show="showSpin">
             <div class="content-box">
-              <div class="chat_top">
-                <img src="img" height="135" width="130" alt="">
-              </div>
+<!--              <div class="chat_top">-->
+<!--                <img src="img" height="135" width="130" alt="">-->
+<!--              </div>-->
               <div v-show="mode === false">
                 <n-scrollbar class="chat" style="height: 57vh ;text-align: left;margin-top: 3vh;">
                   <div ref="chat_message" class="chat_parent" style="overflow:hidden; width: 30vw">
@@ -167,7 +167,9 @@ export default {
       },
       handlePlay () {
         console.log('播放录音')
-        data.recorder.play() // 播放录音
+        if (data.recorder !== null) {
+          data.recorder.play() // 播放录音
+        }
       },
       handleDestroy () {
         console.log('销毁实例')
