@@ -248,6 +248,20 @@
                 </div>
               </n-collapse>
             </n-collapse-item>
+            <n-collapse-item title="Kaleido" name="4">
+              <div style="width: 80%; display: flex">
+                <img src="../../assets/img/kaleidoBlank.jpg" width="50" height="50" class="avatar">
+                <div
+                    style="align-items: center; justify-content: center; margin:auto; text-align: center; margin-left: 19vh; line-height: 6vh; width: 20vh">
+                    Kaleido
+                </div>
+                <div
+                    style="align-items: center; justify-content: center; margin:auto; text-align:left; margin-left: 10vh; line-height: 6vh; width: 50vh">
+                    Powered By lyxa (即时设计)
+                </div>
+              </div>
+            </n-collapse-item>
+
           </n-collapse>
         </n-collapse-item>
       </n-collapse>
