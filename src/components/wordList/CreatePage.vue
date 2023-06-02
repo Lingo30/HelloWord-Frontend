@@ -151,7 +151,7 @@
           <n-button
               class="button"
               @click="create(myWordlistName, pageIdx)"
-              :disabled="!(pageIdx===0&&clickedListId!==undefined||pageIdx===1&&showFileResultFlag)"
+              :disabled="!(pageIdx===0&&clickedListId!==undefined||pageIdx!==0&&showFileResultFlag)"
           >
             生成词单
           </n-button>
