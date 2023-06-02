@@ -149,6 +149,7 @@ export default {
         info.learned = res.learned
         info.creator = res.creator
         info.date = res.date
+        info.official = res.official
         newName.value = info.name
         if (props.clicked) {
           handleClick()

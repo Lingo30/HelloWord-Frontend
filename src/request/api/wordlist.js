@@ -249,7 +249,7 @@ export function submitOfficial(uid, listId) {
         listId: listId,
     })
     return request({
-        url: 'submit_official_wordlist',
+        url: 'submit_official_wordlist/',
         method: 'post',
         data
     })
