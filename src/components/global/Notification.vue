@@ -118,7 +118,7 @@ export default {
         }
       }).catch(err => errMsg = '网络错误')
       if (success) {
-        showMessageDetail(messages[clickedMsg.value])
+        showMessageDetail(messages[clickedMsg.value],0)
       } else {
         message.error(errMsg)
       }
