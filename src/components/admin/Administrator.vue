@@ -15,7 +15,7 @@
           <n-input style="text-align: left" v-model:value="sendUserId" placeholder="用户id" :disabled="sendAll"/>
           <n-checkbox style="width: 100%;padding: 10px" v-model:checked="sendAll">全体发送</n-checkbox>
         </div>
-        <n-button type="success" @click="sendMessage(sendMsg,title)" :disabled="!sendAll&&sendUserId===''">
+        <n-button type="success" @click="sendMessage(sendMsg,sendMsgTitle)" :disabled="!sendAll&&sendUserId===''">
           发送
         </n-button>
       </div>
@@ -69,9 +69,14 @@
                 拒绝
               </n-button>
             </n-button-group>
-            <n-text v-else>
-              {{ list.handleMessage }}
-            </n-text>
+            <div v-else>
+              <n-text >
+                {{ list.handleMessage }}
+              </n-text>
+              <n-button type="info" @click="showListDetail(list.userId,list.listId)">
+                查看详情
+              </n-button>
+            </div>
           </div>
         </n-list-item>
       </n-list>
@@ -111,7 +116,7 @@ import {
   getUserFeedbacks,
   rejectSubmit,
   sendSpecialMessage,
-  sendToAll
+  sendToAll, setMessageState
 } from "@/request/api/admin";
 import store from "@/store";
 import {ACCEPT_SUBMIT_WORDLIST, REJECT_SUBMIT_WORDLIST} from "@/store/local";
@@ -149,7 +154,7 @@ export default {
     const columns = [
       {
         title: "用户id",
-        key: "uid"
+        key: "userId"
       },
       {
         title: "内容",
@@ -161,12 +166,12 @@ export default {
       },
       {
         title: "相关模块",
-        key: "module"
+        key: "modules"
       },
       {
         title: "处理方式",
         key: "action",
-        defaultFilterOptionValues: ['unRead', 'read'],
+        defaultFilterOptionValues: [false, true],
         filter(value, row) {
           return row.state === value
         },
@@ -177,24 +182,24 @@ export default {
                 strong: true,
                 tertiary: true,
                 size: "small",
-                disabled: row.state !== 'unRead',
+                disabled: row.state,
                 onClick: () => {
-                  row.state = 'read'
-                  updateFeedbackTable(feedbackFilter.value)
+                  row.state = true
+                  setRead(row.messageId)
                 }
               },
               {
                 default: () =>
-                    row.state === 'unRead' ? "标记已读" : '已读'
+                    row.state ? '已读' : "标记已读"
               }
-          );
+          )
         }
       }
     ];
     const feedbacks = reactive([
-      {uid: 3, content: "Wonderwall", type: "bug反馈", module: '单词背诵', state: 'unRead'},
-      {uid: 4, content: "Don't Look Back in Anger", type: "bug反馈", module: '其他', state: 'read'},
-      {uid: 12, content: "Champagne Supernova", type: "功能建议", module: '其他', state: 'unRead'}
+      {userId: 3, content: "Wonderwall", type: "bug反馈", modules: '单词背诵', state: false},
+      {userId: 4, content: "Don't Look Back in Anger", type: "bug反馈", modules: '其他', state: false},
+      {userId: 12, content: "Champagne Supernova", type: "功能建议", modules: '其他', state: false}
     ]);
     const pagination = reactive({
       page: 1,
@@ -243,7 +248,7 @@ export default {
     //获取所有用户反馈
     function getFeedBacks() {
       //TODO 获取所有反馈
-      getUserFeedbacks().then(res => {
+      getUserFeedbacks(store.state.admin.id).then(res => {
         feedbacks.splice(0, feedbacks.length)
         res.feedbacks.forEach(feedback => feedbacks.push(feedback))
       }).catch(err => {
@@ -258,15 +263,24 @@ export default {
       }
     }
 
+    //设置消息为已读
+    function setRead(messageId) {
+      setMessageState(store.state.admin.id, messageId).then(res => {
+        if (res.state) {
+          updateFeedbackTable(feedbackFilter.value)
+        }
+      })
+    }
+
     //更新表格
     function updateFeedbackTable(filterType) {
       //根据feedbackFilter过滤
       if (filterType === 0) {
         feedbackRef.value.filter(null)
       } else if (filterType === 1) {
-        feedbackRef.value.filter({action: 'read'})
+        feedbackRef.value.filter({action: true})
       } else if (filterType === 2) {
-        feedbackRef.value.filter({action: 'unRead'})
+        feedbackRef.value.filter({action: false})
       }
     }
 
@@ -307,10 +321,9 @@ export default {
 
     //获取未审核的词单
     function getLists() {
-      //todo
-      getSubmitOfficials().then(res => {
+      getSubmitOfficials(store.state.admin.id).then(res => {
         lists.splice(0, lists.length)
-        res.lists.forEach(list => lists.push(list))
+        res.messages.forEach(list => lists.push(list))
       }).catch(err => {
       })
     }
@@ -321,7 +334,6 @@ export default {
     }
 
     function acceptWordlist(list) {
-      //TODO
       let success = false
       let errMsg = ''
       acceptSubmit(store.state.admin.id, list.listId).then(res => {
@@ -339,7 +351,6 @@ export default {
 
     //是否允许成为官方词单
     function rejectWordlist(list) {
-      //todo
       const msg = ref('')
       dialog.info({
         title: '不通过原因',

@@ -44,7 +44,7 @@
 </template>
 
 <script>
-import {reactive, ref} from "vue";
+import {computed, onMounted, reactive, ref} from "vue";
 import {NIcon, NBadge, NModal, NList, NListItem, NButton, NDivider, NText, useMessage} from "naive-ui";
 import {Megaphone, ChevronForwardOutline} from "@vicons/ionicons5";
 import {getMessages, setMessageRead} from "@/request/api/user";
@@ -67,7 +67,9 @@ export default {
   setup() {
     const message = useMessage()
 
-    const unReadFlag = ref(false)//侧边栏显示是否有未读消息
+    const unReadFlag = computed(() => {
+      return messages.filter(msg => !msg.state).length !== 0
+    })//侧边栏显示是否有未读消息
     const showFlag = ref(false)//是否显示通知公告模态框
     const showDetailFlag = ref(false)//是否显示消息详细内容
     const clickedMsg = ref(0)//被选中的消息
@@ -81,27 +83,27 @@ export default {
       }
     })
     const messages = reactive([
-      {
-        id: 0,
-        title: '公告',
-        content: 'ababa',
-        state: false,//是否已读
-        time: '2023-5-24 10:35',
-      },
-      {
-        id: 1,
-        title: 'Re：意见反馈',
-        content: 'ababa',
-        state: false,
-        time: '2023-5-24 10:35',
-      },
-      {
-        id: 2,
-        title: 'Re：Bug反馈',
-        content: 'ababa',
-        state: true,
-        time: '2023-5-24 10:35',
-      },
+      // {
+      //   id: 0,
+      //   title: '公告',
+      //   content: 'ababa',
+      //   state: false,//是否已读
+      //   time: '2023-5-24 10:35',
+      // },
+      // {
+      //   id: 1,
+      //   title: 'Re：意见反馈',
+      //   content: 'ababa',
+      //   state: false,
+      //   time: '2023-5-24 10:35',
+      // },
+      // {
+      //   id: 2,
+      //   title: 'Re：Bug反馈',
+      //   content: 'ababa',
+      //   state: true,
+      //   time: '2023-5-24 10:35',
+      // },
     ])
 
     async function showMessages() {
@@ -118,7 +120,7 @@ export default {
         }
       }).catch(err => errMsg = '网络错误')
       if (success) {
-        showMessageDetail(messages[clickedMsg.value],0)
+        showMessageDetail(messages[clickedMsg.value], 0)
       } else {
         message.error(errMsg)
       }
@@ -135,6 +137,18 @@ export default {
         })
       }
     }
+
+    onMounted(() => {
+      messages.splice(0, messages.length)
+      let success = false
+      getMessages(store.state.user.uid).then(res => {
+        success = res.state
+        if (success) {
+          res.messages.forEach(message => messages.push(message))
+        }
+      }).catch(err => {
+      })
+    })
 
     return {
       unReadFlag,

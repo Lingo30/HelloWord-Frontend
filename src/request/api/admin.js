@@ -79,7 +79,7 @@ export function rejectSubmit(id, listId, message) {
         message: message,
     })
     return request({
-        url: 'accept_submit_wordlist/',
+        url: 'reject_submit_wordlist/',
         method: 'post',
         data,
     })
@@ -92,6 +92,17 @@ export function getSubmitDetail(id, listId) {
         data: JSON.stringify({
             adminId: id,
             listId: listId,
+        })
+    })
+}
+
+export function setMessageState(id, messageId) {
+    return request({
+        url: 'set_read_message/',
+        method: 'post',
+        data: JSON.stringify({
+            adminId: id,
+            messageId: messageId,
         })
     })
 }
