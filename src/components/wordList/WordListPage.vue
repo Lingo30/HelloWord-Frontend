@@ -90,9 +90,9 @@ export default {
     let createPageRef = ref(null)
     const officialFlagRef = ref(true)//当前选中的词单是否为官方词单
 
-    function clickWordList(id, totalNum, isOficial) {
+    function clickWordList(id, totalNum, isOfficial) {
       clickedId.value = id
-      officialFlagRef.value = isOficial
+      officialFlagRef.value = isOfficial
       wordCardListRef.value.showWords(id, totalNum)
     }
 

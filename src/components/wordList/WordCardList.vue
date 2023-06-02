@@ -64,40 +64,40 @@
         </n-button>
       </n-space>
     </div>
-  </div>
 
-  <n-modal
-		v-model:show="showModal"
-		class="searchModal"
-		:mask-closable="false"
-		:style="bodyStyle"
-		preset="card"
-		content="你确认"
-		:segmented="segmented"
-		@positive-click="onPositiveClick"
-		@negative-click="onNegativeClick"
-	>
-		<div class="word_name_search">
-          {{searchWord.word}}
+    <n-modal
+        v-model:show="showModal"
+        class="searchModal"
+        :mask-closable="false"
+        :style="bodyStyle"
+        preset="card"
+        content="你确认"
+        :segmented="segmented"
+        @positive-click="onPositiveClick"
+        @negative-click="onNegativeClick"
+    >
+      <div class="word_name_search">
+        {{searchWord.word}}
+      </div>
+      <div class="word_meaning_box_search">
+        <div class="word_reading_search">
+          音标: [{{ searchWord.phonetic_symbol }}]
+          <router-link to="" @click="play(searchWord.word)">
+            <img src="../../assets/img/sound1.png">
+          </router-link>
         </div>
-		<div class="word_meaning_box_search">
-          	<div class="word_reading_search">
-				音标: [{{ searchWord.phonetic_symbol }}]
-				<router-link to="" @click="play(searchWord.word)">
-					<img src="../../assets/img/sound1.png">
-				</router-link>
-          	</div>
-			<div>
-			<audio></audio>
-			</div>
-			<div class="word_meaning_search">
-				{{ searchWord.definition_cn }}
-			</div>
-			<div class="word_example_search">
-				例句：{{ searchWord.example }}
-			</div>
+        <div>
+          <audio></audio>
         </div>
-	</n-modal>
+        <div class="word_meaning_search">
+          {{ searchWord.definition_cn }}
+        </div>
+        <div class="word_example_search">
+          例句：{{ searchWord.example }}
+        </div>
+      </div>
+    </n-modal>
+  </div>
 </template>
 
 <script>
@@ -186,7 +186,7 @@ export default {
         content: '要把你的词单上传为官方词单吗？',
         positiveText: '确定',
         negativeText: '让我再想想',
-        onPositiveClick: (listId) => {
+        onPositiveClick: () => {
           submitToOfficial(listId)
         }
       })

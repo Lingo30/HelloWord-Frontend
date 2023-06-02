@@ -246,10 +246,10 @@ export function setAim(uid, aim) {
 export function submitOfficial(uid, listId) {
     const data = JSON.stringify({
         userId: uid,
-        listId: listId,
+        list_id: listId,
     })
     return request({
-        url: 'submit_official_wordlist',
+        url: 'submit_official_wordlist/',
         method: 'post',
         data
     })
