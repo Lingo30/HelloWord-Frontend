@@ -444,7 +444,7 @@ export default {
   height: 30px;
 }
 
-.loginButton :hover {
+.loginButton:hover {
   cursor: pointer;
 }
 
