@@ -11,7 +11,7 @@
     <n-space class="container">
       <div style="margin-bottom: 30px" class="select-box">
         <n-date-picker @confirm="handleChooseDate" v-model:formatted-value="dateRange" value-format="yyyy.MM.dd" type="daterange"/>
-        <n-scrollbar style="margin-top: 15px">
+        <n-scrollbar style="max-height: 53vh;margin-top: 15px">
           <HistoryCard
               v-for="(id,index) in listIds"
               :key="id"
@@ -27,7 +27,7 @@
 
       <div class="content-box">
         <n-card hoverable class="text-card">
-            <n-scrollbar style="max-height: 60vh;width:95%">
+            <n-scrollbar style="max-height: 53vh;width:95%">
             {{historyContent}}
           </n-scrollbar>
         </n-card>
