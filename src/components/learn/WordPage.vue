@@ -3,9 +3,7 @@
 		<div class="word_search">
 			<div class="search">
 				<n-input v-model:value="value" type="text" placeholder="您需要查询的单词" style="border-radius: 15px;"
-					maxlength="30"
-                 @keydown.enter.prevent="getSearchWord(value)"
-                 on-clear="getSearchWord" />
+					maxlength="30" @keydown.enter.prevent="getSearchWord(value)" on-clear="getSearchWord" />
 			</div>
 			<div class="search_button">
 				<n-button type="primary" style="border-radius: 10px;" @click="getSearchWord(value)">
@@ -95,6 +93,8 @@
 					<div class="info_box">
 						<div class="info_title">
 							例句
+							<router-link to="" class="changeExample" @click="changeExample"
+								v-if="shown == true">换一个</router-link>
 						</div>
 						<div class="info_content1" v-if="shown == true">
 							<n-scrollbar>
@@ -135,7 +135,7 @@
 <script>
 import { NCard, NScrollbar, NButton, NInput, NModal, useMessage } from 'naive-ui'
 // import {searchWordAPI, getWordAPI} from "@/request/api/user";
-import { get_group_words_in_list, get_search_word, deleteWordAPI, group_word_learn_save, get_word_releation } from "@/request/api/learn";
+import { get_group_words_in_list, get_search_word, deleteWordAPI, group_word_learn_save, get_word_releation, get_new_example } from "@/request/api/learn";
 import store from "@/store";
 import { reactive, ref } from 'vue';
 import router from '@/router';
@@ -151,10 +151,10 @@ export default {
 	},
 	data() {
 		return {
-      wordCardBackground: {
-        backgroundImage: 'url(' + require('../../assets/img/word_background_4.jpg') + ')',
-      },
-      message: useMessage(),
+			wordCardBackground: {
+				backgroundImage: 'url(' + require('../../assets/img/word_background_4.jpg') + ')',
+			},
+			message: useMessage(),
 			value: ref(''),
 			showModal: ref(false),
 			// searchRef: ref(null),
@@ -210,10 +210,10 @@ export default {
 			forget_times: ref(0),
 			shown: ref(false),
 			list_id: ref(0),
-      color: ref('#679B9B'),
-      color1: ref('rgba(38, 164, 116, 0.8)'),
-      color2: ref('rgba(129, 227, 131, 0.8)'),
-      color3: ref('rgba(129, 227, 185, 0.8)')
+			color: ref('#679B9B'),
+			color1: ref('rgba(38, 164, 116, 0.8)'),
+			color2: ref('rgba(129, 227, 131, 0.8)'),
+			color3: ref('rgba(129, 227, 185, 0.8)')
 		}
 	},
 	methods: {
@@ -240,29 +240,29 @@ export default {
 			})
 		},
 		getGroupWord() {
-      const weekNum = new Date().getDay();
-      switch (weekNum) {
-        case 0:
-          break;
-        case 1:
-          this.wordCardBackground.backgroundImage =  'url(' + require('../../assets/img/word_background_1.png') + ')';
-          break;
-        case 2:
-          this.wordCardBackground.backgroundImage =  'url(' + require('../../assets/img/word_background_2.jpg') + ')';
-          break;
-        case 3:
-          this.wordCardBackground.backgroundImage =  'url(' + require('../../assets/img/word_background_3.jpg') + ')';
-          break;
-        case 4:
-          this.wordCardBackground.backgroundImage =  'url(' + require('../../assets/img/word_background_4.jpg') + ')';
-          break;
-        case 5:
-          this.wordCardBackground.backgroundImage =  'url(' + require('../../assets/img/word_background_5.jpg') + ')';
-          break;
-        case 6:
-          this.wordCardBackground.backgroundImage =  'url(' + require('../../assets/img/word_background_6.jpg') + ')';
-          break;
-      }
+			const weekNum = new Date().getDay();
+			switch (weekNum) {
+				case 0:
+					break;
+				case 1:
+					this.wordCardBackground.backgroundImage = 'url(' + require('../../assets/img/word_background_1.png') + ')';
+					break;
+				case 2:
+					this.wordCardBackground.backgroundImage = 'url(' + require('../../assets/img/word_background_2.jpg') + ')';
+					break;
+				case 3:
+					this.wordCardBackground.backgroundImage = 'url(' + require('../../assets/img/word_background_3.jpg') + ')';
+					break;
+				case 4:
+					this.wordCardBackground.backgroundImage = 'url(' + require('../../assets/img/word_background_4.jpg') + ')';
+					break;
+				case 5:
+					this.wordCardBackground.backgroundImage = 'url(' + require('../../assets/img/word_background_5.jpg') + ')';
+					break;
+				case 6:
+					this.wordCardBackground.backgroundImage = 'url(' + require('../../assets/img/word_background_6.jpg') + ')';
+					break;
+			}
 			let success = false
 			let errMsg = ''
 			get_group_words_in_list(store.state.user.uid).then((res) => {
@@ -392,26 +392,39 @@ export default {
 		onPositiveClick() {
 			message.success('Submit')
 			showModalRef.value = false
-		}
+		},
+		changeExample() {
+			get_new_example(store.state.user.uid, this.group_words[this.curId].word_id).then((res) => {
+				success = res.state
+				errMsg = res.msg
+				this.relation.example = res.example
+			}).catch(err => errMsg = '网络错误').finally(() => {
+				if (!success) {
+					this.message.error(errMsg)
+				}
+			});
+		},
 	},
 	created() {
 		this.getGroupWord();
-    if (store.state.user.custom === 1) {
-      this.color = 'rgba(5,199,243,0.85)';
-      this.color1 = '#359fc5';
-      this.color2 = '#4f77be';
-      this.color3 = '#1E90FF';
-    }
-    if (store.state.user.custom === 2) {
-      this.color = 'rgba(204,167,187,0.95)';
-      this.color1 = '#ffb3bf';
-      this.color2 = '#ffd9e6';
-      this.color3 = '#ffb3e6';    }
-    if (store.state.user.custom === 3) {
-      this.color = 'rgba(177,144,225,0.95)';
-      this.color1 = '#DDA0DD';
-      this.color2 = '#c479e3';
-      this.color3 = '#9370DB';    }
+		if (store.state.user.custom === 1) {
+			this.color = 'rgba(5,199,243,0.85)';
+			this.color1 = '#359fc5';
+			this.color2 = '#4f77be';
+			this.color3 = '#1E90FF';
+		}
+		if (store.state.user.custom === 2) {
+			this.color = 'rgba(204,167,187,0.95)';
+			this.color1 = '#ffb3bf';
+			this.color2 = '#ffd9e6';
+			this.color3 = '#ffb3e6';
+		}
+		if (store.state.user.custom === 3) {
+			this.color = 'rgba(177,144,225,0.95)';
+			this.color1 = '#DDA0DD';
+			this.color2 = '#c479e3';
+			this.color3 = '#9370DB';
+		}
 	}
 }
 </script>
@@ -599,6 +612,21 @@ export default {
 	/* background-color: #679B9B; */
 }
 
+.changeExample {
+	/* margin-top: 10%; */
+	top: 3%;
+	position: absolute;
+	left: 80%;
+	right: 1%;
+	/* height: 20%; */
+	font-size: medium;
+	color: rgba(255, 255, 255, 0.8);
+	/* font-style: italic; */
+	/* opacity: 70%; */
+	text-decoration: underline;
+	/* background-color: #679B9B; */
+}
+
 .word_button_box {
 	margin-top: 5%;
 	margin-left: 2%;
@@ -664,7 +692,7 @@ export default {
 	height: 90%;
 	/*background-color: #679B9B; !* todo *!*/
 	background-color: v-bind(color);
-  margin-left: 5%;
+	margin-left: 5%;
 	display: vertical;
 	border-radius: 20px;
 	/* flex-wrap: wrap;
@@ -679,7 +707,7 @@ export default {
 	border-radius: 10px;
 	/*background-color: rgba(38, 164, 116, 0.8);*/
 	background-color: v-bind(color1);
-  border-width: 0px;
+	border-width: 0px;
 	display: vertical;
 }
 
@@ -689,7 +717,7 @@ export default {
 	left: 5%;
 	height: 25%;
 	border-radius: 10px;
-  background-color: v-bind(color2);
+	background-color: v-bind(color2);
 	/*background-color: rgba(129, 227, 131, 0.8);*/
 	border-width: 0px;
 	display: vertical;
@@ -701,7 +729,7 @@ export default {
 	left: 5%;
 	height: 35%;
 	border-radius: 10px;
-  background-color: v-bind(color3);
+	background-color: v-bind(color3);
 	/*background-color: rgba(129, 227, 185, 0.8);*/
 	/*border-color: rgba(129, 227, 185, 0.8);*/
 	display: vertical;
@@ -844,4 +872,5 @@ export default {
 /*  background-color: #999;*/
 /*  border-radius: 10px;*/
 /*  box-shadow: inset 0 0 3px rgba(0, 0, 0, 0.2);*/
-/*}*/</style>
+/*}*/
+</style>

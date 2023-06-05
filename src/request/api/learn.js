@@ -152,3 +152,18 @@ export function get_user_statistic(user_id) {
         data
     })
 }
+
+export function get_new_example(user_id, word_id) {
+    /*
+        example; "This is my house!",
+    */
+    const data = JSON.stringify({
+        user_id: user_id,
+        word_id, word_id
+    })
+    return request({
+        url: "get_new_example/",
+        method: 'post',
+        data
+    })
+}
