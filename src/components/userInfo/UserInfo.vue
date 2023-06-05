@@ -84,7 +84,7 @@
         >
           <n-form-item label="会员时间" path="vip">
             <span style="font-variant-numeric: tabular-nums">
-              <n-countdown :duration="lastTime" active />
+              <n-countdown :duration="lastTime" active/>
               <n-button :bordered="false" ghost color="#787b0d" @click="handleVip">点击免费加时</n-button>
             </span>
           </n-form-item>
@@ -147,7 +147,7 @@ import {
 } from "naive-ui"
 import store from "@/store";
 import router from "@/router";
-import {getInfo, getRecommendTags, submitAvatar, submitInfo} from "@/request/api/user";
+import {getInfo, getRecommendTags, logoutAPI, submitAvatar, submitInfo} from "@/request/api/user";
 import DynamicTags from "@/components/userInfo/DynamicTags";
 import ChangePassword from "@/components/userInfo/ChangePassword";
 import {TOKEN, USERID} from "@/store/local";
@@ -185,7 +185,7 @@ export default ({
           model.days = res.info.days;
           model.wordLists = res.info.lists;
           model.tags = res.info.tags;
-          lastTime.value = res.info.last_time*1000
+          lastTime.value = res.info.last_time * 1000
         } else {
           msg.error(res.msg)
         }
@@ -321,10 +321,18 @@ export default ({
     /* ********************** 上传相关逻辑 ******************/
 
     function logout() {
-      store.state.user.login = false;
-      localStorage.removeItem(USERID);
-      cookie.clearCookie(TOKEN)
-      router.push({name: 'login'});
+      logoutAPI(store.state.user.uid).then(res => {
+        let success = res.state
+        if (success) {
+          store.state.user.login = false;
+          localStorage.removeItem(USERID);
+          cookie.clearCookie(TOKEN)
+          router.push({name: 'login'});
+        } else {
+          msg.error(res.msg)
+        }
+      }).catch(err => msg.error("网络错误"))
+
     }
 
     checkSelectedTags()
