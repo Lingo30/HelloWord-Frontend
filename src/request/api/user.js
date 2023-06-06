@@ -233,3 +233,13 @@ export function setMessageRead(uid, message) {
         data
     })
 }
+
+export function logoutAPI(uid) {
+    return request({
+        url: 'logout/',
+        method: 'post',
+        data: JSON.stringify({
+            userId: uid,
+        })
+    })
+}
