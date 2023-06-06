@@ -394,6 +394,8 @@ export default {
 			showModalRef.value = false
 		},
 		changeExample() {
+			let success = false
+			let errMsg = ''
 			get_new_example(store.state.user.uid, this.group_words[this.curId].word_id).then((res) => {
 				success = res.state
 				errMsg = res.msg
