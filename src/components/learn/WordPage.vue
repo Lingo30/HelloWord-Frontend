@@ -331,7 +331,7 @@ export default {
 				this.learnWords[pos] = { word_id: this.group_words[this.curId].word_id, forget_times: times, simple: false }
 			}
 			this.showWord()
-			this.play()
+			// this.play()
 			//this.nextWord()
 		},
 		nextWord() {
