@@ -50,7 +50,7 @@
       </div>
     </div>
   </n-space>
-  
+
 </template>
 
 <script>
@@ -236,7 +236,7 @@ export default {
   height: 90%;
   display: flex;
   align-items: center;
-  background-color: rgba(112, 162, 161, 0.4);
+  background-color: rgba(111, 119, 119, 0.2);
   border-radius: 10px;
   /*padding: 30px;  !*background-color: black;*!*/
 }
@@ -284,7 +284,8 @@ export default {
   /*flex-direction: column;*/
   justify-content: center;
   align-items: center;
-  background-color: rgba(112, 162, 161, 0.4);
+  /*background-color: rgba(112, 162, 161, 0.4);*/
+  background-color: rgba(111, 119, 119, 0.2);
   border-radius: 10px;
 }
 

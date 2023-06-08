@@ -292,7 +292,7 @@ export default {
 
 <style scoped>
 .container {
-  background-color: rgba(131, 219, 184, 0.5);
+  background-color: rgb(101, 101, 101,0);
   border-radius: 15px;
   flex-direction: column;
   height: 90%;
