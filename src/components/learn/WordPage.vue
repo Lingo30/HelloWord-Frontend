@@ -213,7 +213,9 @@ export default {
 			color: ref('#679B9B'),
 			color1: ref('rgba(38, 164, 116, 0.8)'),
 			color2: ref('rgba(129, 227, 131, 0.8)'),
-			color3: ref('rgba(129, 227, 185, 0.8)')
+			color3: ref('rgba(129, 227, 185, 0.8)'),
+      info_color1: ref('rgba(38, 164, 116, 0.9)'),
+      info_color2: ref('rgba(129, 227, 131, 0.9)'),
 		}
 	},
 	methods: {
@@ -409,25 +411,31 @@ export default {
 	},
 	created() {
 		this.getGroupWord();
-		if (store.state.user.custom === 1) {
-			this.color = 'rgba(5,199,243,0.85)';
-			this.color1 = '#359fc5';
-			this.color2 = '#4f77be';
-			this.color3 = '#1E90FF';
-		}
-		if (store.state.user.custom === 2) {
-			this.color = 'rgba(204,167,187,0.95)';
-			this.color1 = '#ffb3bf';
-			this.color2 = '#ffd9e6';
-			this.color3 = '#ffb3e6';
-		}
-		if (store.state.user.custom === 3) {
-			this.color = 'rgba(177,144,225,0.95)';
-			this.color1 = '#DDA0DD';
-			this.color2 = '#c479e3';
-			this.color3 = '#9370DB';
-		}
-	}
+    if (store.state.user.custom === 1) {
+      this.color = 'rgba(5,199,243,0.85)';
+      this.color1 = 'rgba(53,159,197,0.8)';
+      this.color2 = 'rgba(79,119,190,0.8)';
+      this.color3 = 'rgba(30,144,255,0.8)';
+      this.info_color1 = 'rgba(53,159,197,0.9)';
+      this.info_color2 = 'rgba(79,119,190,0.9)';
+    }
+    if (store.state.user.custom === 2) {
+      this.color = 'rgba(204,167,187,0.95)';
+      this.color1 = 'rgba(255,179,191,0.8)';
+      this.color2 = 'rgba(255,217,230,0.8)';
+      this.color3 = 'rgba(255,179,230,0.8)';
+      this.info_color1 = 'rgba(255,179,191,0.9)';
+      this.info_color2 = 'rgba(255,217,230,0.9)';
+    }
+    if (store.state.user.custom === 3) {
+      this.color = 'rgba(177,144,225,0.95)';
+      this.color1 = 'rgba(221,160,221,0.8)';
+      this.color2 = 'rgba(196,121,227,0.8)';
+      this.color3 = 'rgba(147,112,219,0.8)';
+      this.info_color1 = 'rgba(221,160,221,0.9)';
+      this.info_color2 = 'rgba(196,121,227,0.9)';
+    }
+  }
 }
 </script>
 
@@ -806,7 +814,8 @@ export default {
 	margin-bottom: 1%;
 	height: auto;
 	display: flex;
-	background-color: rgba(38, 164, 116, 0.8);
+  background-color: v-bind(info_color1);
+	/*background-color: rgba(38, 164, 116, 0.8);*/
 	border-width: 0px;
 	/* background-color:#4E655D; */
 }
@@ -824,7 +833,8 @@ export default {
 	margin-bottom: 1%;
 	height: auto;
 	display: flex;
-	background-color: rgba(129, 227, 131, 0.8);
+  background-color: v-bind(info_color2);
+	/*background-color: rgba(129, 227, 131, 0.8);*/
 	border-width: 0px;
 	/* background-color:#4E655D; */
 }
